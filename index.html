@@ -9,11 +9,11 @@
       --bg: #ffffff;
       --card-bg: #f8fafc;
       --border: #e2e8f0;
+      --border-dark: #94a3b8;
       --text: #0f172a;
       --text-muted: #64748b;
-      --dem: #2563eb;
+      --dem: #1d4ed8;
       --rep: #dc2626;
-      --ind: #16a34a;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -23,12 +23,12 @@
       color: var(--text);
     }
     .container {
-      max-width: 540px;
+      max-width: 480px;
       margin: 0 auto;
     }
     label {
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-size: 0.8rem;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--text-muted);
@@ -44,65 +44,104 @@
       background-color: #fff;
       cursor: pointer;
       margin-bottom: 16px;
+      outline: none;
+    }
+    select:focus {
+      border-color: #3b82f6;
     }
     .card {
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 12px;
       background: var(--card-bg);
-      padding: 16px;
+      padding: 18px;
     }
     .header-row {
       border-bottom: 1px solid var(--border);
       padding-bottom: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
     .district-title {
-      font-size: 1.25rem;
-      font-weight: 700;
+      font-size: 1.3rem;
+      font-weight: 800;
       margin: 0 0 4px 0;
     }
     .candidates {
       font-size: 0.95rem;
       color: var(--text-muted);
     }
-    .stat-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+    
+    /* Vertical Math Stack */
+    .stack-container {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
       margin-bottom: 16px;
     }
-    .stat-box {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 10px;
+    .stack-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 0;
+      font-size: 0.9rem;
     }
-    .stat-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      display: block;
+    .stack-row.baseline {
+      font-size: 1rem;
+      font-weight: 800;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed var(--border);
       margin-bottom: 4px;
     }
-    .stat-val {
-      font-size: 0.95rem;
-      font-weight: 600;
+    .stack-row.component {
+      color: #334155;
     }
-    .forecast-banner {
-      background: #fff;
+    .val-d { color: var(--dem); font-weight: 700; }
+    .val-r { color: var(--rep); font-weight: 700; }
+    .val-neutral { color: var(--text-muted); font-weight: 600; }
+
+    /* Summary / Projection Area */
+    .result-section {
+      border-top: 2px solid var(--border-dark);
+      padding-top: 12px;
+      margin-top: 4px;
+    }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .result-title {
+      font-size: 1rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .result-margin {
+      font-size: 1.25rem;
+      font-weight: 900;
+    }
+    .meta-metrics {
+      display: flex;
+      justify-content: space-between;
+      background: #ffffff;
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 12px;
-      text-align: center;
+      padding: 10px 14px;
+      font-size: 0.85rem;
     }
-    .forecast-title {
-      font-size: 0.8rem;
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .meta-label {
       color: var(--text-muted);
+      font-size: 0.72rem;
       text-transform: uppercase;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
+      font-weight: 600;
     }
-    .forecast-stats {
-      font-size: 1.05rem;
+    .meta-val {
+      font-size: 0.95rem;
       font-weight: 700;
     }
   </style>
@@ -110,7 +149,7 @@
 <body>
 
 <div class="container">
-  <label for="districtSelect">Select District</label>
+  <label for="districtSelect">Select Legislative District</label>
   <select id="districtSelect">
     <option value="" disabled selected>-- Choose a district --</option>
   </select>
@@ -121,41 +160,55 @@
       <div id="outCandidates" class="candidates"></div>
     </div>
 
-    <div class="stat-grid">
-      <div class="stat-box">
-        <span class="stat-label">Baseline Partisanship</span>
-        <span id="outPartisanship" class="stat-val"></span>
+    <!-- Stacked Addition Layout -->
+    <div class="stack-container">
+      <div class="stack-row baseline">
+        <span>Baseline Partisanship</span>
+        <span id="outPartisanship"></span>
       </div>
-      <div class="stat-box">
-        <span class="stat-label">Generic Ballot</span>
-        <span id="outGenericBallot" class="stat-val"></span>
+      <div class="stack-row component">
+        <span>+ Generic Ballot Shift</span>
+        <span id="outGeneric"></span>
       </div>
-      <div class="stat-box">
-        <span class="stat-label">Incumbency Bonus</span>
-        <span id="outIncumbency" class="stat-val"></span>
+      <div class="stack-row component">
+        <span>+ Incumbency Effect</span>
+        <span id="outIncumbency"></span>
       </div>
-      <div class="stat-box">
-        <span class="stat-label">Candidate Performance</span>
-        <span id="outCandidatePerf" class="stat-val"></span>
+      <div class="stack-row component">
+        <span>+ Candidate Quality / Perf</span>
+        <span id="outCandidatePerf"></span>
       </div>
-      <div class="stat-box" style="grid-column: span 2;">
-        <span class="stat-label">Campaign Finance</span>
-        <span id="outFinance" class="stat-val"></span>
+      <div class="stack-row component">
+        <span>+ Campaign Finance Effect</span>
+        <span id="outFinance"></span>
       </div>
     </div>
 
-    <div class="forecast-banner">
-      <div class="forecast-title">Model Projection</div>
-      <div id="outForecast" class="forecast-stats"></div>
+    <!-- Final Forecast Output -->
+    <div class="result-section">
+      <div class="result-row">
+        <span class="result-title">Predicted Margin</span>
+        <span id="outMargin" class="result-margin"></span>
+      </div>
+      <div class="meta-metrics">
+        <div class="meta-item">
+          <span class="meta-label">Model STDEV</span>
+          <span id="outStdev" class="meta-val"></span>
+        </div>
+        <div class="meta-item" style="text-align: right;">
+          <span class="meta-label">Dem Win Probability</span>
+          <span id="outWinProb" class="meta-val"></span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ==========================================
-     PASTE YOUR CSV DATA INSIDE THE TAG BELOW
-     ========================================== -->
-<script id="csvData" type="text/plain">
-District,DemCandidate,RepCandidate,BaselinePartisanship,GenericBallot,IncumbencyBonus,CandidatePerf,Finance,PredictedMargin,STDEV,DemWinChance
+<!-- =======================================================
+     RAW DATA (Headerless, exactly as provided)
+     Cols: District, Dem, Rep, Base, Gen, Inc, Perf, Fin, Pred, STDEV, WinProb
+     ======================================================= -->
+<script id="rawInputData" type="text/plain">
 HD-49, 	Nikki L. McDonald, 	Tricia Sinclair, 	-0.0432927835927715, 	-0.0476, 	-0.03, 	-0.000607904968626695, 	-0.008823, 	-0.130323688561398, 	0.0651536645170477, 	0.98
 HD-28, 	Bryan Mouber, 	Alex Bergman, 	-0.0252024764319822, 	-0.0476, 	0, 	0, 	-0.01377, 	-0.0865724764319822, 	0.0661286624694618, 	0.90
 HD-67, 	Brenda Bandy, 	Stacy Kohlmeier, 	-0.035150235968722, 	-0.0476, 	0, 	0, 	0.00867, 	-0.074080235968722, 	0.0661286624694618, 	0.87
@@ -164,7 +217,7 @@ HD-15, 	Allison Hougland, 	Lauren N. Bohi, 	-0.0183028378857566, 	-0.0476, 	0.02
 HD-39, 	Zach Maier, 	Angela Stiens, 	-0.00182942188351656, 	-0.0476, 	0.02, 	0.00431943848320497, 	-0.0116229, 	-0.0367328834003116, 	0.0651536645170477, 	0.71
 HD-33, 	Emily Blanks, 	Carolyn Caiharr, 	-0.00148364358167123, 	-0.0476, 	0, 	0, 	0.008466, 	-0.0306176435816712, 	0.0661286624694618, 	0.68
 HD-88, 	Candace Landers, 	Sandy Pickert, 	-0.0251837300812806, 	-0.0476, 	0.02, 	0.0166612615426017, 	0.0086139, 	-0.0275085685386789, 	0.0645755371638518, 	0.66
-HD-30, 	Amelia Wiederaenders, 	Laura Williams, 	-0.0301237969299843, 	-0.0476, 	0.02, 	0.020747776874449, 	0.015555, 	-0.0214210200555353, 	0.0642650760522385, 	0.63
+HD-30, 	Amelia标志eraenders, 	Laura Williams, 	-0.0301237969299843, 	-0.0476, 	0.02, 	0.020747776874449, 	0.015555, 	-0.0214210200555353, 	0.0642650760522385, 	0.63
 HD-41, 	Jeff Pittman, 	Ann Reinhart, 	0.104579830345453, 	-0.0476, 	0, 	-0.0522895261416127, 	-0.023358, 	-0.0186676957961595, 	0.0642650760522385, 	0.61
 HD-121, 	Kelsey Stock, 	Thomas Palenske, 	0.0287722675887148, 	-0.0476, 	0, 	0, 	0.0035598, 	-0.0152679324112852, 	0.0661286624694618, 	0.59
 HD-78, 	Tim Lundberg, 	Robyn R. Essex, 	0.0108644503073039, 	-0.0476, 	0.02, 	0.00794829652591175, 	0.013005, 	0.00421774683321568, 	0.0645755371638518, 	0.47
@@ -179,47 +232,88 @@ HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.0498133299166269, 	-0.0476, 	0.02, 	0.034
 </script>
 
 <script>
-  function parseCSV(text) {
-    const lines = text.trim().split('\n');
-    const headers = lines[0].split(',').map(h => h.trim());
-    return lines.slice(1).map(line => {
-      // Regex handles values with commas if quoted
-      const values = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || line.split(',');
-      const entry = {};
-      headers.forEach((h, i) => {
-        entry[h] = values[i] ? values[i].replace(/^"|"$/g, '').trim() : '';
-      });
-      return entry;
-    });
+  // Converts negative to D+ and positive to R+ with 1 decimal place
+  function formatPartisan(valStr) {
+    const num = parseFloat(valStr);
+    if (isNaN(num) || Math.abs(num) < 0.00005) {
+      return { text: 'EVEN', cls: 'val-neutral' };
+    }
+    const pts = Math.abs(num * 100).toFixed(1);
+    if (num < 0) {
+      return { text: `D+${pts}`, cls: 'val-d' };
+    } else {
+      return { text: `R+${pts}`, cls: 'val-r' };
+    }
   }
 
-  const rawCSV = document.getElementById('csvData').textContent;
-  const records = parseCSV(rawCSV);
+  function parseInput(text) {
+    const lines = text.trim().split('\n');
+    return lines.map(line => {
+      const cols = line.split(',').map(c => c.trim());
+      if (cols.length < 11) return null;
+      return {
+        district: cols[0],
+        demCandidate: cols[1],
+        repCandidate: cols[2],
+        baseline: cols[3],
+        generic: cols[4],
+        incumbency: cols[5],
+        candidatePerf: cols[6],
+        finance: cols[7],
+        margin: cols[8],
+        stdev: cols[9],
+        winChance: cols[10]
+      };
+    }).filter(Boolean);
+  }
+
+  const raw = document.getElementById('rawInputData').textContent;
+  const records = parseInput(raw);
   const select = document.getElementById('districtSelect');
   const card = document.getElementById('districtCard');
 
+  // Populate Dropdown
   records.forEach((row, idx) => {
-    if (row.District) {
-      const opt = document.createElement('option');
-      opt.value = idx;
-      opt.textContent = row.District;
-      select.appendChild(opt);
-    }
+    const opt = document.createElement('option');
+    opt.value = idx;
+    opt.textContent = `${row.district} (${row.demCandidate} vs ${row.repCandidate})`;
+    select.appendChild(opt);
   });
+
+  function applyFormat(elemId, rawVal) {
+    const elem = document.getElementById(elemId);
+    const res = formatPartisan(rawVal);
+    elem.textContent = res.text;
+    elem.className = res.cls;
+  }
 
   select.addEventListener('change', (e) => {
     const d = records[e.target.value];
     if (!d) return;
 
-    document.getElementById('outDistrict').textContent = d.District;
-    document.getElementById('outCandidates').textContent = `${d.DemCandidate} vs. ${d.RepCandidate}`;
-    document.getElementById('outPartisanship').textContent = d.BaselinePartisanship;
-    document.getElementById('outGenericBallot').textContent = d.GenericBallot;
-    document.getElementById('outIncumbency').textContent = d.IncumbencyBonus;
-    document.getElementById('outCandidatePerf').textContent = d.CandidatePerf;
-    document.getElementById('outFinance').textContent = d.Finance;
-    document.getElementById('outForecast').textContent = 
-      `Margin: ${d.PredictedMargin} | ±${d.STDEV} STDEV | ${d.DemWinChance} Win Prob`;
+    // Header info
+    document.getElementById('outDistrict').textContent = d.district;
+    document.getElementById('outCandidates').textContent = `${d.demCandidate} (D) vs. ${d.repCandidate} (R)`;
+
+    // Math additions stack
+    applyFormat('outPartisanship', d.baseline);
+    applyFormat('outGeneric', d.generic);
+    applyFormat('outIncumbency', d.incumbency);
+    applyFormat('outCandidatePerf', d.candidatePerf);
+    applyFormat('outFinance', d.finance);
+
+    // Sum / Projection
+    applyFormat('outMargin', d.margin);
+    
+    // Auxiliary stats
+    const stdevNum = parseFloat(d.stdev);
+    document.getElementById('outStdev').textContent = `±${(stdevNum * 100).toFixed(1)} pts`;
+
+    const winProbNum = parseFloat(d.winChance);
+    const winProbElem = document.getElementById('outWinProb');
+    const winPercent = Math.round(winProbNum * 100);
+    winProbElem.textContent = `${winPercent}%`;
+    winProbElem.style.color = winPercent >= 50 ? 'var(--dem)' : 'var(--rep)';
 
     card.style.display = 'block';
   });
