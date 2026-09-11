@@ -15,8 +15,8 @@
       --border-dark: #94a3b8;
       --text: #0f172a;
       --text-muted: #64748b;
-      --dem: #1d4ed8;
-      --rep: #dc2626;
+      --dem: #000082;
+      --rep: #820000;
       --mod: #7c3aed;
     }
     * { box-sizing: border-box; }
@@ -48,12 +48,22 @@
     }
     .legend {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       font-size: 0.72rem;
       font-weight: 600;
+      align-items: center;
     }
     .legend-item { display: flex; align-items: center; gap: 4px; }
-    .legend-box { width: 11px; height: 11px; border-radius: 2px; }
+    .legend-box { width: 13px; height: 13px; border-radius: 2px; border: 1px solid #cbd5e1; }
+    .legend-hatch {
+      background: repeating-linear-gradient(
+        45deg,
+        #f1f5f9,
+        #f1f5f9 2px,
+        #0d0d0d 2px,
+        #0d0d0d 3px
+      );
+    }
 
     .app-layout {
       display: flex;
@@ -64,7 +74,7 @@
     #map {
       flex: 1;
       height: 100%;
-      background: #f1f5f9;
+      background: #ffffff;
     }
 
     /* Hover Info Chip over map */
@@ -73,13 +83,14 @@
       top: 12px;
       left: 60px;
       z-index: 1000;
-      background: rgba(15, 23, 42, 0.88);
+      background: rgba(15, 23, 42, 0.9);
       color: #fff;
       padding: 6px 12px;
       border-radius: 6px;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       pointer-events: none;
       backdrop-filter: blur(4px);
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
     }
 
     /* Sidebar */
@@ -266,11 +277,12 @@
 <header>
   <h1>Kansas House 2026 Forecast</h1>
   <div class="legend">
-    <div class="legend-item"><div class="legend-box" style="background: #1e3a8a;"></div> Safe D</div>
-    <div class="legend-item"><div class="legend-box" style="background: #3b82f6;"></div> Lean D</div>
-    <div class="legend-item"><div class="legend-box" style="background: #facc15;"></div> Tossup</div>
-    <div class="legend-item"><div class="legend-box" style="background: #ef4444;"></div> Lean R</div>
-    <div class="legend-item"><div class="legend-box" style="background: #991b1b;"></div> Safe R</div>
+    <div class="legend-item"><div class="legend-box" style="background: #000082;"></div> Safe D</div>
+    <div class="legend-item"><div class="legend-box" style="background: #6363ff;"></div> Lean D</div>
+    <div class="legend-item"><div class="legend-box" style="background: #ffe89a;"></div> Tossup</div>
+    <div class="legend-item"><div class="legend-box" style="background: #ff6259;"></div> Lean R</div>
+    <div class="legend-item"><div class="legend-box" style="background: #820000;"></div> Safe R</div>
+    <div class="legend-item"><div class="legend-box legend-hatch"></div> Projected Flip</div>
   </div>
 </header>
 
@@ -286,55 +298,29 @@
         <div class="needle-label">House Control Outcome</div>
         <div class="needle-val" style="color: var(--rep);">89.4% Plain Majority</div>
         <svg class="gauge" viewBox="0 0 200 110">
-          <!-- Left arc: Supermajority (84+ seats) -->
-          <path d="M 20 100 A 80 80 0 0 1 100 20" fill="none" stroke="#b91c1c" stroke-width="18" />
-          <!-- Right arc: Simple Majority (63-83 seats) -->
-          <path d="M 100 20 A 80 80 0 0 1 180 100" fill="none" stroke="#f87171" stroke-width="18" />
-          
-          <!-- Dial Center Hub -->
+          <path d="M 20 100 A 80 80 0 0 1 100 20" fill="none" stroke="#820000" stroke-width="18" />
+          <path d="M 100 20 A 80 80 0 0 1 180 100" fill="none" stroke="#ff6259" stroke-width="18" />
           <circle cx="100" cy="100" r="7" fill="#0f172a" />
-          
-          <!-- Needle: 89.4% towards Simple Majority (right side) -->
-          <!-- Angle: 180° - (180° * 0.894) = 19.08° from the 0° right axis -->
-          <!-- x = 100 + 72*cos(19.08°) = 168, y = 100 - 72*sin(19.08°) = 76 -->
           <line x1="100" y1="100" x2="168" y2="76" stroke="#0f172a" stroke-width="4" stroke-linecap="round" />
-          
           <text x="14" y="105" font-size="8" fill="#64748b" font-weight="700">Supermajority</text>
           <text x="142" y="105" font-size="8" fill="#64748b" font-weight="700">Plain Majority</text>
         </svg>
         <div class="needle-sub">Plain Majority (63–83): <strong>89.4%</strong> | Supermajority (84+): <strong>10.6%</strong></div>
       </div>
 
-      <!-- Gauge 2: Projected DEM Seats (All Red Scale) -->
+      <!-- Gauge 2: Projected DEM Seats -->
       <div class="needle-block">
         <div class="needle-label">Projected Democratic Seats</div>
         <div class="needle-val" style="color: var(--rep);">47 Median <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">(of 125)</span></div>
         <svg class="gauge" viewBox="0 0 200 110">
-          <!-- Background arc -->
           <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#f1f5f9" stroke-width="18" />
-          
-          <!-- 95% Confidence Interval: 39 to 56 seats (Light Red) -->
-          <!-- 39/125 = 31.2% (123.8°), 56/125 = 44.8% (99.4°) -->
-          <!-- Start: 100 + 80*cos(123.8°) = 55.5, 100 - 80*sin(123.8°) = 33.5 -->
-          <!-- End: 100 + 80*cos(99.4°) = 87.0, 100 - 80*sin(99.4°) = 21.1 -->
-          <path d="M 55.5 33.5 A 80 80 0 0 1 87.0 21.1" fill="none" stroke="#fecaca" stroke-width="18" />
-          
-          <!-- 67% Confidence Interval: 43 to 52 seats (Medium Red) -->
-          <!-- 43/125 = 34.4% (118.1°), 52/125 = 41.6% (105.1°) -->
-          <!-- Start: 100 + 80*cos(118.1°) = 62.3, 100 - 80*sin(118.1°) = 29.4 -->
-          <!-- End: 100 + 80*cos(105.1°) = 79.1, 100 - 80*sin(105.1°) = 22.8 -->
-          <path d="M 62.3 29.4 A 80 80 0 0 1 79.1 22.8" fill="none" stroke="#f87171" stroke-width="18" />
-          
-          <!-- Majority Threshold tick mark at 63 seats (center: 100, 20) -->
+          <!-- 95% Interval: 39 to 56 seats -->
+          <path d="M 55.5 33.5 A 80 80 0 0 1 87.0 21.1" fill="none" stroke="#ffafab" stroke-width="18" />
+          <!-- 67% Interval: 43 to 52 seats -->
+          <path d="M 62.3 29.4 A 80 80 0 0 1 79.1 22.8" fill="none" stroke="#ff6259" stroke-width="18" />
           <line x1="100" y1="12" x2="100" y2="28" stroke="#94a3b8" stroke-width="2" />
-
-          <!-- Dial Center Hub -->
           <circle cx="100" cy="100" r="7" fill="#0f172a" />
-          
-          <!-- Median needle (47 seats / 125 = 37.6% -> angle = 112.3°) -->
-          <!-- x = 100 + 72*cos(112.3°) = 72.7, y = 100 - 72*sin(112.3°) = 33.4 -->
-          <line x1="100" y1="100" x2="73" y2="33" stroke="#b91c1c" stroke-width="4" stroke-linecap="round" />
-          
+          <line x1="100" y1="100" x2="73" y2="33" stroke="#820000" stroke-width="4" stroke-linecap="round" />
           <text x="16" y="105" font-size="9" fill="#64748b" font-weight="700">0</text>
           <text x="94" y="10" font-size="8" fill="#64748b" font-weight="700">63 (Maj)</text>
           <text x="168" y="105" font-size="9" fill="#64748b" font-weight="700">125</text>
@@ -562,19 +548,71 @@ HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.0498133299166269, 	-0.0476, 	0.02, 	0.034
 </script>
 
 <script>
-  // Ratings mapping
+  // 2026 Projected Flips array from python script
+  const PROJECTED_FLIPS = new Set([67, 28, 14, 15, 39, 33, 88, 30, 41, 121]);
+
+  // Color Ramp Definitions matching Python Script[cite: 3]
+  const CMAP_D = ["#ffffff", "#babaff", "#6363ff", "#0000f8", "#000082"];
+  const CMAP_R = ["#ffffff", "#ffafab", "#ff6259", "#f80d00", "#820000"];
+  const FLOOR = 0.1;
+  const GAMMA = 1.5;
+  const CONTESTED_MAX = 0.95;
+
+  function hexToRgb(hex) {
+    const c = parseInt(hex.replace('#', ''), 16);
+    return [(c >> 16) & 255, (c >> 8) & 255, c & 255];
+  }
+
+  function rgbToHex(r, g, b) {
+    return "#" + [r, g, b].map(x => Math.round(x).toString(16).padStart(2, '0')).join('');
+  }
+
+  function interpolateColormap(cmap, t) {
+    t = Math.max(0, Math.min(1, t));
+    const n = cmap.length - 1;
+    const idx = t * n;
+    const i = Math.floor(idx);
+    const frac = idx - i;
+    if (i >= n) return cmap[n];
+    const c1 = hexToRgb(cmap[i]);
+    const c2 = hexToRgb(cmap[i + 1]);
+    return rgbToHex(
+      c1[0] + (c2[0] - c1[0]) * frac,
+      c1[1] + (c2[1] - c1[1]) * frac,
+      c1[2] + (c2[2] - c1[2]) * frac
+    );
+  }
+
+  // Exact Python prob_to_color replication[cite: 3]
+  function probToColor(p, label = "") {
+    if (label.includes("TOSSUP")) {
+      return "#ffe89a"; // Light yellow for Tossup[cite: 3]
+    }
+    let t;
+    if (label.includes("UNCONTESTED")) {
+      t = 1.0;
+    } else {
+      t = Math.pow(Math.abs(p - 0.5) * 2.0, GAMMA);
+      t = FLOOR + (CONTESTED_MAX - FLOOR) * t;
+    }
+    return interpolateColormap(p >= 0.5 ? CMAP_D : CMAP_R, t);
+  }
+
+  // Ratings Mapping
   const ratingsMap = {};
   document.getElementById('ratingsData').textContent.trim().split('\n').forEach(line => {
     const parts = line.split('\t');
     if (parts.length >= 3) {
+      const p = parseFloat(parts[2].replace('%', '')) / 100.0;
       ratingsMap[parts[0].trim()] = {
         rating: parts[1].trim(),
-        prob: parts[2].trim()
+        prob: parts[2].trim(),
+        pdem: p
       };
     }
   });
 
-  // Competitive Data mapping
+  // Competitive Data Mapping
   function parseInput(text) {
     return text.trim().split('\n').map(line => {
       const cols = line.split(',').map(c => c.trim());
@@ -608,20 +646,6 @@ HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.0498133299166269, 	-0.0476, 	0.02, 	0.034
       : { text: `R+${pts}`, cls: 'val-r' };
   }
 
-  function getDistrictColor(distNum) {
-    const data = ratingsMap[distNum];
-    if (!data) return '#cbd5e1';
-    const r = data.rating;
-    if (r.includes('UNCONTESTED D') || r === 'SAFE D') return '#1e3a8a';
-    if (r === 'VERY LIKELY D' || r === 'LIKELY D') return '#2563eb';
-    if (r === 'LEAN D' || r === 'TILT D') return '#60a5fa';
-    if (r === 'TOSSUP') return '#facc15';
-    if (r === 'TILT R' || r === 'LEAN R') return '#f87171';
-    if (r === 'VERY LIKELY R' || r === 'LIKELY R') return '#dc2626';
-    if (r.includes('UNCONTESTED R') || r === 'SAFE R') return '#991b1b';
-    return '#94a3b8';
-  }
-
   const select = document.getElementById('districtSelect');
   competitiveRecords.forEach((row) => {
     const opt = document.createElement('option');
@@ -630,11 +654,26 @@ HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.0498133299166269, 	-0.0476, 	0.02, 	0.034
     select.appendChild(opt);
   });
 
-  // Initialize Map without background raster tiles
+  // Map Setup without raster tiles
   const map = L.map('map', {
     zoomControl: true,
     attributionControl: false
   }).setView([38.5, -98.3], 7);
+
+  // SVG Hatch Pattern Injection for Leaflet SVG Renderer
+  map.on('load', injectHatchPattern);
+  function injectHatchPattern() {
+    const svg = document.querySelector('#map svg');
+    if (svg && !svg.querySelector('#diagonalHatch')) {
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      defs.innerHTML = `
+        <pattern id="diagonalHatch" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+          <line x1="0" y1="0" x2="0" y2="8" stroke="#0d0d0d" stroke-width="1.6" />
+        </pattern>
+      `;
+      svg.appendChild(defs);
+    }
+  }
 
   let geojsonLayer;
   let activeHighlightedLayer = null;
@@ -694,40 +733,47 @@ HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.0498133299166269, 	-0.0476, 	0.02, 	0.034
     }
   }
 
-  // Load Boundaries from local geojson
+  // Load geojson from repository root
   fetch('./districts.geojson')
     .then(r => r.json())
     .then(geojson => {
       geojsonLayer = L.geoJSON(geojson, {
         style: feature => {
           const id = String(feature.properties.NAME || feature.properties.id);
+          const rInfo = ratingsMap[id] || { rating: '', pdem: 0.5 };
+          const fillColor = probToColor(rInfo.pdem, rInfo.rating);
+          const isTossup = rInfo.rating.includes("TOSSUP");
+
           return {
-            fillColor: getDistrictColor(id),
-            weight: 1,
+            fillColor: fillColor,
+            weight: 0.8,
             opacity: 1,
             color: '#ffffff',
-            fillOpacity: 0.85
+            fillOpacity: isTossup ? 0.6 : 0.95
           };
         },
         onEachFeature: (feature, layer) => {
           const id = String(feature.properties.NAME || feature.properties.id);
+          const numId = parseInt(id, 10);
           const rInfo = ratingsMap[id] || { rating: 'Unlisted', prob: 'N/A' };
+          const isFlip = PROJECTED_FLIPS.has(numId);
 
-          // Hover handler uses a single pinned overlay rather than sticking Leaflet tooltips
           layer.on({
             mouseover: e => {
               const l = e.target;
               if (activeHighlightedLayer !== l) {
-                l.setStyle({ weight: 2.5, color: '#0f172a' });
+                l.setStyle({ weight: 2.2, color: '#0f172a' });
                 l.bringToFront();
               }
-              hoverChip.innerHTML = `<strong>HD-${id}</strong> &bull; ${rInfo.rating} &bull; Dem Win: ${rInfo.prob}`;
+              const flipBadge = isFlip ? ' &bull; <em>Projected Flip</em>' : '';
+              hoverChip.innerHTML = `<strong>HD-${id}</strong> &bull; ${rInfo.rating} &bull; Dem Win: ${rInfo.prob}${flipBadge}`;
               hoverChip.style.display = 'block';
             },
             mouseout: e => {
               const l = e.target;
               if (activeHighlightedLayer !== l) {
                 geojsonLayer.resetStyle(l);
+                applyHatchOverlay();
               }
               hoverChip.style.display = 'none';
             },
@@ -736,7 +782,7 @@ HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.0498133299166269, 	-0.0476, 	0.02, 	0.034
                 geojsonLayer.resetStyle(activeHighlightedLayer);
               }
               activeHighlightedLayer = e.target;
-              activeHighlightedLayer.setStyle({ weight: 3, color: '#0f172a' });
+              activeHighlightedLayer.setStyle({ weight: 2.8, color: '#0f172a' });
 
               if (competitiveMap[id]) {
                 select.value = id;
@@ -744,16 +790,43 @@ HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.0498133299166269, 	-0.0476, 	0.02, 	0.034
                 select.value = "";
               }
               renderCard(id);
+              applyHatchOverlay();
             }
           });
         }
       }).addTo(map);
 
+      injectHatchPattern();
+      applyHatchOverlay();
       map.fitBounds(geojsonLayer.getBounds(), { padding: [15, 15] });
     })
     .catch(err => {
-      console.error("Make sure districts.geojson is committed to the repository root directory.", err);
+      console.error("Make sure districts.geojson is present in the repository root.", err);
     });
+
+  // Apply Diagonal Striping to Flips via an SVG Hatch Pattern overlay
+  let hatchOverlayGroup = L.featureGroup().addTo(map);
+
+  function applyHatchOverlay() {
+    injectHatchPattern();
+    if (!geojsonLayer) return;
+    hatchOverlayGroup.clearLayers();
+
+    geojsonLayer.eachLayer(layer => {
+      const id = parseInt(layer.feature.properties.NAME || layer.feature.properties.id, 10);
+      if (PROJECTED_FLIPS.has(id)) {
+        const hatchLayer = L.geoJSON(layer.feature, {
+          style: {
+            fillColor: 'url(#diagonalHatch)',
+            fillOpacity: 0.35,
+            weight: 0,
+            interactive: false
+          }
+        });
+        hatchOverlayGroup.addLayer(hatchLayer);
+      }
+    });
+  }
 
   select.addEventListener('change', (e) => {
     const id = e.target.value;
@@ -765,8 +838,9 @@ HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.0498133299166269, 	-0.0476, 	0.02, 	0.034
         if (fid === id) {
           if (activeHighlightedLayer) geojsonLayer.resetStyle(activeHighlightedLayer);
           activeHighlightedLayer = layer;
-          activeHighlightedLayer.setStyle({ weight: 3, color: '#0f172a' });
+          activeHighlightedLayer.setStyle({ weight: 2.8, color: '#0f172a' });
           activeHighlightedLayer.bringToFront();
+          applyHatchOverlay();
           map.fitBounds(layer.getBounds(), { maxZoom: 11 });
         }
       });
