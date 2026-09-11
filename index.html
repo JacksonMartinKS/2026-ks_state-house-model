@@ -281,44 +281,62 @@
   <div class="sidebar">
     <!-- NYT-STYLE FORECAST GAUGES -->
     <div class="needle-container">
-      <!-- Gauge 1: GOP Majority Probability -->
+      <!-- Gauge 1: GOP Supermajority vs Simple Majority -->
       <div class="needle-block">
-        <div class="needle-label">GOP Majority Control Prob</div>
-        <div class="needle-val" style="color: var(--rep);">89.4% Chance</div>
+        <div class="needle-label">House Control Outcome</div>
+        <div class="needle-val" style="color: var(--rep);">89.4% Plain Majority</div>
         <svg class="gauge" viewBox="0 0 200 110">
-          <!-- Arcs: 0-100% mapped to 180° - 0° -->
-          <path d="M 20 100 A 80 80 0 0 1 100 20" fill="none" stroke="#93c5fd" stroke-width="18" />
-          <path d="M 100 20 A 80 80 0 0 1 180 100" fill="none" stroke="#fca5a5" stroke-width="18" />
+          <!-- Left arc: Supermajority (84+ seats) -->
+          <path d="M 20 100 A 80 80 0 0 1 100 20" fill="none" stroke="#b91c1c" stroke-width="18" />
+          <!-- Right arc: Simple Majority (63-83 seats) -->
+          <path d="M 100 20 A 80 80 0 0 1 180 100" fill="none" stroke="#f87171" stroke-width="18" />
+          
           <!-- Dial Center Hub -->
           <circle cx="100" cy="100" r="7" fill="#0f172a" />
-          <!-- 89.4% needle (angle = 180 - 180*0.894 = 19.08 deg from right) -->
-          <!-- Line pointing outward -->
-          <line x1="100" y1="100" x2="167" y2="73" stroke="#991b1b" stroke-width="4" stroke-linecap="round" />
-          <text x="25" y="105" font-size="9" fill="#64748b" font-weight="700">D Maj</text>
-          <text x="155" y="105" font-size="9" fill="#64748b" font-weight="700">R Maj</text>
+          
+          <!-- Needle: 89.4% towards Simple Majority (right side) -->
+          <!-- Angle: 180° - (180° * 0.894) = 19.08° from the 0° right axis -->
+          <!-- x = 100 + 72*cos(19.08°) = 168, y = 100 - 72*sin(19.08°) = 76 -->
+          <line x1="100" y1="100" x2="168" y2="76" stroke="#0f172a" stroke-width="4" stroke-linecap="round" />
+          
+          <text x="14" y="105" font-size="8" fill="#64748b" font-weight="700">Supermajority</text>
+          <text x="142" y="105" font-size="8" fill="#64748b" font-weight="700">Plain Majority</text>
         </svg>
-        <div class="needle-sub">GOP Plain Majority Prob: <strong>89.4%</strong> | Supermajority (84+ Seats) In Play</div>
+        <div class="needle-sub">Plain Majority (63–83): <strong>89.4%</strong> | Supermajority (84+): <strong>10.6%</strong></div>
       </div>
 
-      <!-- Gauge 2: Projected DEM Seats (0 to 125) -->
+      <!-- Gauge 2: Projected DEM Seats (All Red Scale) -->
       <div class="needle-block">
         <div class="needle-label">Projected Democratic Seats</div>
-        <div class="needle-val" style="color: var(--dem);">47 Median <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">(of 125)</span></div>
+        <div class="needle-val" style="color: var(--rep);">47 Median <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">(of 125)</span></div>
         <svg class="gauge" viewBox="0 0 200 110">
           <!-- Background arc -->
-          <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e2e8f0" stroke-width="18" />
-          <!-- 95% Confidence Interval (39 to 56 seats) -->
-          <!-- 39/125 = 31.2% (angle ~ 124°), 56/125 = 44.8% (angle ~ 99°) -->
-          <path d="M 44 60 A 80 80 0 0 1 83 23" fill="none" stroke="#bfdbfe" stroke-width="18" />
-          <!-- 67% Confidence Interval (43 to 52 seats) -->
-          <path d="M 52 49 A 80 80 0 0 1 74 27" fill="none" stroke="#60a5fa" stroke-width="18" />
-          <!-- Center Hub -->
+          <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#f1f5f9" stroke-width="18" />
+          
+          <!-- 95% Confidence Interval: 39 to 56 seats (Light Red) -->
+          <!-- 39/125 = 31.2% (123.8°), 56/125 = 44.8% (99.4°) -->
+          <!-- Start: 100 + 80*cos(123.8°) = 55.5, 100 - 80*sin(123.8°) = 33.5 -->
+          <!-- End: 100 + 80*cos(99.4°) = 87.0, 100 - 80*sin(99.4°) = 21.1 -->
+          <path d="M 55.5 33.5 A 80 80 0 0 1 87.0 21.1" fill="none" stroke="#fecaca" stroke-width="18" />
+          
+          <!-- 67% Confidence Interval: 43 to 52 seats (Medium Red) -->
+          <!-- 43/125 = 34.4% (118.1°), 52/125 = 41.6% (105.1°) -->
+          <!-- Start: 100 + 80*cos(118.1°) = 62.3, 100 - 80*sin(118.1°) = 29.4 -->
+          <!-- End: 100 + 80*cos(105.1°) = 79.1, 100 - 80*sin(105.1°) = 22.8 -->
+          <path d="M 62.3 29.4 A 80 80 0 0 1 79.1 22.8" fill="none" stroke="#f87171" stroke-width="18" />
+          
+          <!-- Majority Threshold tick mark at 63 seats (center: 100, 20) -->
+          <line x1="100" y1="12" x2="100" y2="28" stroke="#94a3b8" stroke-width="2" />
+
+          <!-- Dial Center Hub -->
           <circle cx="100" cy="100" r="7" fill="#0f172a" />
-          <!-- Median needle (47 seats = 37.6% across 180 deg -> angle = 180 - (180 * 0.376) = 112.3 deg) -->
-          <!-- dx = 72 * cos(112.3°) = -27.3, dy = -72 * sin(112.3°) = -66.6 -->
-          <line x1="100" y1="100" x2="72" y2="33" stroke="#1d4ed8" stroke-width="4" stroke-linecap="round" />
+          
+          <!-- Median needle (47 seats / 125 = 37.6% -> angle = 112.3°) -->
+          <!-- x = 100 + 72*cos(112.3°) = 72.7, y = 100 - 72*sin(112.3°) = 33.4 -->
+          <line x1="100" y1="100" x2="73" y2="33" stroke="#b91c1c" stroke-width="4" stroke-linecap="round" />
+          
           <text x="16" y="105" font-size="9" fill="#64748b" font-weight="700">0</text>
-          <text x="94" y="16" font-size="9" fill="#64748b" font-weight="700">63</text>
+          <text x="94" y="10" font-size="8" fill="#64748b" font-weight="700">63 (Maj)</text>
           <text x="168" y="105" font-size="9" fill="#64748b" font-weight="700">125</text>
         </svg>
         <div class="needle-sub">67% Range: <strong>43–52</strong> | 95% Range: <strong>39–56</strong></div>
