@@ -5,13 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kansas State House 2026 Forecast</title>
 
-  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <style>
     :root {
-      --bg: #ffffff;
-      --card-bg: #f8fafc;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
       --border: #e2e8f0;
       --border-dark: #94a3b8;
       --text: #0f172a;
@@ -26,7 +25,7 @@
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: var(--text);
-      background: #f1f5f9;
+      background: var(--bg);
       display: flex;
       flex-direction: column;
       height: 100vh;
@@ -36,51 +35,111 @@
     header {
       background: #ffffff;
       border-bottom: 1px solid var(--border);
-      padding: 10px 20px;
+      padding: 10px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 1000;
     }
     header h1 {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       margin: 0;
       font-weight: 800;
     }
     .legend {
       display: flex;
-      gap: 12px;
-      font-size: 0.75rem;
+      gap: 10px;
+      font-size: 0.72rem;
       font-weight: 600;
     }
     .legend-item { display: flex; align-items: center; gap: 4px; }
-    .legend-box { width: 12px; height: 12px; border-radius: 2px; }
+    .legend-box { width: 11px; height: 11px; border-radius: 2px; }
 
-    /* Layout */
     .app-layout {
       display: flex;
       flex: 1;
-      height: calc(100vh - 49px);
+      height: calc(100vh - 46px);
       position: relative;
     }
     #map {
       flex: 1;
       height: 100%;
-      background: #e2e8f0;
+      background: #f1f5f9;
     }
+
+    /* Hover Info Chip over map */
+    .map-hover-chip {
+      position: absolute;
+      top: 12px;
+      left: 60px;
+      z-index: 1000;
+      background: rgba(15, 23, 42, 0.88);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      pointer-events: none;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Sidebar */
     .sidebar {
-      width: 420px;
+      width: 440px;
       max-width: 100%;
       background: #ffffff;
       border-left: 1px solid var(--border);
-      padding: 16px;
+      padding: 14px;
       overflow-y: auto;
-      box-shadow: -2px 0 10px rgba(0,0,0,0.04);
+      box-shadow: -2px 0 10px rgba(0,0,0,0.03);
       z-index: 1000;
     }
 
-    label {
+    /* NYT Gauges Container */
+    .needle-container {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 10px;
+      margin-bottom: 14px;
+    }
+    .needle-block {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .needle-block:last-child {
+      margin-bottom: 0;
+      border-top: 1px dashed var(--border);
+      padding-top: 10px;
+    }
+    .needle-label {
       font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .needle-val {
+      font-size: 1.15rem;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+    .needle-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    svg.gauge {
+      width: 100%;
+      max-width: 250px;
+      height: 125px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Dropdown & Cards */
+    label.control-label {
+      font-size: 0.72rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -90,8 +149,8 @@
     }
     select {
       width: 100%;
-      padding: 9px 10px;
-      font-size: 0.95rem;
+      padding: 8px 10px;
+      font-size: 0.92rem;
       border: 1px solid var(--border);
       border-radius: 8px;
       background-color: #fff;
@@ -99,49 +158,48 @@
       margin-bottom: 14px;
       outline: none;
     }
-    select:focus { border-color: #3b82f6; }
 
     .card {
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 10px;
       background: var(--card-bg);
-      padding: 16px;
+      padding: 14px;
     }
     .header-row {
       border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
-      margin-bottom: 12px;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
     }
     .district-title {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 800;
-      margin: 0 0 2px 0;
+      margin: 0;
     }
     .candidates {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       color: var(--text-muted);
+      margin-top: 2px;
     }
 
-    /* Stacked Math Layout */
     .stack-container {
       display: flex;
       flex-direction: column;
-      gap: 5px;
-      margin-bottom: 14px;
+      gap: 4px;
+      margin-bottom: 12px;
     }
     .stack-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 3px 0;
-      font-size: 0.88rem;
+      padding: 2px 0;
+      font-size: 0.85rem;
     }
     .stack-row.baseline {
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 800;
-      padding-bottom: 6px;
+      padding-bottom: 5px;
       border-bottom: 1px dashed var(--border);
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
     .val-d { color: var(--dem); font-weight: 700; }
     .val-r { color: var(--rep); font-weight: 700; }
@@ -150,58 +208,56 @@
 
     .result-section {
       border-top: 2px solid var(--border-dark);
-      padding-top: 10px;
-      margin-top: 4px;
+      padding-top: 8px;
     }
     .result-row {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .result-title {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
     .result-margin {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 900;
     }
     .meta-metrics {
       display: flex;
       justify-content: space-between;
-      background: #ffffff;
+      background: #f8fafc;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 0.82rem;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.8rem;
     }
     .meta-item { display: flex; flex-direction: column; }
     .meta-label {
       color: var(--text-muted);
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       text-transform: uppercase;
-      margin-bottom: 2px;
       font-weight: 600;
     }
-    .meta-val { font-size: 0.9rem; font-weight: 700; }
+    .meta-val { font-size: 0.88rem; font-weight: 700; }
 
     .uncontested-notice {
-      padding: 18px 12px;
+      padding: 16px 10px;
       text-align: center;
       color: var(--text-muted);
-      font-size: 0.9rem;
-      background: #ffffff;
+      font-size: 0.88rem;
+      background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: 8px;
     }
 
     @media (max-width: 860px) {
       .app-layout { flex-direction: column; }
-      #map { height: 50vh; }
-      .sidebar { width: 100%; height: 50vh; }
+      #map { height: 45vh; }
+      .sidebar { width: 100%; height: 55vh; }
     }
   </style>
 </head>
@@ -220,9 +276,57 @@
 
 <div class="app-layout">
   <div id="map"></div>
+  <div id="hoverChip" class="map-hover-chip" style="display: none;">Hover over a district</div>
 
   <div class="sidebar">
-    <label for="districtSelect">Select Legislative District</label>
+    <!-- NYT-STYLE FORECAST GAUGES -->
+    <div class="needle-container">
+      <!-- Gauge 1: GOP Majority Probability -->
+      <div class="needle-block">
+        <div class="needle-label">GOP Majority Control Prob</div>
+        <div class="needle-val" style="color: var(--rep);">89.4% Chance</div>
+        <svg class="gauge" viewBox="0 0 200 110">
+          <!-- Arcs: 0-100% mapped to 180° - 0° -->
+          <path d="M 20 100 A 80 80 0 0 1 100 20" fill="none" stroke="#93c5fd" stroke-width="18" />
+          <path d="M 100 20 A 80 80 0 0 1 180 100" fill="none" stroke="#fca5a5" stroke-width="18" />
+          <!-- Dial Center Hub -->
+          <circle cx="100" cy="100" r="7" fill="#0f172a" />
+          <!-- 89.4% needle (angle = 180 - 180*0.894 = 19.08 deg from right) -->
+          <!-- Line pointing outward -->
+          <line x1="100" y1="100" x2="167" y2="73" stroke="#991b1b" stroke-width="4" stroke-linecap="round" />
+          <text x="25" y="105" font-size="9" fill="#64748b" font-weight="700">D Maj</text>
+          <text x="155" y="105" font-size="9" fill="#64748b" font-weight="700">R Maj</text>
+        </svg>
+        <div class="needle-sub">GOP Plain Majority Prob: <strong>89.4%</strong> | Supermajority (84+ Seats) In Play</div>
+      </div>
+
+      <!-- Gauge 2: Projected DEM Seats (0 to 125) -->
+      <div class="needle-block">
+        <div class="needle-label">Projected Democratic Seats</div>
+        <div class="needle-val" style="color: var(--dem);">47 Median <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">(of 125)</span></div>
+        <svg class="gauge" viewBox="0 0 200 110">
+          <!-- Background arc -->
+          <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e2e8f0" stroke-width="18" />
+          <!-- 95% Confidence Interval (39 to 56 seats) -->
+          <!-- 39/125 = 31.2% (angle ~ 124°), 56/125 = 44.8% (angle ~ 99°) -->
+          <path d="M 44 60 A 80 80 0 0 1 83 23" fill="none" stroke="#bfdbfe" stroke-width="18" />
+          <!-- 67% Confidence Interval (43 to 52 seats) -->
+          <path d="M 52 49 A 80 80 0 0 1 74 27" fill="none" stroke="#60a5fa" stroke-width="18" />
+          <!-- Center Hub -->
+          <circle cx="100" cy="100" r="7" fill="#0f172a" />
+          <!-- Median needle (47 seats = 37.6% across 180 deg -> angle = 180 - (180 * 0.376) = 112.3 deg) -->
+          <!-- dx = 72 * cos(112.3°) = -27.3, dy = -72 * sin(112.3°) = -66.6 -->
+          <line x1="100" y1="100" x2="72" y2="33" stroke="#1d4ed8" stroke-width="4" stroke-linecap="round" />
+          <text x="16" y="105" font-size="9" fill="#64748b" font-weight="700">0</text>
+          <text x="94" y="16" font-size="9" fill="#64748b" font-weight="700">63</text>
+          <text x="168" y="105" font-size="9" fill="#64748b" font-weight="700">125</text>
+        </svg>
+        <div class="needle-sub">67% Range: <strong>43–52</strong> | 95% Range: <strong>39–56</strong></div>
+      </div>
+    </div>
+
+    <!-- DISTRICT DETAILS -->
+    <label class="control-label" for="districtSelect">Select Legislative District</label>
     <select id="districtSelect">
       <option value="" disabled selected>-- Choose competitive district --</option>
     </select>
@@ -254,7 +358,6 @@
           <span>+ Campaign Finance Effect</span>
           <span id="outFinance"></span>
         </div>
-        <!-- Manual modifier row calculated dynamically -->
         <div id="modifierRow" class="stack-row" style="display: none; background: #f5f3ff; padding: 4px 6px; border-radius: 4px;">
           <span style="font-weight: 600; color: var(--mod);">+ Other / Manual Modifiers</span>
           <span id="outModifier" class="val-mod"></span>
@@ -282,15 +385,13 @@
     <div id="uncontestedCard" class="uncontested-notice" style="display: none;">
       <strong id="uncontestedDistrictTitle"></strong><br/>
       <span id="uncontestedRatingText"></span>
-      <p style="margin: 8px 0 0; font-size: 0.8rem;">This district is currently rated non-competitive/uncontested and does not have full breakdown variables tracked in the competitive model.</p>
+      <p style="margin: 6px 0 0; font-size: 0.78rem;">District is uncompetitive / uncontested. Not tracked with sub-variables.</p>
     </div>
   </div>
 </div>
 
-<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<!-- RAW DATA -->
 <script id="ratingsData" type="text/plain">
 1	UNCONTESTED R	0%
 2	SAFE R	0%
@@ -443,7 +544,7 @@ HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.0498133299166269, 	-0.0476, 	0.02, 	0.034
 </script>
 
 <script>
-  // 1. Parse Full Ratings Data
+  // Ratings mapping
   const ratingsMap = {};
   document.getElementById('ratingsData').textContent.trim().split('\n').forEach(line => {
     const parts = line.split('\t');
@@ -455,7 +556,7 @@ HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.0498133299166269, 	-0.0476, 	0.02, 	0.034
     }
   });
 
-  // 2. Parse Competitive District Breakdown
+  // Competitive Data mapping
   function parseInput(text) {
     return text.trim().split('\n').map(line => {
       const cols = line.split(',').map(c => c.trim());
@@ -479,25 +580,19 @@ HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.0498133299166269, 	-0.0476, 	0.02, 	0.034
 
   const competitiveRecords = parseInput(document.getElementById('rawInputData').textContent);
   const competitiveMap = {};
-  competitiveRecords.forEach((r, idx) => {
-    competitiveMap[r.num] = r;
-  });
+  competitiveRecords.forEach((r) => { competitiveMap[r.num] = r; });
 
-  // Format Helper: Converts sign to D+ or R+
-  function formatPartisan(num, isPoints = false) {
+  function formatPartisan(num) {
     if (isNaN(num) || Math.abs(num) < 0.00005) return { text: 'EVEN', cls: 'val-neutral' };
-    const mult = isPoints ? 1 : 100;
-    const pts = Math.abs(num * mult).toFixed(1);
+    const pts = Math.abs(num * 100).toFixed(1);
     return num < 0 
       ? { text: `D+${pts}`, cls: 'val-d' }
       : { text: `R+${pts}`, cls: 'val-r' };
   }
 
-  // Color Scale Generator based on Rating / Probability
   function getDistrictColor(distNum) {
     const data = ratingsMap[distNum];
     if (!data) return '#cbd5e1';
-
     const r = data.rating;
     if (r.includes('UNCONTESTED D') || r === 'SAFE D') return '#1e3a8a';
     if (r === 'VERY LIKELY D' || r === 'LIKELY D') return '#2563eb';
@@ -509,7 +604,6 @@ HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.0498133299166269, 	-0.0476, 	0.02, 	0.034
     return '#94a3b8';
   }
 
-  // Populate Competitive Dropdown
   const select = document.getElementById('districtSelect');
   competitiveRecords.forEach((row) => {
     const opt = document.createElement('option');
@@ -518,23 +612,19 @@ HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.0498133299166269, 	-0.0476, 	0.02, 	0.034
     select.appendChild(opt);
   });
 
-  // 3. Initialize Leaflet Map
+  // Initialize Map without background raster tiles
   const map = L.map('map', {
-    zoomSnap: 0.25
+    zoomControl: true,
+    attributionControl: false
   }).setView([38.5, -98.3], 7);
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; OpenStreetMap &copy; CARTO',
-    maxZoom: 14,
-    minZoom: 6
-  }).addTo(map);
-
   let geojsonLayer;
+  let activeHighlightedLayer = null;
+  const hoverChip = document.getElementById('hoverChip');
 
   function renderCard(distNum) {
     const comp = competitiveMap[distNum];
     const general = ratingsMap[distNum];
-
     const card = document.getElementById('districtCard');
     const uncontested = document.getElementById('uncontestedCard');
 
@@ -545,7 +635,6 @@ HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.0498133299166269, 	-0.0476, 	0.02, 	0.034
       document.getElementById('outDistrict').textContent = comp.district;
       document.getElementById('outCandidates').textContent = `${comp.demCandidate} (D) vs. ${comp.repCandidate} (R)`;
 
-      // Partisan addition stack
       const setFormatted = (elemId, num) => {
         const res = formatPartisan(num);
         const el = document.getElementById(elemId);
@@ -560,7 +649,7 @@ HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.0498133299166269, 	-0.0476, 	0.02, 	0.034
       setFormatted('outFinance', comp.finance);
       setFormatted('outMargin', comp.margin);
 
-      // Dynamic Manual / Other Modifier Calculation
+      // Automated Modifier Math
       const sumKnown = comp.baseline + comp.generic + comp.incumbency + comp.candidatePerf + comp.finance;
       const otherDiff = comp.margin - sumKnown;
       const modRow = document.getElementById('modifierRow');
@@ -587,42 +676,50 @@ HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.0498133299166269, 	-0.0476, 	0.02, 	0.034
     }
   }
 
-  // Load GeoJSON Boundaries
+  // Load Boundaries from local geojson
   fetch('./districts.geojson')
     .then(r => r.json())
     .then(geojson => {
       geojsonLayer = L.geoJSON(geojson, {
         style: feature => {
-          const id = feature.properties.NAME || feature.properties.id;
+          const id = String(feature.properties.NAME || feature.properties.id);
           return {
-            fillColor: getDistrictColor(String(id)),
+            fillColor: getDistrictColor(id),
             weight: 1,
-            opacity: 0.9,
+            opacity: 1,
             color: '#ffffff',
-            fillOpacity: 0.72
+            fillOpacity: 0.85
           };
         },
         onEachFeature: (feature, layer) => {
           const id = String(feature.properties.NAME || feature.properties.id);
-          const rInfo = ratingsMap[id] || { rating: 'N/A', prob: 'N/A' };
+          const rInfo = ratingsMap[id] || { rating: 'Unlisted', prob: 'N/A' };
 
-          // Hover Tooltip
-          layer.bindTooltip(`
-            <strong>HD-${id}</strong><br/>
-            ${rInfo.rating}<br/>
-            Dem Win Prob: ${rInfo.prob}
-          `, { sticky: true });
-
+          // Hover handler uses a single pinned overlay rather than sticking Leaflet tooltips
           layer.on({
             mouseover: e => {
               const l = e.target;
-              l.setStyle({ weight: 2.5, color: '#0f172a', fillOpacity: 0.88 });
-              l.bringToFront();
+              if (activeHighlightedLayer !== l) {
+                l.setStyle({ weight: 2.5, color: '#0f172a' });
+                l.bringToFront();
+              }
+              hoverChip.innerHTML = `<strong>HD-${id}</strong> &bull; ${rInfo.rating} &bull; Dem Win: ${rInfo.prob}`;
+              hoverChip.style.display = 'block';
             },
             mouseout: e => {
-              geojsonLayer.resetStyle(e.target);
+              const l = e.target;
+              if (activeHighlightedLayer !== l) {
+                geojsonLayer.resetStyle(l);
+              }
+              hoverChip.style.display = 'none';
             },
             click: e => {
+              if (activeHighlightedLayer && activeHighlightedLayer !== e.target) {
+                geojsonLayer.resetStyle(activeHighlightedLayer);
+              }
+              activeHighlightedLayer = e.target;
+              activeHighlightedLayer.setStyle({ weight: 3, color: '#0f172a' });
+
               if (competitiveMap[id]) {
                 select.value = id;
               } else {
@@ -634,29 +731,29 @@ HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.0498133299166269, 	-0.0476, 	0.02, 	0.034
         }
       }).addTo(map);
 
-      // Auto-fit map to Kansas boundaries
-      map.fitBounds(geojsonLayer.getBounds());
+      map.fitBounds(geojsonLayer.getBounds(), { padding: [15, 15] });
     })
     .catch(err => {
-      console.warn("Couldn't load districts.geojson automatically. Ensure districts.geojson is committed in your repository root.", err);
+      console.error("Make sure districts.geojson is committed to the repository root directory.", err);
     });
 
   select.addEventListener('change', (e) => {
     const id = e.target.value;
     renderCard(id);
 
-    // Zoom map to clicked district if layer exists
     if (geojsonLayer) {
       geojsonLayer.eachLayer(layer => {
         const fid = String(layer.feature.properties.NAME || layer.feature.properties.id);
         if (fid === id) {
+          if (activeHighlightedLayer) geojsonLayer.resetStyle(activeHighlightedLayer);
+          activeHighlightedLayer = layer;
+          activeHighlightedLayer.setStyle({ weight: 3, color: '#0f172a' });
+          activeHighlightedLayer.bringToFront();
           map.fitBounds(layer.getBounds(), { maxZoom: 11 });
-          layer.setStyle({ weight: 3, color: '#0f172a' });
         }
       });
     }
   });
 </script>
-
 </body>
 </html>
