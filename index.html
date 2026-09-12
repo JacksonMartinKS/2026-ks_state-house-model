@@ -93,6 +93,7 @@
       box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
     }
 
+    /* District Number Label Overlays */
     .district-label-marker {
       background: transparent !important;
       border: none !important;
@@ -138,12 +139,12 @@
       background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 12px 10px;
+      padding: 12px 10px 8px 10px;
       margin-bottom: 14px;
     }
     .needle-block {
       text-align: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .needle-block:last-child {
       margin-bottom: 0;
@@ -161,19 +162,20 @@
     .needle-val {
       font-size: 1.15rem;
       font-weight: 900;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
     .needle-sub {
       font-size: 0.75rem;
       color: var(--text-muted);
-      margin-top: 2px;
+      margin-top: 4px;
     }
     svg.gauge {
       width: 100%;
       max-width: 250px;
-      height: 125px;
+      height: 120px;
       display: block;
       margin: 0 auto;
+      overflow: visible;
     }
 
     label.control-label {
@@ -335,33 +337,38 @@
 
   <div class="sidebar">
     <div class="needle-container">
+      <!-- Gauge 1: GOP Supermajority vs Simple Majority -->
       <div class="needle-block">
         <div class="needle-label">House Control Outcome</div>
         <div class="needle-val" style="color: var(--rep);">89.4% Plain Majority</div>
-        <svg class="gauge" viewBox="0 0 200 110">
-          <path d="M 20 100 A 80 80 0 0 1 100 20" fill="none" stroke="#820000" stroke-width="18" />
-          <path d="M 100 20 A 80 80 0 0 1 180 100" fill="none" stroke="#ff6259" stroke-width="18" />
-          <circle cx="100" cy="100" r="7" fill="#0f172a" />
-          <line x1="100" y1="100" x2="168" y2="76" stroke="#0f172a" stroke-width="4" stroke-linecap="round" />
-          <text x="14" y="105" font-size="8" fill="#64748b" font-weight="700">Supermajority</text>
-          <text x="142" y="105" font-size="8" fill="#64748b" font-weight="700">Plain Majority</text>
+        <svg class="gauge" viewBox="0 0 200 120">
+          <path d="M 20 95 A 80 80 0 0 1 100 15" fill="none" stroke="#820000" stroke-width="18" />
+          <path d="M 100 15 A 80 80 0 0 1 180 95" fill="none" stroke="#ff6259" stroke-width="18" />
+          <circle cx="100" cy="95" r="7" fill="#0f172a" />
+          <line x1="100" y1="95" x2="168" y2="71" stroke="#0f172a" stroke-width="4" stroke-linecap="round" />
+          <!-- Centered text anchors directly under the arc bases -->
+          <text x="32" y="114" font-size="8.5" fill="#64748b" font-weight="700" text-anchor="middle">Supermajority</text>
+          <text x="168" y="114" font-size="8.5" fill="#64748b" font-weight="700" text-anchor="middle">Plain Majority</text>
         </svg>
         <div class="needle-sub">Plain Majority (63–83): <strong>89.4%</strong> | Supermajority (84+): <strong>10.6%</strong></div>
       </div>
 
+      <!-- Gauge 2: Projected DEM Seats -->
       <div class="needle-block">
         <div class="needle-label">Projected Democratic Seats</div>
         <div class="needle-val" style="color: var(--rep);">47 Median <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">(of 125)</span></div>
-        <svg class="gauge" viewBox="0 0 200 110">
-          <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#f1f5f9" stroke-width="18" />
-          <path d="M 55.5 33.5 A 80 80 0 0 1 87.0 21.1" fill="none" stroke="#ffafab" stroke-width="18" />
-          <path d="M 62.3 29.4 A 80 80 0 0 1 79.1 22.8" fill="none" stroke="#ff6259" stroke-width="18" />
-          <line x1="100" y1="12" x2="100" y2="28" stroke="#94a3b8" stroke-width="2" />
-          <circle cx="100" cy="100" r="7" fill="#0f172a" />
-          <line x1="100" y1="100" x2="73" y2="33" stroke="#820000" stroke-width="4" stroke-linecap="round" />
-          <text x="16" y="105" font-size="9" fill="#64748b" font-weight="700">0</text>
-          <text x="94" y="10" font-size="8" fill="#64748b" font-weight="700">63 (Maj)</text>
-          <text x="168" y="105" font-size="9" fill="#64748b" font-weight="700">125</text>
+        <svg class="gauge" viewBox="0 0 200 120">
+          <path d="M 20 95 A 80 80 0 0 1 180 95" fill="none" stroke="#f1f5f9" stroke-width="18" />
+          <!-- 95% Interval: 39 to 56 seats -->
+          <path d="M 55.5 28.5 A 80 80 0 0 1 87.0 16.1" fill="none" stroke="#ffafab" stroke-width="18" />
+          <!-- 67% Interval: 43 to 52 seats -->
+          <path d="M 62.3 24.4 A 80 80 0 0 1 79.1 17.8" fill="none" stroke="#ff6259" stroke-width="18" />
+          <line x1="100" y1="7" x2="100" y2="23" stroke="#94a3b8" stroke-width="2" />
+          <circle cx="100" cy="95" r="7" fill="#0f172a" />
+          <line x1="100" y1="95" x2="73" y2="28" stroke="#820000" stroke-width="4" stroke-linecap="round" />
+          <text x="20" y="114" font-size="9" fill="#64748b" font-weight="700" text-anchor="middle">0</text>
+          <text x="100" y="8" font-size="8" fill="#64748b" font-weight="700" text-anchor="middle">63 (Maj)</text>
+          <text x="180" y="114" font-size="9" fill="#64748b" font-weight="700" text-anchor="middle">125</text>
         </svg>
         <div class="needle-sub">67% Range: <strong>43–52</strong> | 95% Range: <strong>39–56</strong></div>
       </div>
@@ -369,7 +376,7 @@
 
     <label class="control-label" for="districtSelect">Select Legislative District</label>
     <select id="districtSelect">
-      <option value="" disabled selected>-- Choose competitive district --</option>
+      <option value="" disabled selected>-- Select any legislative district --</option>
     </select>
 
     <div id="districtCard" class="card" style="display: none;">
@@ -426,7 +433,7 @@
     <div id="uncontestedCard" class="uncontested-notice" style="display: none;">
       <strong id="uncontestedDistrictTitle"></strong><br/>
       <span id="uncontestedRatingText"></span>
-      <p style="margin: 6px 0 0; font-size: 0.78rem;">District is uncompetitive / uncontested. Not tracked with sub-variables.</p>
+      <p style="margin: 6px 0 0; font-size: 0.78rem;">District is uncontested or non-competitive. Not tracked with itemized shift variables.</p>
     </div>
   </div>
 </div>
@@ -692,6 +699,16 @@ HD-125, 	, 	, 	0.392139743512033, 	-0.0476, 	0, 	0, 	, 	1.01, 	0.067067130548428
 <script>
   const PROJECTED_FLIPS = new Set([67, 28, 14, 15, 39, 33, 88, 30, 41, 121]);
 
+  // Urban dense clusters that cause label overlaps at statewide zoom[cite: 3]
+  const METRO_CLUSTERS = new Set([
+    // Kansas City / Johnson / Wyandotte
+    14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 29, 30, 31, 32, 33, 34, 35, 36, 37, 39, 48, 49, 78, 121,
+    // Topeka & Lawrence
+    10, 44, 45, 46, 52, 53, 55, 56, 57, 58,
+    // Wichita
+    83, 84, 85, 86, 87, 88, 89, 91, 92, 95, 96, 97, 98, 100, 103, 105
+  ]);
+
   const CMAP_D = ["#ffffff", "#babaff", "#6363ff", "#0000f8", "#000082"];
   const CMAP_R = ["#ffffff", "#ffafab", "#ff6259", "#f80d00", "#820000"];
   const FLOOR = 0.1;
@@ -775,8 +792,10 @@ HD-125, 	, 	, 	0.392139743512033, 	-0.0476, 	0, 	0, 	, 	1.01, 	0.067067130548428
   const competitiveMap = {};
   competitiveRecords.forEach((r) => { competitiveMap[r.num] = r; });
 
-  // Distinguishes third-party and Independent candidates
   function formatCandidate(name, defaultParty) {
+    if (!name || name.trim() === '') {
+      return { fullName: 'None', party: defaultParty, isInd: false, html: `Uncontested` };
+    }
     const cleanName = name.replace(/\s*\((Independent|Ind|D|R)\)/gi, '').trim();
     const isInd = /independent|ind/i.test(name) || /Geiger|Goff/i.test(name);
     const party = isInd ? 'IND' : defaultParty;
@@ -802,13 +821,24 @@ HD-125, 	, 	, 	0.392139743512033, 	-0.0476, 	0, 	0, 	, 	1.01, 	0.067067130548428
     }
   }
 
+  // Populate EVERY district 1 to 125 in the dropdown[cite: 2]
   const select = document.getElementById('districtSelect');
-  competitiveRecords.forEach((row) => {
+  for (let i = 1; i <= 125; i++) {
+    const id = String(i);
+    const rInfo = ratingsMap[id] || { rating: 'Uncontested', prob: 'N/A' };
+    const comp = competitiveMap[id];
     const opt = document.createElement('option');
-    opt.value = row.num;
-    opt.textContent = `${row.district} (${row.demCandidate} vs ${row.repCandidate})`;
+    opt.value = id;
+
+    if (comp && comp.demCandidate && comp.repCandidate) {
+      const c1 = comp.demCandidate.replace(/\s*\((.*?)\)/g, '').trim();
+      const c2 = comp.repCandidate.replace(/\s*\((.*?)\)/g, '').trim();
+      opt.textContent = `HD-${id}: ${c1} vs ${c2} (${rInfo.rating})`;
+    } else {
+      opt.textContent = `HD-${id} (${rInfo.rating})`;
+    }
     select.appendChild(opt);
-  });
+  }
 
   const map = L.map('map', {
     zoomControl: true,
@@ -834,13 +864,31 @@ HD-125, 	, 	, 	0.392139743512033, 	-0.0476, 	0, 	0, 	, 	1.01, 	0.067067130548428
   const hoverChip = document.getElementById('hoverChip');
   const labelLayerGroup = L.layerGroup().addTo(map);
 
+  // Storage for all district markers to control density dynamically
+  const labelMarkers = [];
+
+  function updateLabelVisibility() {
+    const currentZoom = map.getZoom();
+    labelMarkers.forEach(({ numId, marker }) => {
+      // If metro district and zoomed out, hide the number to prevent overlapping[cite: 3]
+      if (METRO_CLUSTERS.has(numId) && currentZoom < 9) {
+        marker.setOpacity(0);
+      } else {
+        marker.setOpacity(1);
+      }
+    });
+  }
+
+  map.on('zoomend', updateLabelVisibility);
+
   function renderCard(distNum) {
     const comp = competitiveMap[distNum];
     const general = ratingsMap[distNum];
     const card = document.getElementById('districtCard');
     const uncontested = document.getElementById('uncontestedCard');
 
-    if (comp) {
+    // Only render the calculation breakdown if valid candidate contest is modeled
+    if (comp && comp.demCandidate && comp.repCandidate) {
       uncontested.style.display = 'none';
       card.style.display = 'block';
 
@@ -866,8 +914,8 @@ HD-125, 	, 	, 	0.392139743512033, 	-0.0476, 	0, 	0, 	, 	1.01, 	0.067067130548428
       setFormatted('outFinance', comp.finance);
       setFormatted('outMargin', comp.margin);
 
-      // Automated Modifier Math rounded to eliminate IEEE float imprecision (fixes HD80)
-      const sumKnown = Math.round((comp.baseline + comp.generic + comp.incumbency + comp.candidatePerf + comp.finance) * 1e6) / 1e6;
+      // Automated Modifier Math rounded to eliminate IEEE float imprecision
+      const sumKnown = Math.round((comp.baseline + comp.generic + comp.incumbency + comp.candidatePerf + (isNaN(comp.finance) ? 0 : comp.finance)) * 1e6) / 1e6;
       const targetMargin = Math.round(comp.margin * 1e6) / 1e6;
       const otherDiff = Math.round((targetMargin - sumKnown) * 1e6) / 1e6;
 
@@ -904,6 +952,7 @@ HD-125, 	, 	, 	0.392139743512033, 	-0.0476, 	0, 	0, 	, 	1.01, 	0.067067130548428
     .then(r => r.json())
     .then(geojson => {
       labelLayerGroup.clearLayers();
+      labelMarkers.length = 0;
 
       geojsonLayer = L.geoJSON(geojson, {
         style: feature => {
@@ -935,11 +984,12 @@ HD-125, 	, 	, 	0.392139743512033, 	-0.0476, 	0, 	0, 	, 	1.01, 	0.067067130548428
               icon: L.divIcon({
                 className: 'district-label-marker',
                 html: `<span class="district-num ${isDark ? 'dark-bg' : ''}">${id}</span>`,
-                iconSize: [28, 14],
-                iconAnchor: [14, 7]
+                iconSize: [26, 14],
+                iconAnchor: [13, 7]
               })
             });
             labelLayerGroup.addLayer(labelMarker);
+            labelMarkers.push({ numId, marker: labelMarker });
           }
 
           layer.on({
@@ -968,11 +1018,7 @@ HD-125, 	, 	, 	0.392139743512033, 	-0.0476, 	0, 	0, 	, 	1.01, 	0.067067130548428
               activeHighlightedLayer = e.target;
               activeHighlightedLayer.setStyle({ weight: 2.8, color: '#0f172a' });
 
-              if (competitiveMap[id]) {
-                select.value = id;
-              } else {
-                select.value = "";
-              }
+              select.value = id;
               renderCard(id);
               applyHatchOverlay();
             }
@@ -982,10 +1028,11 @@ HD-125, 	, 	, 	0.392139743512033, 	-0.0476, 	0, 	0, 	, 	1.01, 	0.067067130548428
 
       injectHatchPattern();
       applyHatchOverlay();
+      updateLabelVisibility();
       map.fitBounds(geojsonLayer.getBounds(), { padding: [15, 15] });
     })
     .catch(err => {
-      console.error("Make sure districts.geojson is present in the repository root.", err);
+      console.error("Ensure districts.geojson is present in the repository root.", err);
     });
 
   let hatchOverlayGroup = L.featureGroup().addTo(map);
