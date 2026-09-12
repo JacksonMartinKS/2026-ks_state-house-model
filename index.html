@@ -409,36 +409,57 @@
       <!-- Gauge 1: GOP Supermajority vs Simple Majority -->
       <div class="needle-block">
         <div class="needle-label">House Control Outcome</div>
-        <div class="needle-val" style="color: var(--rep);">89.4% Plain Majority</div>
+        <div class="needle-val" style="color: var(--rep);">87.4% Plain Majority</div>
         <svg class="gauge" viewBox="0 0 200 120">
           <path d="M 20 95 A 80 80 0 0 1 100 15" fill="none" stroke="#820000" stroke-width="18" />
           <path d="M 100 15 A 80 80 0 0 1 180 95" fill="none" stroke="#ff6259" stroke-width="18" />
           <circle cx="100" cy="95" r="7" fill="#0f172a" />
-          <line x1="100" y1="95" x2="168" y2="71" stroke="#0f172a" stroke-width="4" stroke-linecap="round" />
+          <!-- Needle at 87.4% towards Simple Majority (angle = 180 - 180*0.874 = 22.68° from right) -->
+          <!-- x = 100 + 72*cos(22.68°) = 166.4, y = 95 - 72*sin(22.68°) = 67.2 -->
+          <line x1="100" y1="95" x2="166" y2="67" stroke="#0f172a" stroke-width="4" stroke-linecap="round" />
           <text x="32" y="114" font-size="8.5" fill="#64748b" font-weight="700" text-anchor="middle">Supermajority</text>
           <text x="168" y="114" font-size="8.5" fill="#64748b" font-weight="700" text-anchor="middle">Plain Majority</text>
         </svg>
-        <div class="needle-sub">Plain Majority (63–83): <strong>89.4%</strong> | Supermajority (84+): <strong>10.6%</strong></div>
+        <div class="needle-sub">Plain Majority (42–62): <strong>87.4%</strong> | Supermajority (&le;41): <strong>12.6%</strong></div>
       </div>
 
-      <!-- Gauge 2: Projected DEM Seats -->
+      <!-- Gauge 2: Projected DEM Seats with Supermajority Break Line -->
       <div class="needle-block">
         <div class="needle-label">Projected Democratic Seats</div>
         <div class="needle-val" style="color: var(--rep);">47 Median <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">(of 125)</span></div>
         <svg class="gauge" viewBox="0 0 200 120">
+          <!-- Background arc -->
           <path d="M 20 95 A 80 80 0 0 1 180 95" fill="none" stroke="#f1f5f9" stroke-width="18" />
-          <!-- 95% Interval: 39 to 56 seats -->
+          
+          <!-- 95% Interval: 39 to 56 seats (31.2% to 44.8% -> angle 123.8° to 99.4°) -->
+          <!-- Start: 100 + 80*cos(123.8°) = 55.5, 95 - 80*sin(123.8°) = 28.5 -->
+          <!-- End: 100 + 80*cos(99.4°) = 87.0, 95 - 80*sin(99.4°) = 16.1 -->
           <path d="M 55.5 28.5 A 80 80 0 0 1 87.0 16.1" fill="none" stroke="#ffafab" stroke-width="18" />
-          <!-- 67% Interval: 43 to 52 seats -->
-          <path d="M 62.3 24.4 A 80 80 0 0 1 79.1 17.8" fill="none" stroke="#ff6259" stroke-width="18" />
+          
+          <!-- 67% Interval: 42 to 51 seats (33.6% to 40.8% -> angle 119.5° to 106.6°) -->
+          <!-- Start: 100 + 80*cos(119.5°) = 60.6, 95 - 80*sin(119.5°) = 25.4 -->
+          <!-- End: 100 + 80*cos(106.6°) = 77.1, 95 - 80*sin(106.6°) = 18.3 -->
+          <path d="M 60.6 25.4 A 80 80 0 0 1 77.1 18.3" fill="none" stroke="#ff6259" stroke-width="18" />
+
+          <!-- Supermajority Break Threshold Line at 42 seats (42/125 = 33.6% -> angle = 119.5°) -->
+          <!-- r1=66: (67.5, 37.6), r2=94: (53.7, 13.2) -->
+          <line x1="68" y1="38" x2="54" y2="13" stroke="#0f172a" stroke-width="2" stroke-dasharray="2,1" />
+          <text x="50" y="8" font-size="7.5" fill="#0f172a" font-weight="800" text-anchor="middle">42 (Break)</text>
+
+          <!-- Majority Threshold Line at 63 seats (center: 100, 15) -->
           <line x1="100" y1="7" x2="100" y2="23" stroke="#94a3b8" stroke-width="2" />
+          <text x="100" y="5" font-size="7.5" fill="#64748b" font-weight="700" text-anchor="middle">63 (Maj)</text>
+
+          <!-- Dial Center Hub -->
           <circle cx="100" cy="95" r="7" fill="#0f172a" />
+
+          <!-- Median needle (47 seats / 125 = 37.6% -> angle = 112.3°) -->
           <line x1="100" y1="95" x2="73" y2="28" stroke="#820000" stroke-width="4" stroke-linecap="round" />
+          
           <text x="20" y="114" font-size="9" fill="#64748b" font-weight="700" text-anchor="middle">0</text>
-          <text x="100" y="8" font-size="8" fill="#64748b" font-weight="700" text-anchor="middle">63 (Maj)</text>
           <text x="180" y="114" font-size="9" fill="#64748b" font-weight="700" text-anchor="middle">125</text>
         </svg>
-        <div class="needle-sub">67% Range: <strong>43–52</strong> | 95% Range: <strong>39–56</strong></div>
+        <div class="needle-sub">67% Range: <strong>42–51</strong> | 95% Range: <strong>39–56</strong></div>
       </div>
     </div>
   </div>
