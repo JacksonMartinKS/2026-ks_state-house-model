@@ -270,7 +270,6 @@
     }
     .meta-val { font-size: 0.88rem; font-weight: 700; }
 
-    /* Outcome Distribution Bar Graph */
     .range-box {
       margin-top: 12px;
       padding-top: 10px;
@@ -284,11 +283,11 @@
       text-transform: uppercase;
       letter-spacing: 0.04em;
       color: var(--text-muted);
-      margin-bottom: 4px;
+      margin-bottom: 8px;
     }
     svg.outcome-svg {
       width: 100%;
-      height: 52px;
+      height: 56px;
       display: block;
       overflow: visible;
     }
@@ -329,15 +328,12 @@
   <div id="hoverChip" class="map-hover-chip" style="display: none;">Hover over a district</div>
 
   <div class="sidebar">
-    <!-- LEGISLATIVE DISTRICT DROPDOWN -->
     <label class="control-label" for="districtSelect">Select Legislative District</label>
     <select id="districtSelect">
       <option value="" disabled selected>-- Select any legislative district --</option>
     </select>
 
-    <!-- NYT-STYLE FORECAST GAUGES -->
     <div class="needle-container">
-      <!-- Gauge 1: GOP Supermajority vs Simple Majority -->
       <div class="needle-block">
         <div class="needle-label">House Control Outcome</div>
         <div class="needle-val" style="color: var(--rep);">89.4% Plain Majority</div>
@@ -352,15 +348,12 @@
         <div class="needle-sub">Plain Majority (63–83): <strong>89.4%</strong> | Supermajority (84+): <strong>10.6%</strong></div>
       </div>
 
-      <!-- Gauge 2: Projected DEM Seats -->
       <div class="needle-block">
         <div class="needle-label">Projected Democratic Seats</div>
         <div class="needle-val" style="color: var(--rep);">47 Median <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">(of 125)</span></div>
         <svg class="gauge" viewBox="0 0 200 120">
           <path d="M 20 95 A 80 80 0 0 1 180 95" fill="none" stroke="#f1f5f9" stroke-width="18" />
-          <!-- 95% Interval: 39 to 56 seats -->
           <path d="M 55.5 28.5 A 80 80 0 0 1 87.0 16.1" fill="none" stroke="#ffafab" stroke-width="18" />
-          <!-- 67% Interval: 43 to 52 seats -->
           <path d="M 62.3 24.4 A 80 80 0 0 1 79.1 17.8" fill="none" stroke="#ff6259" stroke-width="18" />
           <line x1="100" y1="7" x2="100" y2="23" stroke="#94a3b8" stroke-width="2" />
           <circle cx="100" cy="95" r="7" fill="#0f172a" />
@@ -373,7 +366,6 @@
       </div>
     </div>
 
-    <!-- DISTRICT CARD -->
     <div id="districtCard" class="card" style="display: none;">
       <div class="header-row">
         <div id="outDistrict" class="district-title"></div>
@@ -424,14 +416,12 @@
         </div>
       </div>
 
-      <!-- HORIZONTAL RANGE OF OUTCOMES BAR (67% & 95% CI) -->
       <div class="range-box">
         <div class="range-title-row">
           <span>Range of Outcomes</span>
           <span id="outRangeSummary"></span>
         </div>
-        <svg id="rangeSvg" class="outcome-svg" viewBox="0 0 320 52">
-          <!-- Dynamically populated via renderOutcomeBar() -->
+        <svg id="rangeSvg" class="outcome-svg" viewBox="0 0 320 56">
         </svg>
       </div>
     </div>
@@ -445,262 +435,6 @@
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<script id="ratingsData" type="text/plain">
-1	UNCONTESTED R	0%
-2	SAFE R	0%
-3	LIKELY R	22%
-4	UNCONTESTED R	0%
-5	SAFE R	0%
-6	SAFE R	0%
-7	SAFE R	0%
-8	LIKELY R	22%
-9	UNCONTESTED R	0%
-10	UNCONTESTED D	100%
-11	SAFE R	0%
-12	SAFE R	0%
-13	SAFE R	0%
-14	LIKELY D	82%
-15	LEAN D	73%
-16	UNCONTESTED D	100%
-17	SAFE D	100%
-18	SAFE D	100%
-19	SAFE D	100%
-20	UNCONTESTED D	100%
-21	UNCONTESTED D	100%
-22	UNCONTESTED D	100%
-23	UNCONTESTED D	100%
-24	SAFE D	100%
-25	UNCONTESTED D	100%
-26	VERY LIKELY R	6%
-27	VERY LIKELY R	3%
-28	LIKELY D	89%
-29	UNCONTESTED D	100%
-30	LEAN D	61%
-31	SAFE D	100%
-32	UNCONTESTED D	100%
-33	LEAN D	68%
-34	SAFE D	100%
-35	SAFE D	100%
-36	SAFE D	100%
-37	SAFE D	100%
-38	SAFE R	0%
-39	LEAN D	70%
-40	VERY LIKELY R	9%
-41	LEAN D	62%
-42	SAFE R	0%
-43	SAFE R	0%
-44	UNCONTESTED D	100%
-45	UNCONTESTED D	100%
-46	UNCONTESTED D	100%
-47	SAFE R	0%
-48	UNCONTESTED D	100%
-49	VERY LIKELY D	97%
-50	UNCONTESTED R	0%
-51	UNCONTESTED R	0%
-52	LIKELY R	11%
-53	UNCONTESTED D	100%
-54	SAFE R	0%
-55	SAFE D	100%
-56	SAFE D	100%
-57	UNCONTESTED D	100%
-58	SAFE D	100%
-59	SAFE R	0%
-60	LIKELY R	21%
-61	UNCONTESTED R	0%
-62	SAFE R	1%
-63	SAFE R	0%
-64	UNCONTESTED R	0%
-65	UNCONTESTED R	0%
-66	SAFE D	100%
-67	LIKELY D	85%
-68	UNCONTESTED R	0%
-69	SAFE R	0%
-70	SAFE R	0%
-71	SAFE R	0%
-72	SAFE R	0%
-73	SAFE R	0%
-74	SAFE R	0%
-75	SAFE R	0%
-76	SAFE R	0%
-77	SAFE R	0%
-78	TOSSUP	46%
-79	SAFE R	0%
-80	VERY LIKELY R	5%
-81	SAFE R	0%
-82	SAFE R	0%
-83	SAFE D	100%
-84	UNCONTESTED D	100%
-85	LIKELY R	20%
-86	SAFE D	100%
-87	UNCONTESTED R	0%
-88	LEAN D	66%
-89	UNCONTESTED D	100%
-90	SAFE R	0%
-91	SAFE R	0%
-92	SAFE D	100%
-93	SAFE R	0%
-94	UNCONTESTED R	0%
-95	UNCONTESTED D	100%
-96	LEAN R	34%
-97	SAFE R	0%
-98	SAFE R	0%
-99	SAFE R	0%
-100	VERY LIKELY R	3%
-101	SAFE R	0%
-102	LEAN R	36%
-103	SAFE D	100%
-104	SAFE R	0%
-105	VERY LIKELY R	5%
-106	UNCONTESTED R	0%
-107	SAFE R	0%
-108	UNCONTESTED D	100%
-109	UNCONTESTED R	0%
-110	SAFE R	0%
-111	SAFE R	0%
-112	SAFE R	0%
-113	SAFE R	0%
-114	SAFE R	0%
-115	UNCONTESTED R	0%
-116	SAFE R	0%
-117	LEAN R	25%
-118	UNCONTESTED R	0%
-119	UNCONTESTED R	0%
-120	UNCONTESTED R	0%
-121	TILT D	58%
-122	UNCONTESTED R	0%
-123	SAFE R	0%
-124	UNCONTESTED R	0%
-125	UNCONTESTED R	0%
-</script>
-
-<script id="rawInputData" type="text/plain">
-HD-1, 	, 	, 	0.4718, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-2, 	Avery Rowland, 	Dan Muter, 	0.3571, 	-0.046, 	0, 	0, 	, 	0.311095961370014, 	0.0670671305484289, 	0.00
-HD-3, 	Isaiah Harris, 	D.J. Perry, 	0.08294, 	-0.046, 	0, 	0, 	-0.005508, 	0.0514275975334916, 	0.0661286624694618, 	0.22
-HD-4, 	, 	, 	0.52129, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-5, 	Henry Johns, 	Courtney Sappington, 	0.24149, 	-0.046, 	0, 	0.0139136642335568, 	0.0149736, 	0.224380560413308, 	0.0651536645170477, 	0.00
-HD-6, 	Frank Henderson, 	Samantha Poetter Parshall, 	0.35309, 	-0.046, 	0.02, 	0.000538631864359589, 	, 	0.327628009194544, 	0.0655362495112438, 	0.00
-HD-7, 	Taylor Moreland, 	Thomas Douglas Allen, 	0.30562, 	-0.046, 	0, 	0, 	, 	0.259624057956015, 	0.0670671305484289, 	0.00
-HD-8, 	Megan Phillips, 	Chris Croft, 	0.0673, 	-0.046, 	0.02, 	-0.0040231989834271, 	0.013209, 	0.0504864675403988, 	0.0642650760522385, 	0.22
-HD-9, 	, 	, 	0.45599, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-10, 	, 	, 	-0.59601, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-11, 	William Kendall, 	Ron Bryce, 	0.42909, 	-0.046, 	0.02, 	0.0151584811268076, 	, 	0.418249856024013, 	0.0661059755241537, 	0.00
-HD-12, 	Garland Ferrell, 	Marci Laffen, 	0.59207, 	-0.046, 	0, 	0, 	, 	0.546074799760824, 	0.0670671305484289, 	0.00
-HD-13, 	Mark Remmert, 	Duane Droge, 	0.53395, 	-0.046, 	0.02, 	0.0100965139656651, 	, 	0.518044460045524, 	0.0661059755241537, 	0.00
-HD-14, 	Sherry Giebler, 	Charlotte Esau, 	-0.01803, 	-0.046, 	0.02, 	-0.00328787271512723, 	-0.0116433, 	-0.058958304519513, 	0.0632613626157389, 	0.82
-HD-15, 	Allison Hougland, 	Lauren N. Bohi, 	-0.01833, 	-0.046, 	0.02, 	0.0151816717668046, 	-0.008925, 	-0.0380704387698631, 	0.0635767253010093, 	0.73
-HD-16, 	, 	, 	-0.09456, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-17, 	Jo Ella Hoye, 	Jim Eschrich, 	-0.1199, 	-0.046, 	-0.03, 	0.0128947867309801, 	0.002193, 	-0.180809685736506, 	0.0645755371638518, 	1.00
-HD-18, 	Cindy Neighbor, 	Robert Whitman, 	-0.14234, 	-0.046, 	-0.03, 	-0.0120339518415989, 	, 	-0.230377835787827, 	0.0642417309853961, 	1.00
-HD-19, 	Stephanie Sawyer Clayton, 	Mark Hermes, 	-0.25455, 	-0.046, 	-0.03, 	0.0035878827816458, 	, 	-0.326965538084014, 	0.0645523043740501, 	1.00
-HD-20, 	, 	, 	-0.13082, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-21, 	, 	, 	-0.34994, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-22, 	, 	, 	-0.28542, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-23, 	, 	, 	-0.22817, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-24, 	Jarrod Ousley, 	Scott Speicker, 	-0.3301, 	-0.046, 	-0.03, 	0.0150773432431154, 	, 	-0.391024628871367, 	0.0652303610292017, 	1.00
-HD-25, 	, 	, 	-0.35965, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-26, 	Laura Johnson, 	Chip VanHouden, 	0.11814, 	-0.046, 	0.02, 	0, 	0.0118065, 	0.103950699571733, 	0.0659943179372285, 	0.06
-HD-27, 	Sara Kiewiet, 	Sean E. Tarwater Sr, 	0.10765, 	-0.046, 	0.02, 	0.0268019523954823, 	0.013005, 	0.121455104367252, 	0.0642650760522385, 	0.03
-HD-28, 	Bryan Mouber, 	Alex Bergman, 	-0.02065, 	-0.046, 	0, 	0, 	-0.01377, 	-0.0804157624519463, 	0.0661286624694618, 	0.89
-HD-29, 	, 	, 	-0.20777, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-30, 	Amelia Wiederaenders, 	Laura Williams, 	-0.02759, 	-0.046, 	0.02, 	0.0196819751042914, 	0.015555, 	-0.018351053108403, 	0.0642650760522385, 	0.61
-HD-31, 	Emily Hane, 	Dennis Grindel, 	-0.41036, 	-0.046, 	0, 	-0.00735871393759374, 	, 	-0.463721172632522, 	0.0655362495112438, 	1.00
-HD-32, 	, 	, 	-0.44885, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-33, 	Emily Blanks, 	Carolyn Caiharr, 	-0.00338, 	-0.046, 	0, 	0, 	0.008466, 	-0.0309124577982934, 	0.0661286624694618, 	0.68
-HD-34, 	Valdenia Winn, 	CeCe Harlin, 	-0.59716, 	-0.046, 	-0.03, 	0.0431727201363003, 	, 	-0.629991382232891, 	0.0661059755241537, 	1.00
-HD-35, 	Wanda Brownlee Paige, 	Alex Sanchez, 	-0.58819, 	-0.046, 	-0.03, 	0, 	, 	-0.664187598404429, 	0.0669346696413749, 	1.00
-HD-36, 	Lynn Melton, 	Brian Dickason, 	-0.18929, 	-0.046, 	-0.03, 	-0.0111480814883944, 	, 	-0.276438622060051, 	0.0655362495112438, 	1.00
-HD-37, 	Melissa M Oropeza, 	Connie Jo Henry, 	-0.21794, 	-0.046, 	-0.03, 	-0.00695912459394011, 	, 	-0.300900020262013, 	0.0655362495112438, 	1.00
-HD-38, 	Richard Paz, 	Timothy H. Johnson, 	0.22506, 	-0.046, 	0.02, 	0.0274719999273695, 	, 	0.226533806399553, 	0.0645523043740501, 	0.00
-HD-39, 	Zach Maier, 	Angela Stiens, 	0.00019, 	-0.046, 	0.02, 	0.00390453606815482, 	-0.0116229, 	-0.0335246672215819, 	0.0651536645170477, 	0.70
-HD-40, 	Mika Stilwell, 	David Buehler, 	0.09991, 	-0.046, 	0.02, 	0.000948480817278372, 	0.013923, 	0.0887846191638807, 	0.0651536645170477, 	0.09
-HD-41, 	Jeff Pittman, 	Ann Reinhart, 	0.10115, 	-0.046, 	0, 	-0.051599911006906, 	-0.023358, 	-0.0198055327027361, 	0.0642650760522385, 	0.62
-HD-42, 	Brandon Wendt, 	Lance W. Neelly, 	0.19383, 	-0.046, 	0.02, 	0.0312758825190787, 	0.0127908, 	0.211892268279491, 	0.0651536645170477, 	0.00
-HD-43, 	Kristen Schultz, 	Bill Sutton, 	0.18379, 	-0.046, 	0.02, 	0.02718833270183, 	0.0015249, 	0.186501570887527, 	0.0642650760522385, 	0.00
-HD-44, 	, 	, 	-0.51829, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-45, 	, 	, 	-0.41504, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-46, 	, 	, 	-0.75551, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-47, 	Mary T. Williams, 	Paula Newell Ellis, 	0.27991, 	-0.046, 	0, 	-0.0130399401829844, 	-0.002958, 	0.217915584671854, 	0.0651536645170477, 	0.00
-HD-48, 	, 	, 	-0.07688, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-49, 	Nikki L. McDonald, 	Tricia Sinclair, 	-0.04107, 	-0.046, 	-0.03, 	-0.00120716603995101, 	-0.008823, 	-0.127097122796375, 	0.0651536645170477, 	0.97
-HD-50, 	, 	, 	0.24817, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-51, 	, 	, 	0.3319, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.05434, 	-0.046, 	0.02, 	0.0312734791356715, 	0.016575, 	0.0761913869984835, 	0.0632613626157389, 	0.11
-HD-53, 	, 	, 	-0.10137, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-54, 	Chris Tanner, 	Ken Corbet, 	0.30839, 	-0.046, 	0.02, 	-0.0299202242070801, 	, 	0.252474034915794, 	0.0652303610292017, 	0.00
-HD-55, 	Tobias Schlingensiepen, 	Lanell Griffith, 	-0.27226, 	-0.046, 	-0.03, 	-0.00143997051380292, 	, 	-0.349698737687352, 	0.0652303610292017, 	1.00
-HD-56, 	Virgil Weigel, 	Elvin Fajardo, 	-0.10455, 	-0.046, 	-0.03, 	0.00613964070141908, 	-0.0050337, 	-0.179441266059333, 	0.0642650760522385, 	1.00
-HD-57, 	, 	, 	-0.14064, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-58, 	Alexis Simmons, 	Michael Mathewson, 	-0.24416, 	-0.046, 	-0.03, 	-0.0325164871686185, 	, 	-0.352679441617426, 	0.0651306379517351, 	1.00
-HD-59, 	Michael Lewis, 	Rebecca Schmoe, 	0.35124, 	-0.046, 	0.02, 	0.0193253631170424, 	, 	0.344565611811043, 	0.0645523043740501, 	0.00
-HD-60, 	Maddison Glover, 	Mark Schreiber, 	0.01416, 	-0.046, 	0.02, 	0.0488903051894651, 	0.0156366, 	0.0526899463679126, 	0.0642650760522385, 	0.21
-HD-61, 	, 	, 	0.43677, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-62, 	Jack E. Geiger (Independent), 	Sean M. Wilcott, 	0.55223, 	-0.046, 	0.02, 	0, 	-0.0014229, 	0.324808714982679, 	0.145483057432816, 	0.01
-HD-63, 	Adam Booth, 	Allen B. Reavis, 	0.424, 	-0.046, 	0.02, 	0, 	, 	0.397995551900297, 	0.0669346696413749, 	0.00
-HD-64, 	, 	, 	0.51078, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-65, 	, 	, 	0.13285, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-66, 	Sydney Carlin, 	Noah Perry, 	-0.30026, 	-0.046, 	-0.03, 	-0.0251571170544653, 	, 	-0.401416769713283, 	0.0655362495112438, 	1.00
-HD-67, 	Brenda Bandy, 	Stacy Kohlmeier, 	-0.03103, 	-0.046, 	0, 	0, 	0.00867, 	-0.068359510353835, 	0.0661286624694618, 	0.85
-HD-68, 	, 	, 	0.33024, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-69, 	Miranda Bachman, 	Luci Larson, 	0.32161, 	-0.046, 	0, 	0, 	, 	0.275612051549266, 	0.0670671305484289, 	0.00
-HD-70, 	Kylie Kilmer, 	Greg Wilson, 	0.51285, 	-0.046, 	0, 	0, 	, 	0.46684854178672, 	0.0670671305484289, 	0.00
-HD-71, 	Jerry Lonergan, 	Steven Howe, 	0.29969, 	-0.046, 	0.02, 	0, 	, 	0.273694923531946, 	0.0670671305484289, 	0.00
-HD-72, 	Matthew L. Smith, 	Avery Anderson, 	0.20676, 	-0.046, 	0.02, 	0.0217576921457019, 	0.014433, 	0.216946415610525, 	0.0645755371638518, 	0.00
-HD-73, 	Bobby Joe Robertson Jr., 	Lori Shultz, 	0.35491, 	-0.046, 	0, 	0, 	, 	0.308909259754932, 	0.0670671305484289, 	0.00
-HD-74, 	Michele Ediger, 	Mike King, 	0.33305, 	-0.046, 	0.02, 	0.0124933462471271, 	, 	0.319538772424413, 	0.0661059755241537, 	0.00
-HD-75, 	Randy Quinn, 	Tyler Coats, 	0.41262, 	-0.046, 	0, 	0, 	, 	0.366619058694814, 	0.0670671305484289, 	0.00
-HD-76, 	David Claridge, 	Russel Stukey, 	0.45665, 	-0.046, 	0, 	0, 	, 	0.410653890881033, 	0.0670671305484289, 	0.00
-HD-77, 	Troy Nicks, 	Kristey S. Williams, 	0.38906, 	-0.046, 	0.02, 	0, 	, 	0.363059856253297, 	0.0669346696413749, 	0.00
-HD-78, 	Tim Lundberg, 	Robyn R. Essex, 	0.01258, 	-0.046, 	0.02, 	0.00707922049365436, 	0.013005, 	0.00666261321581844, 	0.0645755371638518, 	0.46
-HD-79, 	Siobhan McIntyre, 	Webster T. Roth, 	0.3528, 	-0.046, 	0.02, 	0.0216732717296305, 	, 	0.348472835302436, 	0.0645523043740501, 	0.00
-HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	0.220209890733403, 	0.13386933928275, 	0.05
-HD-81, 	Kayden Bennett, 	Blake Carpenter, 	0.23696, 	-0.046, 	0.02, 	0.0128345347474383, 	, 	0.223799093819069, 	0.0652303610292017, 	0.00
-HD-82, 	Kyle Beauchamp, 	Leah Howell, 	0.28063, 	-0.046, 	0.02, 	0.00729691315745875, 	, 	0.261925316449085, 	0.0645523043740501, 	0.00
-HD-83, 	Brandon J. Whipple, 	Zachary Werhan, 	-0.20125, 	-0.046, 	0, 	-0.00596658341218105, 	, 	-0.25321721327743, 	0.0655362495112438, 	1.00
-HD-84, 	, 	, 	-0.4609, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-85, 	Mackenzi Truelove, 	Steven Brunk, 	0.07801, 	-0.046, 	0, 	0.0110547736040452, 	0.01071, 	0.0537698128340911, 	0.0645755371638518, 	0.20
-HD-86, 	Abi Boatman, 	Kevin Thompson, 	-0.18096, 	-0.046, 	0, 	0, 	, 	-0.226962076292425, 	0.0670671305484289, 	1.00
-HD-87, 	, 	, 	0.05539, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-88, 	Candace Landers, 	Sandy Pickert, 	-0.0247, 	-0.046, 	0.02, 	0.0163106958956003, 	0.0086139, 	-0.025779745447949, 	0.0645755371638518, 	0.66
-HD-89, 	, 	, 	-0.26017, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-90, 	Amy Warhurst, 	Steve Huebert, 	0.37162, 	-0.046, 	0.02, 	0.013977390778537, 	, 	0.359601548493021, 	0.0652303610292017, 	0.00
-HD-91, 	Velma Davis, 	Emil Bergquist, 	0.24354, 	-0.046, 	0.02, 	0.0101097313601634, 	, 	0.227646567377703, 	0.0655362495112438, 	0.00
-HD-92, 	John Carmichael, 	Vail Fruechting, 	-0.18224, 	-0.046, 	-0.03, 	-0.00357388687755237, 	, 	-0.261814276182615, 	0.0645523043740501, 	1.00
-HD-93, 	Eli Rueda-Vega, 	Brian Bergkamp, 	0.44646, 	-0.046, 	0.02, 	-0.00225873513492978, 	, 	0.418198724592933, 	0.0661059755241537, 	0.00
-HD-94, 	, 	, 	0.22852, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-95, 	, 	, 	-0.05042, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-96, 	Jessica Maldonado, 	Tom Kessler, 	0.03103, 	-0.046, 	0.02, 	0.0046955118617227, 	0.0161415, 	0.0258702064969737, 	0.0645755371638518, 	0.34
-HD-97, 	Rhashanna Grant, 	Nick Hoheisel, 	0.18804, 	-0.046, 	0.02, 	-0.00170699979137345, 	0.016575, 	0.1769088225606, 	0.0642650760522385, 	0.00
-HD-98, 	Erica Lewis, 	Cyndi Howerton, 	0.19846, 	-0.046, 	0.02, 	0.00216315998397325, 	0.007905, 	0.182528209726768, 	0.0645755371638518, 	0.00
-HD-99, 	Mark Barlow, 	Susan Humphries, 	0.23516, 	-0.046, 	0.02, 	0.00544423872721546, 	, 	0.214606458274064, 	0.0655362495112438, 	0.00
-HD-100, 	Amanda Mogoi, 	Al Jirak, 	0.17359, 	-0.046, 	0, 	0, 	-0.000408, 	0.127184485911048, 	0.0661286624694618, 	0.03
-HD-101, 	Mary Ann Harmon, 	Kevin O'Brien, 	0.43676, 	-0.046, 	0, 	0, 	, 	0.390755771405501, 	0.0670671305484289, 	0.00
-HD-102, 	Jason Probst, 	Kyler Sweely, 	0.11431, 	-0.046, 	0.02, 	-0.0700009079972096, 	0.003927, 	0.022231446913762, 	0.0632613626157389, 	0.36
-HD-103, 	Angela Martinez, 	Jordan Chessher, 	-0.28948, 	-0.046, 	-0.03, 	0, 	, 	-0.365480915168964, 	0.0669346696413749, 	1.00
-HD-104, 	Lynnette Krieger-Zook, 	Randy Parks, 	0.34618, 	-0.046, 	0, 	-0.000264917411009743, 	, 	0.299916573608291, 	0.0661059755241537, 	0.00
-HD-105, 	John Burke, 	Jill Ann Ward, 	0.09307, 	-0.046, 	0.02, 	0.0286375722417836, 	0.0107814, 	0.106484193173658, 	0.0641638527521532, 	0.05
-HD-106, 	, 	, 	0.58066, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-107, 	Cheri Koochel, 	Dawn Wolf, 	0.52901, 	-0.046, 	0.02, 	0, 	, 	0.503006281432892, 	0.0669346696413749, 	0.00
-HD-108, 	, 	, 	-0.17954, 	-0.046, 	0, 	0, 	, 	-1.01, 	0.0670671305484289, 	1.00
-HD-109, 	, 	, 	0.60791, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-110, 	Mark Schaukowitch, 	Cody Ward, 	0.66581, 	-0.046, 	0, 	0, 	, 	0.619810726096113, 	0.0670671305484289, 	0.00
-HD-111, 	Melanie McMillan, 	Barb Wasinger, 	0.37827, 	-0.046, 	0.02, 	-0.0222507900709006, 	, 	0.330016956291176, 	0.0652303610292017, 	0.00
-HD-112, 	Rhys Froetschner, 	Sherri Brantley, 	0.54842, 	-0.046, 	0.02, 	-0.0412390235583722, 	, 	0.481183776182197, 	0.0661059755241537, 	0.00
-HD-113, 	Jo Ann Roth, 	Brett Fairchild, 	0.55889, 	-0.046, 	0.02, 	-0.0453331314870372, 	, 	0.487556298704802, 	0.0639687423668779, 	0.00
-HD-114, 	Alan Albers, 	Kevin D. Schwertfeger, 	0.52104, 	-0.046, 	0.02, 	0, 	, 	0.495036206942805, 	0.0669346696413749, 	0.00
-HD-115, 	, 	, 	0.60173, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-116, 	Nathan Bales, 	Kyle D. Hoffman, 	0.58299, 	-0.046, 	0.02, 	-0.0668592723978157, 	, 	0.490134706132399, 	0.0652303610292017, 	0.00
-HD-117, 	Brandon Holland, 	Adam Turk, 	0.05322, 	-0.046, 	0.02, 	0.00875780909483665, 	0.0093993, 	0.0428818046603031, 	0.0645755371638518, 	0.25
-HD-118, 	, 	, 	0.72026, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-119, 	, 	, 	0.21533, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-120, 	, 	, 	0.66492, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-121, 	Kelsey Stock, 	Thomas Palenske, 	0.02987, 	-0.046, 	0, 	0, 	0.0035598, 	-0.0125730889589331, 	0.0661286624694618, 	0.58
-HD-122, 	, 	, 	0.56095, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-123, 	Becca Burnfin, 	Bob Lewis, 	0.28625, 	-0.046, 	0.02, 	-0.0123660809405254, 	0.0127296, 	0.260611296573155, 	0.0651536645170477, 	0.00
-HD-124, 	, 	, 	0.66351, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-HD-125, 	, 	, 	0.39214, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
-</script>
 
 <script>
   const PROJECTED_FLIPS = new Set([67, 28, 14, 15, 39, 33, 88, 30, 41, 121]);
@@ -737,9 +471,7 @@ HD-125, 	, 	, 	0.39214, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
   }
 
   function probToColor(p, label = "") {
-    if (label.includes("TOSSUP")) {
-      return "#ffe89a";
-    }
+    if (label.includes("TOSSUP")) return "#ffe89a";
     let t;
     if (label.includes("UNCONTESTED")) {
       t = 1.0;
@@ -751,44 +483,8 @@ HD-125, 	, 	, 	0.39214, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
   }
 
   const ratingsMap = {};
-  document.getElementById('ratingsData').textContent.trim().split('\n').forEach(line => {
-    const parts = line.split('\t');
-    if (parts.length >= 3) {
-      const p = parseFloat(parts[2].replace('%', '')) / 100.0;
-      ratingsMap[parts[0].trim()] = {
-        rating: parts[1].trim(),
-        prob: parts[2].trim(),
-        pdem: p
-      };
-    }
-  });
-
-  function parseInput(text) {
-    return text.trim().split('\n').map(line => {
-      const cols = line.split(',').map(c => c.trim());
-      if (cols.length < 11) return null;
-      return {
-        district: cols[0],
-        num: cols[0].replace('HD-', ''),
-        demCandidate: cols[1],
-        repCandidate: cols[2],
-        baseline: parseFloat(cols[3]),
-        generic: parseFloat(cols[4]),
-        incumbency: parseFloat(cols[5]),
-        candidatePerf: parseFloat(cols[6]),
-        finance: parseFloat(cols[7]),
-        margin: parseFloat(cols[8]),
-        stdev: parseFloat(cols[9]),
-        winChance: parseFloat(cols[10])
-      };
-    }).filter(Boolean);
-  }
-
-  const competitiveRecords = parseInput(document.getElementById('rawInputData').textContent);
   const competitiveMap = {};
-  competitiveRecords.forEach((r) => { competitiveMap[r.num] = r; });
 
-  // STRICT check: Only Jack Geiger in HD-62 and Lex Goff in HD-80
   function formatCandidate(name, distNum, defaultParty) {
     if (!name || name.trim() === '') {
       return { fullName: 'None', party: defaultParty, isInd: false, html: `Uncontested` };
@@ -818,23 +514,26 @@ HD-125, 	, 	, 	0.39214, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
     }
   }
 
-  // Populate EVERY district 1 to 125 in the dropdown
-  const select = document.getElementById('districtSelect');
-  for (let i = 1; i <= 125; i++) {
-    const id = String(i);
-    const rInfo = ratingsMap[id] || { rating: 'Uncontested', prob: 'N/A' };
-    const comp = competitiveMap[id];
-    const opt = document.createElement('option');
-    opt.value = id;
+  // Populate Dropdown Options
+  function updateDropdownList() {
+    const select = document.getElementById('districtSelect');
+    select.innerHTML = '<option value="" disabled selected>-- Select any legislative district --</option>';
+    for (let i = 1; i <= 125; i++) {
+      const id = String(i);
+      const rInfo = ratingsMap[id] || { rating: 'Uncontested', prob: 'N/A' };
+      const comp = competitiveMap[id];
+      const opt = document.createElement('option');
+      opt.value = id;
 
-    if (comp && comp.demCandidate && comp.repCandidate) {
-      const c1 = comp.demCandidate.replace(/\s*\((.*?)\)/g, '').trim();
-      const c2 = comp.repCandidate.replace(/\s*\((.*?)\)/g, '').trim();
-      opt.textContent = `HD-${id}: ${c1} vs ${c2} (${rInfo.rating})`;
-    } else {
-      opt.textContent = `HD-${id} (${rInfo.rating})`;
+      if (comp && comp.demCandidate && comp.repCandidate) {
+        const c1 = comp.demCandidate.replace(/\s*\((.*?)\)/g, '').trim();
+        const c2 = comp.repCandidate.replace(/\s*\((.*?)\)/g, '').trim();
+        opt.textContent = `HD-${id}: ${c1} vs ${c2} (${rInfo.rating})`;
+      } else {
+        opt.textContent = `HD-${id} (${rInfo.rating})`;
+      }
+      select.appendChild(opt);
     }
-    select.appendChild(opt);
   }
 
   const map = L.map('map', {
@@ -848,8 +547,8 @@ HD-125, 	, 	, 	0.39214, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
     if (svg && !svg.querySelector('#diagonalHatch')) {
       const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
       defs.innerHTML = `
-        <pattern id="diagonalHatch" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
-          <line x1="0" y1="0" x2="0" y2="8" stroke="#000000" stroke-width="2.2" />
+        <pattern id="diagonalHatch" width="7" height="7" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+          <line x1="0" y1="0" x2="0" y2="7" stroke="#000000" stroke-width="2.6" />
         </pattern>
       `;
       svg.appendChild(defs);
@@ -857,10 +556,10 @@ HD-125, 	, 	, 	0.39214, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
   }
 
   let geojsonLayer;
-  let activeHighlightedLayer = null;
+  let selectedId = null;
   const hoverChip = document.getElementById('hoverChip');
 
-  // Render Outcome CI Distribution Bar (67% & 95% Confidence Intervals)
+  // Split-Color Outcome Range Bar
   function renderOutcomeBar(comp, isInd) {
     const svg = document.getElementById('rangeSvg');
     const summarySpan = document.getElementById('outRangeSummary');
@@ -873,13 +572,11 @@ HD-125, 	, 	, 	0.39214, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
     const margin = comp.margin * 100;
     const stdev = comp.stdev * 100;
 
-    // Normal distribution quantiles
     const lo67 = margin - (0.974 * stdev);
     const hi67 = margin + (0.974 * stdev);
     const lo95 = margin - (1.960 * stdev);
     const hi95 = margin + (1.960 * stdev);
 
-    // Compute dynamic symmetric domain anchored around margin and EVEN (0)
     const maxExtent = Math.max(Math.abs(lo95), Math.abs(hi95), 16);
     const minDomain = -maxExtent - 2;
     const maxDomain = maxExtent + 2;
@@ -894,9 +591,10 @@ HD-125, 	, 	, 	0.39214, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
     const x67L = Math.max(0, scaleX(lo67));
     const x67R = Math.min(width, scaleX(hi67));
 
-    // Choose colors based on expected winner
-    const c95 = margin < 0 ? '#bfdbfe' : '#fecaca';
-    const c67 = margin < 0 ? '#60a5fa' : '#f87171';
+    const colorLeft95 = isInd ? '#fef3c7' : '#bfdbfe';
+    const colorLeft67 = isInd ? '#f59e0b' : '#60a5fa';
+    const colorRight95 = '#fecaca';
+    const colorRight67 = '#f87171';
     const cBar = margin < 0 ? (isInd ? 'var(--ind)' : '#1d4ed8') : '#dc2626';
 
     const fmtPt = (v) => {
@@ -909,24 +607,44 @@ HD-125, 	, 	, 	0.39214, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
       summarySpan.textContent = `67%: ${fmtPt(lo67)} to ${fmtPt(hi67)}`;
     }
 
+    // Generate Split Segments across the EVEN line
+    let barsHtml = '';
+
+    // 95% Interval (height 14, y=20)
+    if (x95L < xEven) {
+      const r = Math.min(xEven, x95R);
+      barsHtml += `<rect x="${x95L}" y="20" width="${Math.max(0, r - x95L)}" height="14" rx="3" fill="${colorLeft95}" />`;
+    }
+    if (x95R > xEven) {
+      const l = Math.max(xEven, x95L);
+      barsHtml += `<rect x="${l}" y="20" width="${Math.max(0, x95R - l)}" height="14" rx="3" fill="${colorRight95}" />`;
+    }
+
+    // 67% Interval (height 20, y=17)
+    if (x67L < xEven) {
+      const r = Math.min(xEven, x67R);
+      barsHtml += `<rect x="${x67L}" y="17" width="${Math.max(0, r - x67L)}" height="20" rx="4" fill="${colorLeft67}" />`;
+    }
+    if (x67R > xEven) {
+      const l = Math.max(xEven, x67L);
+      barsHtml += `<rect x="${l}" y="17" width="${Math.max(0, x67R - l)}" height="20" rx="4" fill="${colorRight67}" />`;
+    }
+
     svg.innerHTML = `
       <!-- Base Axis Track -->
-      <line x1="0" y1="20" x2="${width}" y2="20" stroke="#cbd5e1" stroke-width="2" />
+      <line x1="0" y1="27" x2="${width}" y2="27" stroke="#cbd5e1" stroke-width="2" />
       
-      <!-- 95% Confidence Range Bar -->
-      <rect x="${x95L}" y="12" width="${Math.max(2, x95R - x95L)}" height="16" rx="4" fill="${c95}" opacity="0.85" />
-      
-      <!-- 67% Confidence Range Bar (Darker) -->
-      <rect x="${x67L}" y="9" width="${Math.max(2, x67R - x67L)}" height="22" rx="4" fill="${c67}" />
+      <!-- Split Colored Confidence Bands -->
+      ${barsHtml}
 
-      <!-- Center Zero / EVEN Divider Line -->
-      <line x1="${xEven}" y1="4" x2="${xEven}" y2="36" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="2,2" />
-      <text x="${xEven}" y="48" font-size="8.5" font-weight="800" fill="#475569" text-anchor="middle">EVEN</text>
+      <!-- Center Zero / EVEN Line -->
+      <line x1="${xEven}" y1="12" x2="${xEven}" y2="42" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="2,2" />
+      <text x="${xEven}" y="52" font-size="8.5" font-weight="800" fill="#475569" text-anchor="middle">EVEN</text>
 
-      <!-- Predicted Margin Center Needle/Marker -->
-      <line x1="${xMedian}" y1="5" x2="${xMedian}" y2="35" stroke="${cBar}" stroke-width="3.5" stroke-linecap="round" />
-      <circle cx="${xMedian}" cy="20" r="4.5" fill="${cBar}" stroke="#ffffff" stroke-width="1.5" />
-      <text x="${xMedian}" y="48" font-size="8.5" font-weight="900" fill="${cBar}" text-anchor="middle">${fmtPt(margin)}</text>
+      <!-- Predicted Margin Value and Pin (Placed ABOVE bar to prevent overlap) -->
+      <text x="${xMedian}" y="10" font-size="9" font-weight="900" fill="${cBar}" text-anchor="middle">${fmtPt(margin)}</text>
+      <line x1="${xMedian}" y1="13" x2="${xMedian}" y2="41" stroke="${cBar}" stroke-width="3" stroke-linecap="round" />
+      <circle cx="${xMedian}" cy="27" r="4.5" fill="${cBar}" stroke="#ffffff" stroke-width="1.5" />
     `;
   }
 
@@ -988,7 +706,6 @@ HD-125, 	, 	, 	0.39214, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
         probLabel.textContent = isInd ? 'Ind Win Probability' : 'Dem Win Probability';
       }
 
-      // Render Distribution Bar
       renderOutcomeBar(comp, isInd);
     } else if (general) {
       card.style.display = 'none';
@@ -998,7 +715,6 @@ HD-125, 	, 	, 	0.39214, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
     }
   }
 
-  // Polygon Style Helper with black outline for Flips and Tossups
   function getFeatureStyle(feature) {
     const id = String(feature.properties.NAME || feature.properties.id);
     const numId = parseInt(id, 10);
@@ -1006,70 +722,116 @@ HD-125, 	, 	, 	0.39214, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
     const fillColor = probToColor(rInfo.pdem, rInfo.rating);
     const isTossup = rInfo.rating.includes("TOSSUP");
     const isFlip = PROJECTED_FLIPS.has(numId);
-
     const isSpecialOutline = isFlip || isTossup;
+
+    const isSelected = selectedId === id;
 
     return {
       fillColor: fillColor,
-      weight: isSpecialOutline ? 1.6 : 0.7,
+      weight: isSelected ? 3.5 : (isSpecialOutline ? 1.8 : 0.7),
       opacity: 1,
-      color: isSpecialOutline ? '#000000' : '#ffffff',
+      color: isSelected ? '#0f172a' : (isSpecialOutline ? '#000000' : '#ffffff'),
       fillOpacity: isTossup ? 0.6 : 0.95
     };
   }
 
-  fetch('./districts.geojson')
-    .then(r => r.json())
-    .then(geojson => {
-      geojsonLayer = L.geoJSON(geojson, {
-        style: getFeatureStyle,
-        onEachFeature: (feature, layer) => {
-          const id = String(feature.properties.NAME || feature.properties.id);
-          const numId = parseInt(id, 10);
-          const rInfo = ratingsMap[id] || { rating: 'Unlisted', prob: 'N/A' };
-          const isFlip = PROJECTED_FLIPS.has(numId);
+  function refreshMapStyles() {
+    if (geojsonLayer) {
+      geojsonLayer.eachLayer(layer => {
+        layer.setStyle(getFeatureStyle(layer.feature));
+      });
+    }
+  }
 
-          layer.on({
-            mouseover: e => {
-              const l = e.target;
-              if (activeHighlightedLayer !== l) {
-                l.setStyle({ weight: 2.8, color: '#0f172a' });
-                l.bringToFront();
-                if (hatchOverlayGroup) hatchOverlayGroup.bringToFront();
-              }
-              const flipBadge = isFlip ? ' &bull; <em>Projected Flip</em>' : '';
-              hoverChip.innerHTML = `<strong>HD-${id}</strong> &bull; ${rInfo.rating} &bull; Win: ${rInfo.prob}${flipBadge}`;
-              hoverChip.style.display = 'block';
-            },
-            mouseout: e => {
-              const l = e.target;
-              if (activeHighlightedLayer !== l) {
-                l.setStyle(getFeatureStyle(l.feature));
-              }
-              hoverChip.style.display = 'none';
-            },
-            click: e => {
-              if (activeHighlightedLayer && activeHighlightedLayer !== e.target) {
-                activeHighlightedLayer.setStyle(getFeatureStyle(activeHighlightedLayer.feature));
-              }
-              activeHighlightedLayer = e.target;
-              activeHighlightedLayer.setStyle({ weight: 3.2, color: '#0f172a' });
-
-              select.value = id;
-              renderCard(id);
-              if (hatchOverlayGroup) hatchOverlayGroup.bringToFront();
-            }
-          });
-        }
-      }).addTo(map);
-
-      injectHatchPattern();
-      applyHatchOverlay();
-      map.fitBounds(geojsonLayer.getBounds(), { padding: [15, 15] });
-    })
-    .catch(err => {
-      console.error("Ensure districts.geojson is present in the repository root.", err);
+  // File Parsers for external text files
+  function parseRatingsText(text) {
+    text.trim().split('\n').forEach(line => {
+      const parts = line.split('\t');
+      if (parts.length >= 3) {
+        const p = parseFloat(parts[2].replace('%', '')) / 100.0;
+        ratingsMap[parts[0].trim()] = {
+          rating: parts[1].trim(),
+          prob: parts[2].trim(),
+          pdem: p
+        };
+      }
     });
+  }
+
+  function parseDistrictDataText(text) {
+    text.trim().split('\n').forEach(line => {
+      const cols = line.split(',').map(c => c.trim());
+      if (cols.length >= 11) {
+        const num = cols[0].replace('HD-', '');
+        competitiveMap[num] = {
+          district: cols[0],
+          num: num,
+          demCandidate: cols[1],
+          repCandidate: cols[2],
+          baseline: parseFloat(cols[3]),
+          generic: parseFloat(cols[4]),
+          incumbency: parseFloat(cols[5]),
+          candidatePerf: parseFloat(cols[6]),
+          finance: parseFloat(cols[7]),
+          margin: parseFloat(cols[8]),
+          stdev: parseFloat(cols[9]),
+          winChance: parseFloat(cols[10])
+        };
+      }
+    });
+  }
+
+  // Fetch external forecast text documents and geojson simultaneously
+  Promise.all([
+    fetch('./districts.geojson').then(r => r.json()),
+    fetch('./ratings.txt').then(r => r.text()).catch(() => ""),
+    fetch('./district_data.txt').then(r => r.text()).catch(() => "")
+  ]).then(([geojson, ratingsTxt, districtTxt]) => {
+    if (ratingsTxt) parseRatingsText(ratingsTxt);
+    if (districtTxt) parseDistrictDataText(districtTxt);
+
+    updateDropdownList();
+
+    geojsonLayer = L.geoJSON(geojson, {
+      style: getFeatureStyle,
+      onEachFeature: (feature, layer) => {
+        const id = String(feature.properties.NAME || feature.properties.id);
+        const numId = parseInt(id, 10);
+        const isFlip = PROJECTED_FLIPS.has(numId);
+
+        layer.on({
+          mouseover: e => {
+            const rInfo = ratingsMap[id] || { rating: 'Unlisted', prob: 'N/A' };
+            const flipBadge = isFlip ? ' &bull; <em>Projected Flip</em>' : '';
+            hoverChip.innerHTML = `<strong>HD-${id}</strong> &bull; ${rInfo.rating} &bull; Win: ${rInfo.prob}${flipBadge}`;
+            hoverChip.style.display = 'block';
+
+            if (selectedId !== id) {
+              layer.setStyle({ weight: 2.8, color: '#0f172a' });
+            }
+          },
+          mouseout: e => {
+            hoverChip.style.display = 'none';
+            if (selectedId !== id) {
+              layer.setStyle(getFeatureStyle(feature));
+            }
+          },
+          click: e => {
+            selectedId = id;
+            refreshMapStyles();
+            document.getElementById('districtSelect').value = id;
+            renderCard(id);
+          }
+        });
+      }
+    }).addTo(map);
+
+    injectHatchPattern();
+    applyHatchOverlay();
+    map.fitBounds(geojsonLayer.getBounds(), { padding: [15, 15] });
+  }).catch(err => {
+    console.error("Initialization error. Verify districts.geojson, ratings.txt, and district_data.txt exist in repository root.", err);
+  });
 
   let hatchOverlayGroup = L.featureGroup().addTo(map);
 
@@ -1084,7 +846,7 @@ HD-125, 	, 	, 	0.39214, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
         const hatchLayer = L.geoJSON(layer.feature, {
           style: {
             fillColor: 'url(#diagonalHatch)',
-            fillOpacity: 0.55,
+            fillOpacity: 0.65,
             weight: 0,
             interactive: false
           }
@@ -1095,19 +857,16 @@ HD-125, 	, 	, 	0.39214, 	-0.046, 	0, 	0, 	, 	1.01, 	0.0670671305484289, 	0.00
     hatchOverlayGroup.bringToFront();
   }
 
-  select.addEventListener('change', (e) => {
+  document.getElementById('districtSelect').addEventListener('change', (e) => {
     const id = e.target.value;
+    selectedId = id;
+    refreshMapStyles();
     renderCard(id);
 
     if (geojsonLayer) {
       geojsonLayer.eachLayer(layer => {
         const fid = String(layer.feature.properties.NAME || layer.feature.properties.id);
         if (fid === id) {
-          if (activeHighlightedLayer) activeHighlightedLayer.setStyle(getFeatureStyle(activeHighlightedLayer.feature));
-          activeHighlightedLayer = layer;
-          activeHighlightedLayer.setStyle({ weight: 3.2, color: '#0f172a' });
-          activeHighlightedLayer.bringToFront();
-          if (hatchOverlayGroup) hatchOverlayGroup.bringToFront();
           map.fitBounds(layer.getBounds(), { maxZoom: 11 });
         }
       });
