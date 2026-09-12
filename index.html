@@ -126,54 +126,12 @@
       outline: none;
     }
 
-    .needle-container {
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 10px 8px 10px;
-      margin-bottom: 14px;
-    }
-    .needle-block {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-    .needle-block:last-child {
-      margin-bottom: 0;
-      border-top: 1px dashed var(--border);
-      padding-top: 10px;
-    }
-    .needle-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--text-muted);
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
-    .needle-val {
-      font-size: 1.15rem;
-      font-weight: 900;
-      margin-bottom: 2px;
-    }
-    .needle-sub {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-    svg.gauge {
-      width: 100%;
-      max-width: 250px;
-      height: 120px;
-      display: block;
-      margin: 0 auto;
-      overflow: visible;
-    }
-
     .card {
       border: 1px solid var(--border);
       border-radius: 10px;
       background: var(--card-bg);
       padding: 14px;
+      margin-bottom: 14px;
     }
     .header-row {
       border-bottom: 1px solid var(--border);
@@ -300,6 +258,50 @@
       background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: 8px;
+      margin-bottom: 14px;
+    }
+
+    .needle-container {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 10px 8px 10px;
+      margin-bottom: 14px;
+    }
+    .needle-block {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .needle-block:last-child {
+      margin-bottom: 0;
+      border-top: 1px dashed var(--border);
+      padding-top: 10px;
+    }
+    .needle-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .needle-val {
+      font-size: 1.15rem;
+      font-weight: 900;
+      margin-bottom: 2px;
+    }
+    .needle-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    svg.gauge {
+      width: 100%;
+      max-width: 250px;
+      height: 120px;
+      display: block;
+      margin: 0 auto;
+      overflow: visible;
     }
 
     @media (max-width: 860px) {
@@ -328,44 +330,13 @@
   <div id="hoverChip" class="map-hover-chip" style="display: none;">Hover over a district</div>
 
   <div class="sidebar">
+    <!-- LEGISLATIVE DISTRICT DROPDOWN -->
     <label class="control-label" for="districtSelect">Select Legislative District</label>
     <select id="districtSelect">
       <option value="" disabled selected>-- Select any legislative district --</option>
     </select>
 
-    <div class="needle-container">
-      <div class="needle-block">
-        <div class="needle-label">House Control Outcome</div>
-        <div class="needle-val" style="color: var(--rep);">89.4% Plain Majority</div>
-        <svg class="gauge" viewBox="0 0 200 120">
-          <path d="M 20 95 A 80 80 0 0 1 100 15" fill="none" stroke="#820000" stroke-width="18" />
-          <path d="M 100 15 A 80 80 0 0 1 180 95" fill="none" stroke="#ff6259" stroke-width="18" />
-          <circle cx="100" cy="95" r="7" fill="#0f172a" />
-          <line x1="100" y1="95" x2="168" y2="71" stroke="#0f172a" stroke-width="4" stroke-linecap="round" />
-          <text x="32" y="114" font-size="8.5" fill="#64748b" font-weight="700" text-anchor="middle">Supermajority</text>
-          <text x="168" y="114" font-size="8.5" fill="#64748b" font-weight="700" text-anchor="middle">Plain Majority</text>
-        </svg>
-        <div class="needle-sub">Plain Majority (63–83): <strong>89.4%</strong> | Supermajority (84+): <strong>10.6%</strong></div>
-      </div>
-
-      <div class="needle-block">
-        <div class="needle-label">Projected Democratic Seats</div>
-        <div class="needle-val" style="color: var(--rep);">47 Median <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">(of 125)</span></div>
-        <svg class="gauge" viewBox="0 0 200 120">
-          <path d="M 20 95 A 80 80 0 0 1 180 95" fill="none" stroke="#f1f5f9" stroke-width="18" />
-          <path d="M 55.5 28.5 A 80 80 0 0 1 87.0 16.1" fill="none" stroke="#ffafab" stroke-width="18" />
-          <path d="M 62.3 24.4 A 80 80 0 0 1 79.1 17.8" fill="none" stroke="#ff6259" stroke-width="18" />
-          <line x1="100" y1="7" x2="100" y2="23" stroke="#94a3b8" stroke-width="2" />
-          <circle cx="100" cy="95" r="7" fill="#0f172a" />
-          <line x1="100" y1="95" x2="73" y2="28" stroke="#820000" stroke-width="4" stroke-linecap="round" />
-          <text x="20" y="114" font-size="9" fill="#64748b" font-weight="700" text-anchor="middle">0</text>
-          <text x="100" y="8" font-size="8" fill="#64748b" font-weight="700" text-anchor="middle">63 (Maj)</text>
-          <text x="180" y="114" font-size="9" fill="#64748b" font-weight="700" text-anchor="middle">125</text>
-        </svg>
-        <div class="needle-sub">67% Range: <strong>43–52</strong> | 95% Range: <strong>39–56</strong></div>
-      </div>
-    </div>
-
+    <!-- DISTRICT CARD -->
     <div id="districtCard" class="card" style="display: none;">
       <div class="header-row">
         <div id="outDistrict" class="district-title"></div>
@@ -416,6 +387,7 @@
         </div>
       </div>
 
+      <!-- HORIZONTAL RANGE OF OUTCOMES BAR (67% & 95% CI) -->
       <div class="range-box">
         <div class="range-title-row">
           <span>Range of Outcomes</span>
@@ -430,6 +402,44 @@
       <strong id="uncontestedDistrictTitle"></strong><br/>
       <span id="uncontestedRatingText"></span>
       <p style="margin: 6px 0 0; font-size: 0.78rem;">District is uncontested or non-competitive. Not tracked with itemized shift variables.</p>
+    </div>
+
+    <!-- NYT-STYLE FORECAST GAUGES -->
+    <div class="needle-container">
+      <!-- Gauge 1: GOP Supermajority vs Simple Majority -->
+      <div class="needle-block">
+        <div class="needle-label">House Control Outcome</div>
+        <div class="needle-val" style="color: var(--rep);">89.4% Plain Majority</div>
+        <svg class="gauge" viewBox="0 0 200 120">
+          <path d="M 20 95 A 80 80 0 0 1 100 15" fill="none" stroke="#820000" stroke-width="18" />
+          <path d="M 100 15 A 80 80 0 0 1 180 95" fill="none" stroke="#ff6259" stroke-width="18" />
+          <circle cx="100" cy="95" r="7" fill="#0f172a" />
+          <line x1="100" y1="95" x2="168" y2="71" stroke="#0f172a" stroke-width="4" stroke-linecap="round" />
+          <text x="32" y="114" font-size="8.5" fill="#64748b" font-weight="700" text-anchor="middle">Supermajority</text>
+          <text x="168" y="114" font-size="8.5" fill="#64748b" font-weight="700" text-anchor="middle">Plain Majority</text>
+        </svg>
+        <div class="needle-sub">Plain Majority (63–83): <strong>89.4%</strong> | Supermajority (84+): <strong>10.6%</strong></div>
+      </div>
+
+      <!-- Gauge 2: Projected DEM Seats -->
+      <div class="needle-block">
+        <div class="needle-label">Projected Democratic Seats</div>
+        <div class="needle-val" style="color: var(--rep);">47 Median <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">(of 125)</span></div>
+        <svg class="gauge" viewBox="0 0 200 120">
+          <path d="M 20 95 A 80 80 0 0 1 180 95" fill="none" stroke="#f1f5f9" stroke-width="18" />
+          <!-- 95% Interval: 39 to 56 seats -->
+          <path d="M 55.5 28.5 A 80 80 0 0 1 87.0 16.1" fill="none" stroke="#ffafab" stroke-width="18" />
+          <!-- 67% Interval: 43 to 52 seats -->
+          <path d="M 62.3 24.4 A 80 80 0 0 1 79.1 17.8" fill="none" stroke="#ff6259" stroke-width="18" />
+          <line x1="100" y1="7" x2="100" y2="23" stroke="#94a3b8" stroke-width="2" />
+          <circle cx="100" cy="95" r="7" fill="#0f172a" />
+          <line x1="100" y1="95" x2="73" y2="28" stroke="#820000" stroke-width="4" stroke-linecap="round" />
+          <text x="20" y="114" font-size="9" fill="#64748b" font-weight="700" text-anchor="middle">0</text>
+          <text x="100" y="8" font-size="8" fill="#64748b" font-weight="700" text-anchor="middle">63 (Maj)</text>
+          <text x="180" y="114" font-size="9" fill="#64748b" font-weight="700" text-anchor="middle">125</text>
+        </svg>
+        <div class="needle-sub">67% Range: <strong>43–52</strong> | 95% Range: <strong>39–56</strong></div>
+      </div>
     </div>
   </div>
 </div>
@@ -514,7 +524,6 @@
     }
   }
 
-  // Populate Dropdown Options
   function updateDropdownList() {
     const select = document.getElementById('districtSelect');
     select.innerHTML = '<option value="" disabled selected>-- Select any legislative district --</option>';
@@ -559,7 +568,27 @@
   let selectedId = null;
   const hoverChip = document.getElementById('hoverChip');
 
-  // Split-Color Outcome Range Bar
+  let hoverHighlightLayer = L.geoJSON(null, {
+    interactive: false,
+    style: {
+      fill: false,
+      color: '#0f172a',
+      weight: 2.8,
+      opacity: 1
+    }
+  }).addTo(map);
+
+  let selectedHighlightLayer = L.geoJSON(null, {
+    interactive: false,
+    style: {
+      fill: false,
+      color: '#0f172a',
+      weight: 3.2,
+      opacity: 1
+    }
+  }).addTo(map);
+
+  // Split-Color Outcome Range Bar via SVG Linear Gradient (Eliminates Pinching)
   function renderOutcomeBar(comp, isInd) {
     const svg = document.getElementById('rangeSvg');
     const summarySpan = document.getElementById('outRangeSummary');
@@ -591,6 +620,13 @@
     const x67L = Math.max(0, scaleX(lo67));
     const x67R = Math.min(width, scaleX(hi67));
 
+    const w95 = Math.max(1, x95R - x95L);
+    const w67 = Math.max(1, x67R - x67L);
+
+    // Calculate exact percentage offsets along each bar where the EVEN line falls
+    const pctEven95 = Math.max(0, Math.min(100, ((xEven - x95L) / w95) * 100));
+    const pctEven67 = Math.max(0, Math.min(100, ((xEven - x67L) / w67) * 100));
+
     const colorLeft95 = isInd ? '#fef3c7' : '#bfdbfe';
     const colorLeft67 = isInd ? '#f59e0b' : '#60a5fa';
     const colorRight95 = '#fecaca';
@@ -607,41 +643,33 @@
       summarySpan.textContent = `67%: ${fmtPt(lo67)} to ${fmtPt(hi67)}`;
     }
 
-    // Generate Split Segments across the EVEN line
-    let barsHtml = '';
-
-    // 95% Interval (height 14, y=20)
-    if (x95L < xEven) {
-      const r = Math.min(xEven, x95R);
-      barsHtml += `<rect x="${x95L}" y="20" width="${Math.max(0, r - x95L)}" height="14" rx="3" fill="${colorLeft95}" />`;
-    }
-    if (x95R > xEven) {
-      const l = Math.max(xEven, x95L);
-      barsHtml += `<rect x="${l}" y="20" width="${Math.max(0, x95R - l)}" height="14" rx="3" fill="${colorRight95}" />`;
-    }
-
-    // 67% Interval (height 20, y=17)
-    if (x67L < xEven) {
-      const r = Math.min(xEven, x67R);
-      barsHtml += `<rect x="${x67L}" y="17" width="${Math.max(0, r - x67L)}" height="20" rx="4" fill="${colorLeft67}" />`;
-    }
-    if (x67R > xEven) {
-      const l = Math.max(xEven, x67L);
-      barsHtml += `<rect x="${l}" y="17" width="${Math.max(0, x67R - l)}" height="20" rx="4" fill="${colorRight67}" />`;
-    }
-
     svg.innerHTML = `
+      <defs>
+        <!-- Sharp color transition gradients right at the EVEN boundary -->
+        <linearGradient id="grad95" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="${pctEven95}%" stop-color="${colorLeft95}" />
+          <stop offset="${pctEven95}%" stop-color="${colorRight95}" />
+        </linearGradient>
+        <linearGradient id="grad67" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="${pctEven67}%" stop-color="${colorLeft67}" />
+          <stop offset="${pctEven67}%" stop-color="${colorRight67}" />
+        </linearGradient>
+      </defs>
+
       <!-- Base Axis Track -->
       <line x1="0" y1="27" x2="${width}" y2="27" stroke="#cbd5e1" stroke-width="2" />
       
-      <!-- Split Colored Confidence Bands -->
-      ${barsHtml}
+      <!-- Continuous 95% Confidence Bar with rounded ends -->
+      <rect x="${x95L}" y="20" width="${w95}" height="14" rx="4" fill="url(#grad95)" />
+      
+      <!-- Continuous 67% Confidence Bar with rounded ends (Zero Pinching) -->
+      <rect x="${x67L}" y="17" width="${w67}" height="20" rx="4" fill="url(#grad67)" />
 
       <!-- Center Zero / EVEN Line -->
       <line x1="${xEven}" y1="12" x2="${xEven}" y2="42" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="2,2" />
       <text x="${xEven}" y="52" font-size="8.5" font-weight="800" fill="#475569" text-anchor="middle">EVEN</text>
 
-      <!-- Predicted Margin Value and Pin (Placed ABOVE bar to prevent overlap) -->
+      <!-- Predicted Margin Value and Pin (Positioned above bar) -->
       <text x="${xMedian}" y="10" font-size="9" font-weight="900" fill="${cBar}" text-anchor="middle">${fmtPt(margin)}</text>
       <line x1="${xMedian}" y1="13" x2="${xMedian}" y2="41" stroke="${cBar}" stroke-width="3" stroke-linecap="round" />
       <circle cx="${xMedian}" cy="27" r="4.5" fill="${cBar}" stroke="#ffffff" stroke-width="1.5" />
@@ -743,7 +771,6 @@
     }
   }
 
-  // File Parsers for external text files
   function parseRatingsText(text) {
     text.trim().split('\n').forEach(line => {
       const parts = line.split('\t');
@@ -781,7 +808,6 @@
     });
   }
 
-  // Fetch external forecast text documents and geojson simultaneously
   Promise.all([
     fetch('./districts.geojson').then(r => r.json()),
     fetch('./ratings.txt').then(r => r.text()).catch(() => ""),
