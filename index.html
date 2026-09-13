@@ -42,11 +42,43 @@
       align-items: center;
       z-index: 1000;
     }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
     header h1 {
       font-size: 1.1rem;
       margin: 0;
       font-weight: 800;
     }
+
+    /* View Switcher Toggle */
+    .view-toggle {
+      display: flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      gap: 2px;
+    }
+    .toggle-btn {
+      border: none;
+      background: transparent;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .toggle-btn.active {
+      background: #ffffff;
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
     .legend {
       display: flex;
       gap: 12px;
@@ -92,6 +124,35 @@
       pointer-events: none;
       backdrop-filter: blur(4px);
       box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+
+    /* Hex Label Overlay */
+    .hex-label-marker {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      pointer-events: none !important;
+    }
+    .hex-num {
+      font-size: 8.5px;
+      font-weight: 800;
+      color: #0f172a;
+      text-shadow:
+        -1px -1px 0 #ffffff,
+         1px -1px 0 #ffffff,
+        -1px  1px 0 #ffffff,
+         1px  1px 0 #ffffff;
+      text-align: center;
+      display: block;
+      user-select: none;
+    }
+    .hex-num.dark-bg {
+      color: #ffffff;
+      text-shadow:
+        -1px -1px 0 #000000,
+         1px -1px 0 #000000,
+        -1px  1px 0 #000000,
+         1px  1px 0 #000000;
     }
 
     .sidebar {
@@ -245,7 +306,7 @@
     }
     svg.outcome-svg {
       width: 100%;
-      height: 58px;
+      height: 70px;
       display: block;
       overflow: visible;
     }
@@ -314,7 +375,14 @@
 <body>
 
 <header>
-  <h1>Kansas House 2026 Forecast</h1>
+  <div class="header-left">
+    <h1>Kansas House 2026 Forecast</h1>
+    <div class="view-toggle">
+      <button id="btnGeo" class="toggle-btn active" onclick="switchMapMode('geo')">Geographic Map</button>
+      <button id="btnHex" class="toggle-btn" onclick="switchMapMode('hex')">Hex Cartogram</button>
+    </div>
+  </div>
+
   <div class="legend">
     <div class="legend-item"><div class="legend-box" style="background: #000082;"></div> Safe D</div>
     <div class="legend-item"><div class="legend-box" style="background: #6363ff;"></div> Lean D</div>
@@ -330,13 +398,13 @@
   <div id="hoverChip" class="map-hover-chip" style="display: none;">Hover over a district</div>
 
   <div class="sidebar">
-    <!-- LEGISLATIVE DISTRICT DROPDOWN -->
+    <!-- 1. LEGISLATIVE DISTRICT DROPDOWN -->
     <label class="control-label" for="districtSelect">Select Legislative District</label>
     <select id="districtSelect">
       <option value="" disabled selected>-- Loading districts... --</option>
     </select>
 
-    <!-- DISTRICT DETAILS CARD -->
+    <!-- 2. DISTRICT DETAILS CARD -->
     <div id="districtCard" class="card" style="display: none;">
       <div class="header-row">
         <div id="outDistrict" class="district-title"></div>
@@ -387,7 +455,6 @@
         </div>
       </div>
 
-      <!-- HORIZONTAL RANGE OF OUTCOMES BAR -->
       <div class="range-box">
         <div class="range-title-row">
           <span>Range of Outcomes</span>
@@ -404,7 +471,7 @@
       <p style="margin: 6px 0 0; font-size: 0.78rem;">District is uncontested or non-competitive. Not tracked with itemized shift variables.</p>
     </div>
 
-    <!-- FORECAST GAUGES -->
+    <!-- 3. NYT-STYLE FORECAST GAUGES -->
     <div class="needle-container">
       <div class="needle-block">
         <div class="needle-label">House Control Outcome</div>
@@ -427,12 +494,16 @@
           <path d="M 20 95 A 80 80 0 0 1 180 95" fill="none" stroke="#f1f5f9" stroke-width="18" />
           <path d="M 55.5 28.5 A 80 80 0 0 1 87.0 16.1" fill="none" stroke="#ffafab" stroke-width="18" />
           <path d="M 62.3 24.4 A 80 80 0 0 1 79.1 17.8" fill="none" stroke="#ff6259" stroke-width="18" />
+          
           <line x1="68" y1="38" x2="54" y2="13" stroke="#0f172a" stroke-width="2" stroke-dasharray="2,1" />
           <text x="50" y="8" font-size="7.5" fill="#0f172a" font-weight="800" text-anchor="middle">42 (Break)</text>
+
           <line x1="100" y1="7" x2="100" y2="23" stroke="#94a3b8" stroke-width="2" />
           <text x="100" y="5" font-size="7.5" fill="#64748b" font-weight="700" text-anchor="middle">63 (Maj)</text>
+
           <circle cx="100" cy="95" r="7" fill="#0f172a" />
           <line x1="100" y1="95" x2="73" y2="28" stroke="#820000" stroke-width="4" stroke-linecap="round" />
+          
           <text x="20" y="114" font-size="9" fill="#64748b" font-weight="700" text-anchor="middle">0</text>
           <text x="180" y="114" font-size="9" fill="#64748b" font-weight="700" text-anchor="middle">125</text>
         </svg>
@@ -563,6 +634,11 @@
   }
 
   let geojsonLayer;
+  let hexCartoLayer = null;
+  let hexLabelsGroup = L.layerGroup();
+  let currentMapMode = 'geo';
+  let cachedGeojson = null;
+
   let selectedId = null;
   const hoverChip = document.getElementById('hoverChip');
 
@@ -576,7 +652,6 @@
     style: { fill: false, color: '#0f172a', weight: 3.4, opacity: 1 }
   }).addTo(map);
 
- // Range of Outcomes Chart (Continuous Gradient + Elevated '24 Pin, No EVEN text)
   function renderOutcomeBar(comp, isInd, distNum) {
     const svg = document.getElementById('rangeSvg');
     const summarySpan = document.getElementById('outRangeSummary');
@@ -594,7 +669,6 @@
     const lo95 = margin - (1.960 * stdev);
     const hi95 = margin + (1.960 * stdev);
 
-    // Retrieve historical 2024 margin
     const rInfo = ratingsMap[distNum] || {};
     const hist2024 = (rInfo.hist2024 !== null && rInfo.hist2024 !== undefined) ? (rInfo.hist2024 * 100) : null;
     const isHistContested = hist2024 !== null && Math.abs(hist2024) < 100;
@@ -640,7 +714,6 @@
       summarySpan.textContent = `67%: ${fmtPt(lo67)} to ${fmtPt(hi67)}`;
     }
 
-    // Historical 2024 Pin Marker moved up tight under the bar
     let histSvg = '';
     if (isHistContested) {
       const xHist = scaleX(hist2024);
@@ -664,27 +737,20 @@
         </linearGradient>
       </defs>
 
-      <!-- Baseline axis track -->
       <line x1="0" y1="27" x2="${width}" y2="27" stroke="#cbd5e1" stroke-width="2" />
-      
-      <!-- 95% Confidence Interval Bar -->
       <rect x="${x95L}" y="20" width="${w95}" height="14" rx="4" fill="url(#grad95)" />
-      
-      <!-- 67% Confidence Interval Bar -->
       <rect x="${x67L}" y="17" width="${w67}" height="20" rx="4" fill="url(#grad67)" />
 
-      <!-- Center Zero / EVEN Line (Dashed line preserved, text removed) -->
       <line x1="${xEven}" y1="12" x2="${xEven}" y2="42" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="2,2" />
 
-      <!-- Historical 2024 Result Pin -->
       ${histSvg}
 
-      <!-- Current 2026 Prediction Top Pin and Label -->
       <text x="${xMedian}" y="10" font-size="9" font-weight="900" fill="${cBar}" text-anchor="middle">${fmtPt(margin)}</text>
       <line x1="${xMedian}" y1="13" x2="${xMedian}" y2="40" stroke="${cBar}" stroke-width="3" stroke-linecap="round" />
       <circle cx="${xMedian}" cy="27" r="4.5" fill="${cBar}" stroke="#ffffff" stroke-width="1.5" />
     `;
   }
+
   function renderCard(distNum) {
     const comp = competitiveMap[distNum];
     const general = ratingsMap[distNum];
@@ -772,12 +838,91 @@
     };
   }
 
-  function refreshMapStyles() {
-    if (geojsonLayer) {
-      geojsonLayer.eachLayer(layer => {
-        layer.setStyle(getFeatureStyle(layer.feature));
-      });
+  // Generate a regular flat-topped hexagon polygon around [lat, lng]
+  function generateHexagon(centerLat, centerLng, radius) {
+    const coords = [];
+    for (let i = 0; i < 6; i++) {
+      const angle = (Math.PI / 180) * (60 * i);
+      const lat = centerLat + radius * Math.sin(angle);
+      const lng = centerLng + (radius / Math.cos((centerLat * Math.PI) / 180)) * Math.cos(angle);
+      coords.push([lng, lat]);
     }
+    coords.push(coords[0]);
+    return coords;
+  }
+
+  // Procedural Hex Cartogram Synthesizer
+  function buildHexCartogram(geojson) {
+    const features = [];
+    const radius = 0.16; // Hex size in degrees
+
+    // Extract centroids and sort West-to-East
+    const districtPoints = geojson.features.map(f => {
+      const id = String(f.properties.NAME || f.properties.id);
+      return {
+        id: id,
+        numId: parseInt(id, 10),
+        rawX: f.properties.labelx,
+        rawY: f.properties.labely,
+        feature: f
+      };
+    }).sort((a, b) => a.rawX - b.rawX);
+
+    // Collision-free hex grid allocation
+    const occupied = new Set();
+    const hexSpacingX = radius * Math.sqrt(3) * 0.98;
+    const hexSpacingY = radius * 1.5;
+
+    districtPoints.forEach(pt => {
+      // Find closest discrete row & col
+      let col = Math.round((pt.rawX - (-102.0)) / hexSpacingX);
+      let row = Math.round((pt.rawY - 37.0) / hexSpacingY);
+
+      // Search outward for nearest free hex slot
+      let dist = 0;
+      let placed = false;
+      let finalCol = col, finalRow = row;
+
+      while (!placed && dist < 12) {
+        for (let dc = -dist; dc <= dist && !placed; dc++) {
+          for (let dr = -dist; dr <= dist && !placed; dr++) {
+            if (Math.abs(dc) + Math.abs(dr) === dist) {
+              const testCol = col + dc;
+              const testRow = row + dr;
+              const key = `${testCol},${testRow}`;
+              if (!occupied.has(key)) {
+                occupied.add(key);
+                finalCol = testCol;
+                finalRow = testRow;
+                placed = true;
+              }
+            }
+          }
+        }
+        dist++;
+      }
+
+      // Compute geographic coordinates from slot
+      const hexCenterLat = 37.0 + finalRow * hexSpacingY;
+      const offsetX = (finalRow % 2 === 0) ? 0 : (hexSpacingX / 2);
+      const hexCenterLng = -102.0 + finalCol * hexSpacingX + offsetX;
+
+      const hexGeom = {
+        type: "Feature",
+        properties: {
+          ...pt.feature.properties,
+          hexLat: hexCenterLat,
+          hexLng: hexCenterLng
+        },
+        geometry: {
+          type: "Polygon",
+          coordinates: [generateHexagon(hexCenterLat, hexCenterLng, radius)]
+        }
+      };
+      features.push(hexGeom);
+    });
+
+    return { type: "FeatureCollection", features };
   }
 
   function parseRatingsText(text) {
@@ -834,23 +979,56 @@
     });
   }
 
-  // Load external repository files exclusively
-  Promise.all([
-    fetch('./districts.geojson').then(r => r.json()),
-    fetch('./ratings.txt').then(r => r.text()),
-    fetch('./district_data.txt').then(r => r.text())
-  ]).then(([geojson, ratingsTxt, districtTxt]) => {
-    parseRatingsText(ratingsTxt);
-    parseDistrictDataText(districtTxt);
+  let hatchOverlayGroup = L.featureGroup().addTo(map);
 
-    updateDropdownList();
+  function applyHatchOverlay() {
+    injectHatchPattern();
+    const activeLayer = (currentMapMode === 'hex') ? hexCartoLayer : geojsonLayer;
+    if (!activeLayer) return;
+    hatchOverlayGroup.clearLayers();
 
-    geojsonLayer = L.geoJSON(geojson, {
+    activeLayer.eachLayer(layer => {
+      const id = parseInt(layer.feature.properties.NAME || layer.feature.properties.id, 10);
+      if (PROJECTED_FLIPS.has(id)) {
+        const hatchLayer = L.geoJSON(layer.feature, {
+          style: {
+            fillColor: 'url(#diagonalHatch)',
+            fillOpacity: 0.65,
+            weight: 0,
+            interactive: false
+          }
+        });
+        hatchOverlayGroup.addLayer(hatchLayer);
+      }
+    });
+    hatchOverlayGroup.bringToFront();
+    selectedHighlightLayer.bringToFront();
+    hoverHighlightLayer.bringToFront();
+  }
+
+  // Core layer builder for either mode
+  function buildInteractiveLayer(geoData, isHex = false) {
+    return L.geoJSON(geoData, {
       style: getFeatureStyle,
       onEachFeature: (feature, layer) => {
         const id = String(feature.properties.NAME || feature.properties.id);
         const numId = parseInt(id, 10);
         const isFlip = PROJECTED_FLIPS.has(numId);
+
+        if (isHex && feature.properties.hexLat && feature.properties.hexLng) {
+          const rInfo = ratingsMap[id] || { rating: '' };
+          const isDark = rInfo.rating.startsWith("UNCONTESTED") || rInfo.rating.startsWith("SAFE");
+          const lbl = L.marker([feature.properties.hexLat, feature.properties.hexLng], {
+            interactive: false,
+            icon: L.divIcon({
+              className: 'hex-label-marker',
+              html: `<span class="hex-num ${isDark ? 'dark-bg' : ''}">${id}</span>`,
+              iconSize: [24, 14],
+              iconAnchor: [12, 7]
+            })
+          });
+          hexLabelsGroup.addLayer(lbl);
+        }
 
         layer.on({
           mouseover: e => {
@@ -878,7 +1056,63 @@
           }
         });
       }
-    }).addTo(map);
+    });
+  }
+
+  // Map Mode Switcher
+  function switchMapMode(mode) {
+    if (mode === currentMapMode || !cachedGeojson) return;
+    currentMapMode = mode;
+
+    document.getElementById('btnGeo').classList.toggle('active', mode === 'geo');
+    document.getElementById('btnHex').classList.toggle('active', mode === 'hex');
+
+    hoverHighlightLayer.clearLayers();
+    selectedHighlightLayer.clearLayers();
+
+    if (mode === 'hex') {
+      if (map.hasLayer(geojsonLayer)) map.removeLayer(geojsonLayer);
+      if (!hexCartoLayer) {
+        const hexData = buildHexCartogram(cachedGeojson);
+        hexCartoLayer = buildInteractiveLayer(hexData, true);
+      }
+      hexCartoLayer.addTo(map);
+      hexLabelsGroup.addTo(map);
+      map.fitBounds(hexCartoLayer.getBounds(), { padding: [15, 15] });
+    } else {
+      if (hexCartoLayer && map.hasLayer(hexCartoLayer)) map.removeLayer(hexCartoLayer);
+      if (map.hasLayer(hexLabelsGroup)) map.removeLayer(hexLabelsGroup);
+      geojsonLayer.addTo(map);
+      map.fitBounds(geojsonLayer.getBounds(), { padding: [15, 15] });
+    }
+
+    applyHatchOverlay();
+
+    // Re-highlight current district if selected
+    if (selectedId) {
+      const activeL = (mode === 'hex') ? hexCartoLayer : geojsonLayer;
+      activeL.eachLayer(l => {
+        if (String(l.feature.properties.NAME || l.feature.properties.id) === selectedId) {
+          selectedHighlightLayer.addData(l.feature);
+          selectedHighlightLayer.bringToFront();
+        }
+      });
+    }
+  }
+
+  // Load external repository data files and GeoJSON
+  Promise.all([
+    fetch('./districts.geojson').then(r => r.json()),
+    fetch('./ratings.txt').then(r => r.text()),
+    fetch('./district_data.txt').then(r => r.text())
+  ]).then(([geojson, ratingsTxt, districtTxt]) => {
+    cachedGeojson = geojson;
+    parseRatingsText(ratingsTxt);
+    parseDistrictDataText(districtTxt);
+
+    updateDropdownList();
+
+    geojsonLayer = buildInteractiveLayer(geojson, false).addTo(map);
 
     injectHatchPattern();
     applyHatchOverlay();
@@ -887,44 +1121,20 @@
     console.error("Initialization error. Verify districts.geojson, ratings.txt, and district_data.txt are committed to the repository root.", err);
   });
 
-  let hatchOverlayGroup = L.featureGroup().addTo(map);
-
-  function applyHatchOverlay() {
-    injectHatchPattern();
-    if (!geojsonLayer) return;
-    hatchOverlayGroup.clearLayers();
-
-    geojsonLayer.eachLayer(layer => {
-      const id = parseInt(layer.feature.properties.NAME || layer.feature.properties.id, 10);
-      if (PROJECTED_FLIPS.has(id)) {
-        const hatchLayer = L.geoJSON(layer.feature, {
-          style: {
-            fillColor: 'url(#diagonalHatch)',
-            fillOpacity: 0.65,
-            weight: 0,
-            interactive: false
-          }
-        });
-        hatchOverlayGroup.addLayer(hatchLayer);
-      }
-    });
-    hatchOverlayGroup.bringToFront();
-    selectedHighlightLayer.bringToFront();
-    hoverHighlightLayer.bringToFront();
-  }
-
   document.getElementById('districtSelect').addEventListener('change', (e) => {
     const id = e.target.value;
     selectedId = id;
 
     selectedHighlightLayer.clearLayers();
-    if (geojsonLayer) {
-      geojsonLayer.eachLayer(layer => {
+    const activeLayer = (currentMapMode === 'hex') ? hexCartoLayer : geojsonLayer;
+
+    if (activeLayer) {
+      activeLayer.eachLayer(layer => {
         const fid = String(layer.feature.properties.NAME || layer.feature.properties.id);
         if (fid === id) {
           selectedHighlightLayer.addData(layer.feature);
           selectedHighlightLayer.bringToFront();
-          map.fitBounds(layer.getBounds(), { maxZoom: 11 });
+          map.fitBounds(layer.getBounds(), { maxZoom: (currentMapMode === 'hex' ? 9 : 11) });
         }
       });
     }
