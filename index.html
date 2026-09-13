@@ -245,7 +245,7 @@
     }
     svg.outcome-svg {
       width: 100%;
-      height: 62px;
+      height: 70px;
       display: block;
       overflow: visible;
     }
@@ -788,7 +788,7 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
     style: { fill: false, color: '#0f172a', weight: 3.4, opacity: 1 }
   }).addTo(map);
 
-  // Range of Outcomes Chart (Seamless Continuous Gradient + Previous '24 Pin)
+  // Range of Outcomes Chart (No Pinching + Staggered Vertical Labels)
   function renderOutcomeBar(comp, isInd, distNum) {
     const svg = document.getElementById('rangeSvg');
     const summarySpan = document.getElementById('outRangeSummary');
@@ -833,7 +833,7 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
     const w95 = Math.max(1, x95R - x95L);
     const w67 = Math.max(1, x67R - x67L);
 
-    // Percent coordinates for color gradient transitions
+    // Percent offsets for color gradient transition
     const pctEven95 = Math.max(0, Math.min(100, ((xEven - x95L) / w95) * 100));
     const pctEven67 = Math.max(0, Math.min(100, ((xEven - x67L) / w67) * 100));
 
@@ -853,17 +853,33 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
       summarySpan.textContent = `67%: ${fmtPt(lo67)} to ${fmtPt(hi67)}`;
     }
 
-    // Previous 2024 Result Pin Marker
+    // Historical 2024 Pin Marker positioned beneath the EVEN label
     let histSvg = '';
     if (isHistContested) {
       const xHist = scaleX(hist2024);
+      // Determine text anchor to step clear of the EVEN label if close
+      const delta = xHist - xEven;
+      let textAnchor = "middle";
+      let textOffset = xHist;
+
+      if (Math.abs(delta) < 22) {
+        if (delta >= 0) {
+          textAnchor = "start";
+          textOffset = xHist + 3;
+        } else {
+          textAnchor = "end";
+          textOffset = xHist - 3;
+        }
+      }
+
       histSvg = `
-        <line x1="${xHist}" y1="20" x2="${xHist}" y2="46" stroke="#475569" stroke-width="2" stroke-dasharray="2,2" />
-        <circle cx="${xHist}" cy="30" r="3" fill="#475569" />
-        <text x="${xHist}" y="57" font-size="7.5" font-weight="700" fill="#475569" text-anchor="middle">'24: ${fmtPt(hist2024)}</text>
+        <line x1="${xHist}" y1="18" x2="${xHist}" y2="52" stroke="#475569" stroke-width="1.8" stroke-dasharray="2,2" />
+        <circle cx="${xHist}" cy="27" r="3" fill="#475569" />
+        <text x="${textOffset}" y="65" font-size="7.5" font-weight="700" fill="#475569" text-anchor="${textAnchor}">'24: ${fmtPt(hist2024)}</text>
       `;
     }
 
+    svg.setAttribute("viewBox", "0 0 320 70");
     svg.innerHTML = `
       <defs>
         <linearGradient id="grad95" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -876,26 +892,26 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
         </linearGradient>
       </defs>
 
-      <!-- Baseline axis -->
-      <line x1="0" y1="30" x2="${width}" y2="30" stroke="#cbd5e1" stroke-width="2" />
+      <!-- Base Axis Track -->
+      <line x1="0" y1="27" x2="${width}" y2="27" stroke="#cbd5e1" stroke-width="2" />
       
-      <!-- 95% Interval (Unpinched rounded rect) -->
-      <rect x="${x95L}" y="23" width="${w95}" height="14" rx="4" fill="url(#grad95)" />
+      <!-- 95% Confidence Bar -->
+      <rect x="${x95L}" y="20" width="${w95}" height="14" rx="4" fill="url(#grad95)" />
       
-      <!-- 67% Interval (Unpinched rounded rect) -->
-      <rect x="${x67L}" y="20" width="${w67}" height="20" rx="4" fill="url(#grad67)" />
+      <!-- 67% Confidence Bar -->
+      <rect x="${x67L}" y="17" width="${w67}" height="20" rx="4" fill="url(#grad67)" />
 
-      <!-- Historical 2024 Result Line -->
+      <!-- Center Zero / EVEN Divider Line & Label -->
+      <line x1="${xEven}" y1="12" x2="${xEven}" y2="38" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="2,2" />
+      <text x="${xEven}" y="48" font-size="8.5" font-weight="800" fill="#0f172a" text-anchor="middle">EVEN</text>
+
+      <!-- Historical 2024 Marker -->
       ${histSvg}
 
-      <!-- Center Zero / EVEN Divider Line -->
-      <line x1="${xEven}" y1="16" x2="${xEven}" y2="44" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="2,2" />
-      <text x="${xEven}" y="55" font-size="8.5" font-weight="800" fill="#0f172a" text-anchor="middle">EVEN</text>
-
       <!-- Predicted Margin Top Pin and Label -->
-      <text x="${xMedian}" y="11" font-size="9" font-weight="900" fill="${cBar}" text-anchor="middle">${fmtPt(margin)}</text>
-      <line x1="${xMedian}" y1="14" x2="${xMedian}" y2="44" stroke="${cBar}" stroke-width="3" stroke-linecap="round" />
-      <circle cx="${xMedian}" cy="30" r="4.5" fill="${cBar}" stroke="#ffffff" stroke-width="1.5" />
+      <text x="${xMedian}" y="10" font-size="9" font-weight="900" fill="${cBar}" text-anchor="middle">${fmtPt(margin)}</text>
+      <line x1="${xMedian}" y1="13" x2="${xMedian}" y2="40" stroke="${cBar}" stroke-width="3" stroke-linecap="round" />
+      <circle cx="${xMedian}" cy="27" r="4.5" fill="${cBar}" stroke="#ffffff" stroke-width="1.5" />
     `;
   }
 
