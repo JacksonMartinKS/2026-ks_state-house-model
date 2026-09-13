@@ -833,79 +833,74 @@
     };
   }
 
+// -------------------------------------------------------------
+  // CONTIGUOUS KANSAS RECTANGULAR HEX CARTOGRAM (125 Flush Hexagons)
+  // Aspect: 16 columns wide x ~9 rows high (Rectangular with NE cutout)
   // -------------------------------------------------------------
-  // CONTIGUOUS KANSAS HEX CARTOGRAM LAYOUT (125 Flush Hexagons)
-  // -------------------------------------------------------------
-  // Coordinated [col, row] grid matching Kansas state outline:
-  // Rectangular silhouette, NE river cutout, relative geography.
   const KS_HEX_GRID = {
-    // Row 0 (Northern Border, West to East)
-    118:[0,0], 120:[1,0], 109:[2,0], 106:[3,0], 62:[4,0], 63:[5,0], 61:[6,0], 47:[7,0], 42:[8,0], 40:[9,0], 36:[10,0], 35:[11,0],
+    // Row 0 (Northern Border: West to East, cuts off before NE river bend)
+    118:[0,0], 120:[1,0], 109:[2,0], 106:[3,0], 62:[4,0], 63:[5,0], 61:[6,0], 47:[7,0], 42:[8,0], 40:[9,0], 41:[10,0], 36:[11,0],
     
-    // Row 1
-    124:[0,1], 110:[1,1], 107:[2,1], 108:[3,1], 64:[4,1], 65:[5,1], 50:[6,1], 53:[7,1], 41:[8,1], 38:[9,1], 34:[10,1], 32:[11,1], 31:[12,1],
+    // Row 1 (Northern Tier + Topeka/Manhattan Corridor)
+    124:[0,1], 110:[1,1], 107:[2,1], 108:[3,1], 64:[4,1], 65:[5,1], 50:[6,1], 53:[7,1], 57:[8,1], 55:[9,1], 38:[10,1], 35:[11,1], 34:[12,1],
     
-    // Row 2
-    125:[0,2], 111:[1,2], 71:[2,2], 69:[3,2], 66:[4,2], 67:[5,2], 57:[6,2], 55:[7,2], 58:[8,2], 39:[9,2], 33:[10,2], 37:[11,2], 25:[12,2],
+    // Row 2 (Central Plains & Upper Metro)
+    125:[0,2], 111:[1,2], 71:[2,2], 69:[3,2], 66:[4,2], 67:[5,2], 51:[6,2], 56:[7,2], 58:[8,2], 54:[9,2], 39:[10,2], 33:[11,2], 37:[12,2], 31:[13,2], 32:[14,2],
     
-    // Row 3
-    122:[0,3], 112:[1,3], 70:[2,3], 73:[3,3], 68:[4,3], 51:[5,3], 56:[6,3], 52:[7,3], 54:[8,3], 43:[9,3], 30:[10,3], 17:[11,3], 24:[12,3],
+    // Row 3 (Mid-Kansas + KC / Wyandotte & North Johnson)
+    122:[0,3], 112:[1,3], 70:[2,3], 73:[3,3], 68:[4,3], 74:[5,3], 52:[6,3], 10:[7,3], 45:[8,3], 43:[9,3], 30:[10,3], 17:[11,3], 25:[12,3], 24:[13,3], 23:[14,3],
     
-    // Row 4
-    123:[0,4], 114:[1,4], 113:[2,4], 74:[3,4], 72:[4,4], 60:[5,4], 76:[6,4], 10:[7,4], 45:[8,4], 44:[9,4], 46:[10,4], 18:[11,4], 23:[12,4],
+    // Row 4 (Central Core + Lawrence & Central Johnson)
+    123:[0,4], 114:[1,4], 113:[2,4], 72:[3,4], 60:[4,4], 76:[5,4], 75:[6,4], 44:[7,4], 46:[8,4], 121:[9,4], 14:[10,4], 18:[11,4], 15:[12,4], 19:[13,4], 22:[14,4], 21:[15,4],
     
-    // Row 5
-    119:[0,5], 115:[1,5], 104:[2,5], 102:[3,5], 75:[4,5], 59:[5,5], 6:[6,5], 5:[7,5], 121:[8,5], 14:[9,5], 15:[10,5], 19:[11,5], 22:[12,5],
+    // Row 5 (South Central + Greater Wichita & South Johnson)
+    119:[0,5], 115:[1,5], 104:[2,5], 102:[3,5], 90:[4,5], 81:[5,5], 59:[6,5], 5:[7,5], 6:[8,5], 78:[9,5], 49:[10,5], 48:[11,5], 16:[12,5], 28:[13,5], 29:[14,5], 20:[15,5],
     
-    // Row 6 (South Central & Greater Wichita & South Metro)
-    116:[0,6], 117:[1,6], 105:[2,6], 101:[3,6], 90:[4,6], 89:[5,6], 81:[6,6], 77:[7,6], 78:[8,6], 49:[9,6], 48:[10,6], 16:[11,6], 21:[12,6],
+    // Row 6 (Wichita Metro & Suburban Johnson)
+    116:[0,6], 117:[1,6], 105:[2,6], 101:[3,6], 89:[4,6], 91:[5,6], 84:[6,6], 86:[7,6], 77:[8,6], 79:[9,6], 8:[10,6], 26:[11,6], 27:[12,6], 4:[13,6], 2:[14,6], 3:[15,6],
     
-    // Row 7 (Wichita Metro & Flint Hills)
-    80:[1,7], 100:[2,7], 91:[3,7], 92:[4,7], 84:[5,7], 86:[6,7], 83:[7,7], 79:[8,7], 9:[9,7], 8:[10,7], 28:[11,7], 29:[12,7],
+    // Row 7 (Wichita Urban Core & Southern Plains)
+    80:[1,7], 100:[2,7], 92:[3,7], 95:[4,7], 97:[5,7], 88:[6,7], 83:[7,7], 85:[8,7], 87:[9,7], 9:[10,7], 13:[11,7], 11:[12,7], 12:[13,7], 7:[14,7], 1:[15,7],
     
-    // Row 8 (Wichita Urban & Southern Flank)
-    82:[2,8], 97:[3,8], 95:[4,8], 87:[5,8], 88:[6,8], 85:[7,8], 13:[8,8], 4:[9,8], 26:[10,8], 27:[11,8], 20:[12,8],
-    
-    // Row 9 (Southern Border Districts)
-    93:[3,9], 94:[4,9], 96:[5,9], 98:[6,9], 99:[7,9], 12:[8,9], 11:[9,9], 7:[10,9], 2:[11,9], 3:[12,9],
-    
-    // Row 10 (Southeast Corner)
-    1:[11,10]
+    // Row 8 (Southern Border Tier)
+    93:[3,8], 94:[4,8], 96:[5,8], 82:[6,8], 98:[7,8], 103:[8,8], 99:[9,8]
   };
-
-  // Regular flat-topped hexagon coordinate generator (Cartesian space)
-  function getFlatHexCoords(cx, cy, r) {
-    const coords = [];
-    for (let i = 0; i < 6; i++) {
-      const angle = (Math.PI / 180) * (60 * i);
-      coords.push([cx + r * Math.cos(angle), cy + r * Math.sin(angle)]);
-    }
-    coords.push(coords[0]);
-    return coords;
-  }
 
   function buildContiguousHexCartogram() {
     const features = [];
-    const hexRadius = 0.22;
-    // Mathematical spacing for flat-topped hexagons
-    const dx = hexRadius * 1.5;
+    const centerRefLat = 38.5;
+    const cosFactor = Math.cos((centerRefLat * Math.PI) / 180); // ~0.7825
+
+    // Radius in degrees latitude
+    const hexRadius = 0.20;
+    
+    // Compensate longitude spacing to produce equilateral un-squished hexagons
+    const dx = (hexRadius * 1.5) / cosFactor; 
     const dy = hexRadius * Math.sqrt(3);
 
-    // Anchor origin so the cartogram aligns centrally over Kansas
-    const originLng = -101.5;
-    const originLat = 40.2;
+    // Anchor origin to seat properly in Kansas bounds
+    const originLng = -101.8;
+    const originLat = 40.0;
 
     for (let i = 1; i <= 125; i++) {
       const id = String(i);
-      const pos = KS_HEX_GRID[i] || [i % 12, Math.floor(i / 12)];
+      const pos = KS_HEX_GRID[i] || [i % 16, Math.floor(i / 16)];
       const col = pos[0];
       const row = pos[1];
 
-      // Flat-topped staggering: odd columns shift vertically by half dy
+      // Flat-topped geometry with vertical offset on odd columns
       const cx = originLng + col * dx;
       const cy = originLat - row * dy - ((col % 2 === 1) ? (dy / 2) : 0);
 
-      const hexCoords = getFlatHexCoords(cx, cy, hexRadius * 0.98);
+      // Generate regular hexagon coordinates factoring in latitude projection
+      const coords = [];
+      for (let step = 0; step < 6; step++) {
+        const angle = (Math.PI / 180) * (60 * step);
+        const pLat = cy + hexRadius * 0.98 * Math.sin(angle);
+        const pLng = cx + (hexRadius * 0.98 * Math.cos(angle)) / cosFactor;
+        coords.push([pLng, pLat]);
+      }
+      coords.push(coords[0]);
 
       features.push({
         type: "Feature",
@@ -917,7 +912,7 @@
         },
         geometry: {
           type: "Polygon",
-          coordinates: [hexCoords]
+          coordinates: [coords]
         }
       });
     }
