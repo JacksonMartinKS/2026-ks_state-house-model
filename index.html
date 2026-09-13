@@ -330,13 +330,11 @@
   <div id="hoverChip" class="map-hover-chip" style="display: none;">Hover over a district</div>
 
   <div class="sidebar">
-    <!-- 1. LEGISLATIVE DISTRICT SELECTOR -->
     <label class="control-label" for="districtSelect">Select Legislative District</label>
     <select id="districtSelect">
       <option value="" disabled selected>-- Select any legislative district --</option>
     </select>
 
-    <!-- 2. DISTRICT CARD (Positioned above House Control Gauges) -->
     <div id="districtCard" class="card" style="display: none;">
       <div class="header-row">
         <div id="outDistrict" class="district-title"></div>
@@ -387,7 +385,6 @@
         </div>
       </div>
 
-      <!-- HORIZONTAL RANGE OF OUTCOMES (Continuous Gradient, Staggered '24 Line & Uncontested Ends) -->
       <div class="range-box">
         <div class="range-title-row">
           <span>Range of Outcomes</span>
@@ -404,9 +401,7 @@
       <p style="margin: 6px 0 0; font-size: 0.78rem;">District is uncontested or non-competitive. Not tracked with itemized shift variables.</p>
     </div>
 
-    <!-- 3. NYT-STYLE FORECAST GAUGES -->
     <div class="needle-container">
-      <!-- Gauge 1: GOP Supermajority vs Simple Majority -->
       <div class="needle-block">
         <div class="needle-label">House Control Outcome</div>
         <div class="needle-val" style="color: var(--rep);">87.4% Plain Majority</div>
@@ -421,22 +416,17 @@
         <div class="needle-sub">Plain Majority (42–62): <strong>87.4%</strong> | Supermajority (&le;41): <strong>12.6%</strong></div>
       </div>
 
-      <!-- Gauge 2: Projected DEM Seats with Supermajority Threshold (42) -->
       <div class="needle-block">
         <div class="needle-label">Projected Democratic Seats</div>
         <div class="needle-val" style="color: var(--rep);">47 Median <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">(of 125)</span></div>
         <svg class="gauge" viewBox="0 0 200 120">
           <path d="M 20 95 A 80 80 0 0 1 180 95" fill="none" stroke="#f1f5f9" stroke-width="18" />
-          <!-- 95% Interval: 39 to 56 seats -->
           <path d="M 55.5 28.5 A 80 80 0 0 1 87.0 16.1" fill="none" stroke="#ffafab" stroke-width="18" />
-          <!-- 67% Interval: 42 to 51 seats -->
-          <path d="M 60.6 25.4 A 80 80 0 0 1 77.1 18.3" fill="none" stroke="#ff6259" stroke-width="18" />
+          <path d="M 62.3 24.4 A 80 80 0 0 1 79.1 17.8" fill="none" stroke="#ff6259" stroke-width="18" />
           
-          <!-- Supermajority Break Threshold Line at 42 seats -->
           <line x1="68" y1="38" x2="54" y2="13" stroke="#0f172a" stroke-width="2" stroke-dasharray="2,1" />
           <text x="50" y="8" font-size="7.5" fill="#0f172a" font-weight="800" text-anchor="middle">42 (Break)</text>
 
-          <!-- Plain Majority Threshold Line at 63 seats -->
           <line x1="100" y1="7" x2="100" y2="23" stroke="#94a3b8" stroke-width="2" />
           <text x="100" y="5" font-size="7.5" fill="#64748b" font-weight="700" text-anchor="middle">63 (Maj)</text>
 
@@ -454,7 +444,7 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<!-- EMBEDDED FALLBACK DATA BLOCKS (Matches external repository text file structure) -->
+<!-- Embedded Fallbacks -->
 <script id="ratingsData" type="text/plain">
 15LIKELY D76%-4.4%1.4%39LEAN D73%-4.0%3.2%33LEAN D71%-3.7%13.3%88LEAN D69%-3.2%2.1%41LEAN D66%-2.6%5.1%30LEAN D65%-2.5%5.2%121LEAN D61%-1.9%11.0%78TOSSUP50%0.0%8.8%102TILT R40%1.6%4.1%96LEAN R38%1.9%9.4%117LEAN R29%3.6%15.0%3LIKELY R25%4.5%20.4%8LIKELY R25%4.4%10.5%
 1	UNCONTESTED R	0%	101.1%	101.1%
@@ -642,7 +632,9 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
     return interpolateColormap(p >= 0.5 ? CMAP_D : CMAP_R, t);
   }
 
-  // Strict check: Only Jack Geiger in HD-62 and Lex Goff in HD-80
+  const ratingsMap = {};
+  const competitiveMap = {};
+
   function formatCandidate(name, distNum, defaultParty) {
     if (!name || name.trim() === '') {
       return { fullName: 'None', party: defaultParty, isInd: false, html: `Uncontested` };
@@ -726,7 +718,6 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
     style: { fill: false, color: '#0f172a', weight: 3.4, opacity: 1 }
   }).addTo(map);
 
-  // Range of Outcomes Chart (Continuous Unpinched Bars + '24 Result Line & Edge Anchors)
   function renderOutcomeBar(comp, isInd, distNum) {
     const svg = document.getElementById('rangeSvg');
     const summarySpan = document.getElementById('outRangeSummary');
@@ -744,7 +735,6 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
     const lo95 = margin - (1.960 * stdev);
     const hi95 = margin + (1.960 * stdev);
 
-    // Retrieve historical 2024 margin
     const rInfo = ratingsMap[distNum] || {};
     const hist2024 = (rInfo.hist2024 !== null && rInfo.hist2024 !== undefined) ? (rInfo.hist2024 * 100) : null;
     const isHistUncontestedD = hist2024 !== null && hist2024 <= -100;
@@ -792,7 +782,6 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
       summarySpan.textContent = `67%: ${fmtPt(lo67)} to ${fmtPt(hi67)}`;
     }
 
-    // Previous 2024 Result Indicator with Non-Colliding Layout
     let histSvg = '';
     if (isHistUncontestedD) {
       histSvg = `
@@ -831,23 +820,12 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
         </linearGradient>
       </defs>
 
-      <!-- Baseline axis -->
       <line x1="0" y1="30" x2="${width}" y2="30" stroke="#cbd5e1" stroke-width="2" />
-      
-      <!-- 95% Confidence Interval Bar -->
       <rect x="${x95L}" y="23" width="${w95}" height="14" rx="4" fill="url(#grad95)" />
-      
-      <!-- 67% Confidence Interval Bar -->
       <rect x="${x67L}" y="20" width="${w67}" height="20" rx="4" fill="url(#grad67)" />
-
-      <!-- Historical 2024 Result Reference Indicator -->
       ${histSvg}
-
-      <!-- Center Zero / EVEN Line -->
       <line x1="${xEven}" y1="16" x2="${xEven}" y2="38" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="2,2" />
       <text x="${xEven}" y="48" font-size="8.5" font-weight="800" fill="#0f172a" text-anchor="middle">EVEN</text>
-
-      <!-- Predicted Margin Top Pin and Label (Clear of EVEN and '24) -->
       <text x="${xMedian}" y="11" font-size="9" font-weight="900" fill="${cBar}" text-anchor="middle">${fmtPt(margin)}</text>
       <line x1="${xMedian}" y1="14" x2="${xMedian}" y2="44" stroke="${cBar}" stroke-width="3" stroke-linecap="round" />
       <circle cx="${xMedian}" cy="30" r="4.5" fill="${cBar}" stroke="#ffffff" stroke-width="1.5" />
@@ -949,12 +927,18 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
     }
   }
 
-  // Fetch external forecast text documents and geojson simultaneously
+  // Robust Fetch with Safe 404 Fallbacks
+  const safeFetchText = (url) => 
+    fetch(url)
+      .then(res => res.ok ? res.text() : Promise.reject())
+      .catch(() => null);
+
   Promise.all([
     fetch('./districts.geojson').then(r => r.json()),
-    fetch('./ratings.txt').then(r => r.text()).catch(() => ""),
-    fetch('./district_data.txt').then(r => r.text()).catch(() => "")
+    safeFetchText('./ratings.txt'),
+    safeFetchText('./district_data.txt')
   ]).then(([geojson, ratingsTxt, districtTxt]) => {
+    // Falls back to script blocks if text files fail or 404
     parseRatingsText(ratingsTxt || document.getElementById('ratingsData').textContent);
     parseDistrictDataText(districtTxt || document.getElementById('rawInputData').textContent);
 
@@ -999,7 +983,7 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
     applyHatchOverlay();
     map.fitBounds(geojsonLayer.getBounds(), { padding: [15, 15] });
   }).catch(err => {
-    console.error("Initialization error. Verify districts.geojson, ratings.txt, and district_data.txt exist in repository root.", err);
+    console.error("Critical initialization failure:", err);
   });
 
   let hatchOverlayGroup = L.featureGroup().addTo(map);
