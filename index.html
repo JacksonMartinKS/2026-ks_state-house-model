@@ -834,104 +834,88 @@
   }
 
 // -------------------------------------------------------------------------
-  // KANSAS RECTILINEAR HEX CARTOGRAM SPECIFICATION (125 Flush Hexagons)
-  // 14 columns of 7 (Cols 0-13: Rows 0-6) = 98
-  // 3 columns of 6  (Cols 14-16: Rows 1-6) = 18
-  // 1 column of 5   (Col 17: Rows 2-6)     = 5
-  // 1 column of 4   (Col 18: Rows 3-6)     = 4
-  // Total: 98 + 18 + 5 + 4 = 125 districts. Solid flat base on Row 6.
+  // KANSAS RECTILINEAR HEX CARTOGRAM (125 Flush Hexagons, 17 Columns: 0 to 16)
+  // - Columns 17 & 18 removed; 9 districts redistributed to the northern tier
+  // - Every district 1–125 occupies a unique slot (Zero stacked districts)
+  // - HD-69 placed in Salina beside HD-71; HD-108 beside HD-30 in Johnson Co.
+  // - Straight Western border (Col 0), straight Southern border (Row 7)
   // -------------------------------------------------------------------------
   const KS_HEX_GRID = {
-    // Col 0 (7): Westernmost border
-    118:[0,0], 124:[0,1], 125:[0,2], 122:[0,3], 123:[0,4], 119:[0,5], 116:[0,6],
+    // Col 0 (7): Western border
+    118:[0,1], 124:[0,2], 125:[0,3], 122:[0,4], 123:[0,5], 119:[0,6], 116:[0,7],
 
-    // Col 1 (7)
-    120:[1,0], 110:[1,1], 111:[1,2], 112:[1,3], 113:[1,4], 115:[1,5], 117:[1,6],
+    // Col 1 (8): [1,0] top bracket
+    120:[1,0], 110:[1,1], 111:[1,2], 112:[1,3], 113:[1,4], 115:[1,5], 117:[1,6], 80:[1,7],
 
-    // Col 2 (7)
-    109:[2,0], 107:[2,1], 71:[2,2], 70:[2,3], 114:[2,4], 104:[2,5], 80:[2,6],
+    // Col 2 (7): HD-69 unstacked and placed with HD-71 (Salina)
+    109:[2,1], 107:[2,2], 71:[2,3], 69:[2,4], 70:[2,5], 114:[2,6], 105:[2,7],
 
-    // Col 3 (7)
-    106:[3,0], 64:[3,1], 66:[3,2], 73:[3,3], 72:[3,4], 102:[3,5], 105:[3,6],
+    // Col 3 (8): [3,0] top bracket
+    106:[3,0], 64:[3,1], 66:[3,2], 73:[3,3], 72:[3,4], 104:[3,5], 102:[3,6], 101:[3,7],
 
     // Col 4 (7)
-    62:[4,0], 65:[4,1], 67:[4,2], 68:[4,3], 60:[4,4], 90:[4,5], 101:[4,6],
+    62:[4,1], 65:[4,2], 67:[4,3], 68:[4,4], 60:[4,5], 90:[4,6], 100:[4,7],
 
-    // Col 5 (7)
-    63:[5,0], 50:[5,1], 51:[5,2], 74:[5,3], 76:[5,4], 81:[5,5], 100:[5,6],
+    // Col 5 (8): [5,0] top bracket
+    63:[5,0], 50:[5,1], 51:[5,2], 74:[5,3], 76:[5,4], 81:[5,5], 89:[5,6], 91:[5,7],
 
     // Col 6 (7)
-    61:[6,0], 53:[6,1], 56:[6,2], 52:[6,3], 75:[6,4], 89:[6,5], 91:[6,6],
+    61:[6,1], 53:[6,2], 56:[6,3], 52:[6,4], 75:[6,5], 84:[6,6], 92:[6,7],
 
-    // Col 7 (7)
-    47:[7,0], 57:[7,1], 58:[7,2], 10:[7,3], 59:[7,4], 84:[7,5], 92:[7,6],
+    // Col 7 (8): [7,0] top bracket
+    47:[7,0], 57:[7,1], 58:[7,2], 10:[7,3], 59:[7,4], 86:[7,5], 88:[7,6], 95:[7,7],
 
     // Col 8 (7)
-    42:[8,0], 55:[8,1], 54:[8,2], 45:[8,3], 6:[8,4], 86:[8,5], 88:[8,6],
+    42:[8,1], 55:[8,2], 54:[8,3], 45:[8,4], 6:[8,5], 77:[8,6], 83:[8,7],
 
-    // Col 9 (7)
-    40:[9,0], 38:[9,1], 43:[9,2], 44:[9,3], 5:[9,4], 77:[9,5], 83:[9,6],
+    // Col 9 (8): [9,0] top bracket
+    40:[9,0], 38:[9,1], 43:[9,2], 44:[9,3], 46:[9,4], 5:[9,5], 79:[9,6], 85:[9,7],
 
-    // Col 10 (7)
-    41:[10,0], 39:[10,1], 108:[10,2], 46:[10,3], 78:[10,4], 79:[10,5], 85:[10,6],
+    // Col 10 (7): HD-108 adjacent to HD-30
+    41:[10,1], 39:[10,2], 108:[10,3], 121:[10,4], 78:[10,5], 9:[10,6], 87:[10,7],
 
-    // Col 11 (7) - HD-108 adjacent to HD-30
-    36:[11,0], 33:[11,1], 30:[11,2], 121:[11,3], 49:[11,4], 9:[11,5], 87:[11,6],
+    // Col 11 (8): [11,0] top bracket
+    36:[11,0], 33:[11,1], 30:[11,2], 14:[11,3], 49:[11,4], 8:[11,5], 13:[11,6], 98:[11,7],
 
     // Col 12 (7)
-    35:[12,0], 37:[12,1], 17:[12,2], 14:[12,3], 48:[12,4], 13:[12,5], 95:[12,6],
+    35:[12,1], 37:[12,2], 17:[12,3], 18:[12,4], 48:[12,5], 26:[12,6], 99:[12,7],
 
-    // Col 13 (7)
-    34:[13,0], 31:[13,1], 25:[13,2], 15:[13,3], 8:[13,4], 4:[13,5], 97:[13,6],
+    // Col 13 (8): [13,0] top bracket
+    34:[13,0], 31:[13,1], 25:[13,2], 15:[13,3], 28:[13,4], 27:[13,5], 4:[13,6], 97:[13,7],
 
-    // Col 14 (6): Rows 1 to 6 (Cutout at Row 0)
-    32:[14,1], 24:[14,2], 18:[14,3], 28:[14,4], 11:[14,5], 94:[14,6],
+    // Col 14 (7): Start of NE river cutout step-down
+    32:[14,1], 24:[14,2], 22:[14,3], 19:[14,4], 29:[14,5], 11:[14,6], 94:[14,7],
 
-    // Col 15 (6): Rows 1 to 6 (Cutout at Row 0)
-    23:[15,1], 22:[15,2], 19:[15,3], 29:[15,4], 12:[15,5], 96:[15,6],
+    // Col 15 (7)
+    23:[15,1], 16:[15,2], 20:[15,3], 2:[15,4], 12:[15,5], 96:[15,6], 93:[15,7],
 
-    // Col 16 (6): Rows 1 to 6 (Cutout at Row 0)
-    21:[16,1], 16:[16,2], 26:[16,3], 27:[16,4], 7:[16,5], 82:[16,6],
-
-    // Col 17 (5): Rows 2 to 6 (Cutout at Rows 0-1)
-    20:[17,2], 2:[17,3], 3:[17,4], 98:[17,5], 93:[17,6],
-
-    // Col 18 (4): Rows 3 to 6 (Cutout at Rows 0-2)
-    99:[18,3], 103:[18,4], 1:[18,5], 99:[18,6] // Overwritten correctly below
+    // Col 16 (6): Eastern border (Row 2 to 7)
+    21:[16,2], 3:[16,3], 7:[16,4], 82:[16,5], 103:[16,6], 1:[16,7]
   };
-
-  // Explicit final assignments ensuring no duplicate keys:
-  Object.assign(KS_HEX_GRID, {
-    103: [18, 3],
-    98:  [17, 5],
-    99:  [18, 4],
-    1:   [18, 5],
-    93:  [18, 6]
-  });
 
   function buildContiguousHexCartogram() {
     const features = [];
     const centerRefLat = 38.5;
     const cosFactor = Math.cos((centerRefLat * Math.PI) / 180); // ~0.7825
 
-    // Radius in degrees latitude calibrated for 19 columns x 7 rows
-    const hexRadius = 0.225;
+    // Hex radius in latitude degrees
+    const hexRadius = 0.22;
 
     // Longitude spacing adjusted for flat-topped hexagons
     const dx = (hexRadius * 1.5) / cosFactor;
     const dy = hexRadius * Math.sqrt(3);
 
-    // Anchor origin to center Kansas
-    const originLng = -102.1;
+    // Anchor origin so the cartogram aligns centrally over Kansas bounds
+    const originLng = -101.9;
     const originLat = 40.0;
 
     for (let i = 1; i <= 125; i++) {
       const id = String(i);
-      const pos = KS_HEX_GRID[i] || [i % 19, Math.min(6, Math.floor(i / 19))];
+      const pos = KS_HEX_GRID[i] || [i % 17, Math.min(7, Math.floor(i / 17))];
       const col = pos[0];
-      const row = Math.min(6, pos[1]);
+      const row = Math.min(7, pos[1]);
 
-      // Flat-topped geometry with vertical alternating offset on odd columns
+      // Alternating column vertical offset
       const cx = originLng + col * dx;
       const cy = originLat - row * dy - ((col % 2 === 1) ? (dy / 2) : 0);
 
@@ -961,6 +945,8 @@
 
     return { type: "FeatureCollection", features };
   }
+
+  
   function parseRatingsText(text) {
     const unspacedRegex = /(\d{1,3})\s*([A-Z\s]+?)\s*(\d{1,3}%)\s*([+-]?\d+\.?\d*%)\s*([+-]?\d+\.?\d*%)/g;
     let match;
