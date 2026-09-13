@@ -330,13 +330,13 @@
   <div id="hoverChip" class="map-hover-chip" style="display: none;">Hover over a district</div>
 
   <div class="sidebar">
-    <!-- 1. LEGISLATIVE DISTRICT DROPDOWN -->
+    <!-- LEGISLATIVE DISTRICT DROPDOWN -->
     <label class="control-label" for="districtSelect">Select Legislative District</label>
     <select id="districtSelect">
-      <option value="" disabled selected>-- Select any legislative district --</option>
+      <option value="" disabled selected>-- Loading districts... --</option>
     </select>
 
-    <!-- 2. DISTRICT DETAILS CARD (Placed above House Control Gauges) -->
+    <!-- DISTRICT DETAILS CARD -->
     <div id="districtCard" class="card" style="display: none;">
       <div class="header-row">
         <div id="outDistrict" class="district-title"></div>
@@ -387,14 +387,13 @@
         </div>
       </div>
 
-      <!-- HORIZONTAL RANGE OF OUTCOMES BAR (67%, 95% CI & 2024 Reference Line) -->
+      <!-- HORIZONTAL RANGE OF OUTCOMES BAR -->
       <div class="range-box">
         <div class="range-title-row">
           <span>Range of Outcomes</span>
           <span id="outRangeSummary"></span>
         </div>
-        <svg id="rangeSvg" class="outcome-svg" viewBox="0 0 320 62">
-          <!-- Dynamically populated via renderOutcomeBar() -->
+        <svg id="rangeSvg" class="outcome-svg" viewBox="0 0 320 70">
         </svg>
       </div>
     </div>
@@ -405,9 +404,8 @@
       <p style="margin: 6px 0 0; font-size: 0.78rem;">District is uncontested or non-competitive. Not tracked with itemized shift variables.</p>
     </div>
 
-    <!-- 3. NYT-STYLE FORECAST GAUGES -->
+    <!-- FORECAST GAUGES -->
     <div class="needle-container">
-      <!-- Gauge 1: GOP Supermajority vs Simple Majority -->
       <div class="needle-block">
         <div class="needle-label">House Control Outcome</div>
         <div class="needle-val" style="color: var(--rep);">87.4% Plain Majority</div>
@@ -422,28 +420,19 @@
         <div class="needle-sub">Plain Majority (42–62): <strong>87.4%</strong> | Supermajority (&le;41): <strong>12.6%</strong></div>
       </div>
 
-      <!-- Gauge 2: Projected DEM Seats with Supermajority Threshold (42) -->
       <div class="needle-block">
         <div class="needle-label">Projected Democratic Seats</div>
         <div class="needle-val" style="color: var(--rep);">47 Median <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">(of 125)</span></div>
         <svg class="gauge" viewBox="0 0 200 120">
           <path d="M 20 95 A 80 80 0 0 1 180 95" fill="none" stroke="#f1f5f9" stroke-width="18" />
-          <!-- 95% Interval: 39 to 56 seats -->
           <path d="M 55.5 28.5 A 80 80 0 0 1 87.0 16.1" fill="none" stroke="#ffafab" stroke-width="18" />
-          <!-- 67% Interval: 42 to 51 seats -->
-          <path d="M 60.6 25.4 A 80 80 0 0 1 77.1 18.3" fill="none" stroke="#ff6259" stroke-width="18" />
-          
-          <!-- Supermajority Break Line at 42 seats -->
+          <path d="M 62.3 24.4 A 80 80 0 0 1 79.1 17.8" fill="none" stroke="#ff6259" stroke-width="18" />
           <line x1="68" y1="38" x2="54" y2="13" stroke="#0f172a" stroke-width="2" stroke-dasharray="2,1" />
           <text x="50" y="8" font-size="7.5" fill="#0f172a" font-weight="800" text-anchor="middle">42 (Break)</text>
-
-          <!-- Plain Majority Threshold Line at 63 seats -->
           <line x1="100" y1="7" x2="100" y2="23" stroke="#94a3b8" stroke-width="2" />
           <text x="100" y="5" font-size="7.5" fill="#64748b" font-weight="700" text-anchor="middle">63 (Maj)</text>
-
           <circle cx="100" cy="95" r="7" fill="#0f172a" />
           <line x1="100" y1="95" x2="73" y2="28" stroke="#820000" stroke-width="4" stroke-linecap="round" />
-          
           <text x="20" y="114" font-size="9" fill="#64748b" font-weight="700" text-anchor="middle">0</text>
           <text x="180" y="114" font-size="9" fill="#64748b" font-weight="700" text-anchor="middle">125</text>
         </svg>
@@ -454,148 +443,6 @@
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<!-- RATINGS AND BASELINE REPOSITORY DATA -->
-<script id="ratingsData" type="text/plain">
-15LIKELY D76%-4.4%1.4%39LEAN D73%-4.0%3.2%33LEAN D71%-3.7%13.3%88LEAN D69%-3.2%2.1%41LEAN D66%-2.6%5.1%30LEAN D65%-2.5%5.2%121LEAN D61%-1.9%11.0%78TOSSUP50%0.0%8.8%102TILT R40%1.6%4.1%96LEAN R38%1.9%9.4%117LEAN R29%3.6%15.0%3LIKELY R25%4.5%20.4%8LIKELY R25%4.4%10.5%
-1	UNCONTESTED R	0%	101.1%	101.1%
-2	SAFE R	0%	31.1%	38.5%
-4	UNCONTESTED R	0%	101.1%	101.1%
-5	SAFE R	0%	22.4%	36.7%
-6	SAFE R	0%	32.8%	41.5%
-7	SAFE R	0%	26.0%	34.2%
-9	UNCONTESTED R	0%	101.1%	101.1%
-10	UNCONTESTED D	100%	-101.0%	-101.0%
-11	SAFE R	0%	41.8%	47.2%
-12	SAFE R	0%	54.6%	58.5%
-13	SAFE R	0%	51.8%	55.1%
-14	LIKELY D	84%	-5.9%	2.6%
-16	UNCONTESTED D	100%	-101.0%	-101.0%
-17	SAFE D	100%	-18.1%	-11.9%
-18	SAFE D	100%	-23.0%	-14.2%
-19	SAFE D	100%	-32.7%	-25.5%
-20	UNCONTESTED D	100%	-101.0%	-101.0%
-21	UNCONTESTED D	100%	-101.0%	-101.0%
-22	UNCONTESTED D	100%	-101.0%	-101.0%
-23	UNCONTESTED D	100%	-101.0%	-101.0%
-24	SAFE D	100%	-39.1%	-33.0%
-25	UNCONTESTED D	100%	-101.0%	-101.0%
-26	VERY LIKELY R	6%	10.4%	11.8%
-27	VERY LIKELY R	3%	12.1%	10.8%
-28	VERY LIKELY D	90%	-8.0%	1.2%
-29	UNCONTESTED D	100%	-101.0%	-101.0%
-31	SAFE D	100%	-46.4%	-41.0%
-32	UNCONTESTED D	100%	-101.0%	-101.0%
-34	SAFE D	100%	-63.0%	-59.7%
-35	SAFE D	100%	-66.4%	-58.8%
-36	SAFE D	100%	-27.6%	-18.9%
-37	SAFE D	100%	-30.1%	-21.8%
-38	SAFE R	0%	22.7%	22.5%
-40	VERY LIKELY R	9%	8.9%	9.9%
-42	SAFE R	0%	21.2%	19.4%
-43	SAFE R	0%	18.7%	18.4%
-44	UNCONTESTED D	100%	-101.0%	-101.0%
-45	UNCONTESTED D	100%	-101.0%	-101.0%
-46	UNCONTESTED D	100%	-101.0%	-101.0%
-47	SAFE R	0%	21.8%	28.0%
-48	UNCONTESTED D	100%	-101.0%	-101.0%
-49	SAFE D	98%	-12.7%	1.2%
-50	UNCONTESTED R	0%	101.1%	101.1%
-51	UNCONTESTED R	0%	101.1%	101.1%
-52	LIKELY R	12%	7.6%	12.6%
-53	UNCONTESTED D	100%	-101.0%	-101.0%
-54	SAFE R	0%	25.2%	30.8%
-55	SAFE D	100%	-35.0%	-27.2%
-56	SAFE D	100%	-17.9%	-10.5%
-57	UNCONTESTED D	100%	-101.0%	-101.0%
-58	SAFE D	100%	-35.3%	-24.4%
-59	SAFE R	0%	34.5%	35.1%
-60	LIKELY R	21%	5.3%	10.6%
-61	UNCONTESTED R	0%	101.1%	101.1%
-62	SAFE R	1%	32.5%	55.2%
-63	SAFE R	0%	39.8%	42.4%
-64	UNCONTESTED R	0%	101.1%	101.1%
-65	UNCONTESTED R	0%	101.1%	101.1%
-66	SAFE D	100%	-40.1%	-30.0%
-67	LIKELY D	87%	-6.8%	4.9%
-68	UNCONTESTED R	0%	101.1%	101.1%
-69	SAFE R	0%	27.6%	32.2%
-70	SAFE R	0%	46.7%	51.3%
-71	SAFE R	0%	27.4%	30.0%
-72	SAFE R	0%	21.7%	20.7%
-73	SAFE R	0%	30.9%	35.5%
-74	SAFE R	0%	32.0%	33.3%
-75	SAFE R	0%	36.7%	41.3%
-76	SAFE R	0%	41.1%	45.7%
-77	SAFE R	0%	36.3%	38.9%
-79	SAFE R	0%	34.8%	35.3%
-80	VERY LIKELY R	7%	22.0%	34.6%
-81	SAFE R	0%	22.4%	23.7%
-82	SAFE R	0%	26.2%	28.1%
-83	SAFE D	100%	-25.3%	-20.1%
-84	UNCONTESTED D	100%	-101.0%	-101.0%
-85	LIKELY R	22%	5.4%	14.0%
-86	SAFE D	100%	-22.7%	-18.1%
-87	UNCONTESTED R	0%	101.1%	101.1%
-89	UNCONTESTED D	100%	-101.0%	-101.0%
-90	SAFE R	0%	36.0%	37.2%
-91	SAFE R	0%	22.8%	24.4%
-92	SAFE D	100%	-26.2%	-18.2%
-93	SAFE R	0%	41.8%	44.6%
-94	UNCONTESTED R	0%	101.1%	101.1%
-95	UNCONTESTED D	100%	-101.0%	-101.0%
-97	SAFE R	0%	17.7%	18.8%
-98	SAFE R	0%	18.3%	19.8%
-99	SAFE R	0%	21.5%	23.5%
-100	VERY LIKELY R	3%	12.7%	17.4%
-101	SAFE R	0%	39.1%	43.7%
-103	SAFE D	100%	-36.5%	-28.9%
-104	SAFE R	0%	30.0%	34.6%
-105	VERY LIKELY R	5%	10.6%	9.3%
-106	UNCONTESTED R	0%	101.1%	101.1%
-107	SAFE R	0%	50.3%	52.9%
-108	UNCONTESTED D	100%	-101.0%	-101.0%
-109	UNCONTESTED R	0%	101.1%	101.1%
-110	SAFE R	0%	62.0%	66.6%
-111	SAFE R	0%	33.0%	37.8%
-112	SAFE R	0%	48.1%	54.8%
-113	SAFE R	0%	48.8%	55.9%
-114	SAFE R	0%	49.5%	52.1%
-115	UNCONTESTED R	0%	101.1%	101.1%
-116	SAFE R	0%	49.0%	58.3%
-118	UNCONTESTED R	0%	101.1%	101.1%
-119	UNCONTESTED R	0%	101.1%	101.1%
-120	UNCONTESTED R	0%	101.1%	101.1%
-122	UNCONTESTED R	0%	101.1%	101.1%
-123	SAFE R	0%	26.1%	28.6%
-124	UNCONTESTED R	0%	101.1%	101.1%
-125	UNCONTESTED R	0%	101.1%	101.1%
-</script>
-
-<script id="rawInputData" type="text/plain">
-HD-49, 	Nikki L. McDonald, 	Tricia Sinclair, 	-0.04107, 	-0.046, 	-0.03, 	-0.00120716603995101, 	-0.008823, 	-0.127097122796375, 	0.0651536645170477, 	0.97
-HD-28, 	Bryan Mouber, 	Alex Bergman, 	-0.02065, 	-0.046, 	0, 	0, 	-0.01377, 	-0.0804157624519463, 	0.0661286624694618, 	0.89
-HD-67, 	Brenda Bandy, 	Stacy Kohlmeier, 	-0.03103, 	-0.046, 	0, 	0, 	0.00867, 	-0.068359510353835, 	0.0661286624694618, 	0.85
-HD-14, 	Sherry Giebler, 	Charlotte Esau, 	-0.01803, 	-0.046, 	0.02, 	-0.00328787271512723, 	-0.0116433, 	-0.058958304519513, 	0.0632613626157389, 	0.82
-HD-15, 	Allison Hougland, 	Lauren N. Bohi, 	-0.01833, 	-0.046, 	0.02, 	0.0151816717668046, 	-0.008925, 	-0.044, 	0.0635767253010093, 	0.76
-HD-39, 	Zach Maier, 	Angela Stiens, 	0.00019, 	-0.046, 	0.02, 	0.00390453606815482, 	-0.0116229, 	-0.040, 	0.0651536645170477, 	0.73
-HD-33, 	Emily Blanks, 	Carolyn Caiharr, 	-0.00338, 	-0.046, 	0, 	0, 	0.008466, 	-0.037, 	0.0661286624694618, 	0.71
-HD-88, 	Candace Landers, 	Sandy Pickert, 	-0.0247, 	-0.046, 	0.02, 	0.0163106958956003, 	0.0086139, 	-0.032, 	0.0645755371638518, 	0.69
-HD-41, 	Jeff Pittman, 	Ann Reinhart, 	0.10115, 	-0.046, 	0, 	-0.051599911006906, 	-0.023358, 	-0.026, 	0.0642650760522385, 	0.66
-HD-30, 	Amelia Wiederaenders, 	Laura Williams, 	-0.02759, 	-0.046, 	0.02, 	0.0196819751042914, 	0.015555, 	-0.025, 	0.0642650760522385, 	0.65
-HD-121, 	Kelsey Stock, 	Thomas Palenske, 	0.02987, 	-0.046, 	0, 	0, 	0.0035598, 	-0.019, 	0.0661286624694618, 	0.61
-HD-78, 	Tim Lundberg, 	Robyn R. Essex, 	0.01258, 	-0.046, 	0.02, 	0.00707922049365436, 	0.013005, 	0.000, 	0.0645755371638518, 	0.50
-HD-102, 	Jason Probst, 	Kyler Sweely, 	0.11431, 	-0.046, 	0.02, 	-0.0700009079972096, 	0.003927, 	0.016, 	0.0632613626157389, 	0.40
-HD-96, 	Jessica Maldonado, 	Tom Kessler, 	0.03103, 	-0.046, 	0.02, 	0.0046955118617227, 	0.0161415, 	0.019, 	0.0645755371638518, 	0.38
-HD-117, 	Brandon Holland, 	Adam Turk, 	0.05322, 	-0.046, 	0.02, 	0.00875780909483665, 	0.0093993, 	0.036, 	0.0645755371638518, 	0.29
-HD-3, 	Isaiah Harris, 	D.J. Perry, 	0.08294, 	-0.046, 	0, 	0, 	-0.005508, 	0.045, 	0.0661286624694618, 	0.25
-HD-8, 	Megan Phillips, 	Chris Croft, 	0.0673, 	-0.046, 	0.02, 	-0.0040231989834271, 	0.013209, 	0.044, 	0.0642650760522385, 	0.25
-HD-60, 	Maddison Glover, 	Mark Schreiber, 	0.01416, 	-0.046, 	0.02, 	0.0488903051894651, 	0.0156366, 	0.0526899463679126, 	0.0642650760522385, 	0.21
-HD-85, 	Mackenzi Truelove, 	Steven Brunk, 	0.07801, 	-0.046, 	0, 	0.0110547736040452, 	0.01071, 	0.0537698128340911, 	0.0645755371638518, 	0.20
-HD-52, 	Toni Scalia, 	Jesse Borjon, 	0.05434, 	-0.046, 	0.02, 	0.0312734791356715, 	0.016575, 	0.0761913869984835, 	0.0632613626157389, 	0.11
-HD-62, 	Jack E. Geiger (Independent), 	Sean M. Wilcott, 	0.55223, 	-0.046, 	0.02, 	0, 	-0.0014229, 	0.324808714982679, 	0.145483057432816, 	0.01
-HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	0.220209890733403, 	0.13386933928275, 	0.05
-</script>
 
 <script>
   const PROJECTED_FLIPS = new Set([67, 28, 14, 15, 39, 33, 88, 30, 41, 121]);
@@ -646,64 +493,6 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
   const ratingsMap = {};
   const competitiveMap = {};
 
-  // Parse Ratings block (supports unspaced continuous stream or tabbed lines)
-  function parseRatingsText(text) {
-    // Regex matches unspaced string: "15LIKELY D76%-4.4%1.4%"
-    const unspacedRegex = /(\d{1,3})\s*([A-Z\s]+?)\s*(\d{1,3}%)\s*([+-]?\d+\.?\d*%)\s*([+-]?\d+\.?\d*%)/g;
-    let match;
-    while ((match = unspacedRegex.exec(text)) !== null) {
-      const id = match[1].trim();
-      const p = parseFloat(match[3].replace('%', '')) / 100.0;
-      ratingsMap[id] = {
-        rating: match[2].trim(),
-        prob: match[3].trim(),
-        pdem: p,
-        predMargin: parseFloat(match[4].replace('%', '')) / 100.0,
-        hist2024: parseFloat(match[5].replace('%', '')) / 100.0
-      };
-    }
-
-    // Standard tabbed/spaced line parser
-    text.trim().split('\n').forEach(line => {
-      const parts = line.split('\t').map(p => p.trim());
-      if (parts.length >= 3 && !isNaN(parseInt(parts[0], 10))) {
-        const id = parts[0];
-        const p = parseFloat(parts[2].replace('%', '')) / 100.0;
-        ratingsMap[id] = {
-          rating: parts[1],
-          prob: parts[2],
-          pdem: p,
-          predMargin: parts[3] ? (parseFloat(parts[3].replace('%', '')) / 100.0) : null,
-          hist2024: parts[4] ? (parseFloat(parts[4].replace('%', '')) / 100.0) : null
-        };
-      }
-    });
-  }
-
-  function parseDistrictDataText(text) {
-    text.trim().split('\n').forEach(line => {
-      const cols = line.split(',').map(c => c.trim());
-      if (cols.length >= 11) {
-        const num = cols[0].replace('HD-', '');
-        competitiveMap[num] = {
-          district: cols[0],
-          num: num,
-          demCandidate: cols[1],
-          repCandidate: cols[2],
-          baseline: parseFloat(cols[3]),
-          generic: parseFloat(cols[4]),
-          incumbency: parseFloat(cols[5]),
-          candidatePerf: parseFloat(cols[6]),
-          finance: parseFloat(cols[7]),
-          margin: parseFloat(cols[8]),
-          stdev: parseFloat(cols[9]),
-          winChance: parseFloat(cols[10])
-        };
-      }
-    });
-  }
-
-  // Strict check: Only Jack Geiger in HD-62 and Lex Goff in HD-80
   function formatCandidate(name, distNum, defaultParty) {
     if (!name || name.trim() === '') {
       return { fullName: 'None', party: defaultParty, isInd: false, html: `Uncontested` };
@@ -777,7 +566,6 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
   let selectedId = null;
   const hoverChip = document.getElementById('hoverChip');
 
-  // Dedicated Highlight Layers for Hover and Selection
   let hoverHighlightLayer = L.geoJSON(null, {
     interactive: false,
     style: { fill: false, color: '#0f172a', weight: 2.8, opacity: 1 }
@@ -788,7 +576,6 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
     style: { fill: false, color: '#0f172a', weight: 3.4, opacity: 1 }
   }).addTo(map);
 
-  // Range of Outcomes Chart (No Pinching + Staggered Vertical Labels)
   function renderOutcomeBar(comp, isInd, distNum) {
     const svg = document.getElementById('rangeSvg');
     const summarySpan = document.getElementById('outRangeSummary');
@@ -806,7 +593,6 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
     const lo95 = margin - (1.960 * stdev);
     const hi95 = margin + (1.960 * stdev);
 
-    // Retrieve historical 2024 margin
     const rInfo = ratingsMap[distNum] || {};
     const hist2024 = (rInfo.hist2024 !== null && rInfo.hist2024 !== undefined) ? (rInfo.hist2024 * 100) : null;
     const isHistContested = hist2024 !== null && Math.abs(hist2024) < 100;
@@ -833,7 +619,6 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
     const w95 = Math.max(1, x95R - x95L);
     const w67 = Math.max(1, x67R - x67L);
 
-    // Percent offsets for color gradient transition
     const pctEven95 = Math.max(0, Math.min(100, ((xEven - x95L) / w95) * 100));
     const pctEven67 = Math.max(0, Math.min(100, ((xEven - x67L) / w67) * 100));
 
@@ -853,11 +638,9 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
       summarySpan.textContent = `67%: ${fmtPt(lo67)} to ${fmtPt(hi67)}`;
     }
 
-    // Historical 2024 Pin Marker positioned beneath the EVEN label
     let histSvg = '';
     if (isHistContested) {
       const xHist = scaleX(hist2024);
-      // Determine text anchor to step clear of the EVEN label if close
       const delta = xHist - xEven;
       let textAnchor = "middle";
       let textOffset = xHist;
@@ -892,23 +675,15 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
         </linearGradient>
       </defs>
 
-      <!-- Base Axis Track -->
       <line x1="0" y1="27" x2="${width}" y2="27" stroke="#cbd5e1" stroke-width="2" />
-      
-      <!-- 95% Confidence Bar -->
       <rect x="${x95L}" y="20" width="${w95}" height="14" rx="4" fill="url(#grad95)" />
-      
-      <!-- 67% Confidence Bar -->
       <rect x="${x67L}" y="17" width="${w67}" height="20" rx="4" fill="url(#grad67)" />
 
-      <!-- Center Zero / EVEN Divider Line & Label -->
       <line x1="${xEven}" y1="12" x2="${xEven}" y2="38" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="2,2" />
       <text x="${xEven}" y="48" font-size="8.5" font-weight="800" fill="#0f172a" text-anchor="middle">EVEN</text>
 
-      <!-- Historical 2024 Marker -->
       ${histSvg}
 
-      <!-- Predicted Margin Top Pin and Label -->
       <text x="${xMedian}" y="10" font-size="9" font-weight="900" fill="${cBar}" text-anchor="middle">${fmtPt(margin)}</text>
       <line x1="${xMedian}" y1="13" x2="${xMedian}" y2="40" stroke="${cBar}" stroke-width="3" stroke-linecap="round" />
       <circle cx="${xMedian}" cy="27" r="4.5" fill="${cBar}" stroke="#ffffff" stroke-width="1.5" />
@@ -947,7 +722,6 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
       setFormatted('outFinance', comp.finance);
       setFormatted('outMargin', comp.margin);
 
-      // Automated Modifier Math rounded to eliminate IEEE float drift
       const sumKnown = Math.round((comp.baseline + comp.generic + comp.incumbency + comp.candidatePerf + (isNaN(comp.finance) ? 0 : comp.finance)) * 1e6) / 1e6;
       const targetMargin = Math.round(comp.margin * 1e6) / 1e6;
       const otherDiff = Math.round((targetMargin - sumKnown) * 1e6) / 1e6;
@@ -1011,15 +785,68 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
     }
   }
 
-  // Load external repository data files and GeoJSON
+  function parseRatingsText(text) {
+    const unspacedRegex = /(\d{1,3})\s*([A-Z\s]+?)\s*(\d{1,3}%)\s*([+-]?\d+\.?\d*%)\s*([+-]?\d+\.?\d*%)/g;
+    let match;
+    while ((match = unspacedRegex.exec(text)) !== null) {
+      const id = match[1].trim();
+      const p = parseFloat(match[3].replace('%', '')) / 100.0;
+      ratingsMap[id] = {
+        rating: match[2].trim(),
+        prob: match[3].trim(),
+        pdem: p,
+        predMargin: parseFloat(match[4].replace('%', '')) / 100.0,
+        hist2024: parseFloat(match[5].replace('%', '')) / 100.0
+      };
+    }
+
+    text.trim().split('\n').forEach(line => {
+      const parts = line.split('\t').map(p => p.trim());
+      if (parts.length >= 3 && !isNaN(parseInt(parts[0], 10))) {
+        const id = parts[0];
+        const p = parseFloat(parts[2].replace('%', '')) / 100.0;
+        ratingsMap[id] = {
+          rating: parts[1],
+          prob: parts[2],
+          pdem: p,
+          predMargin: parts[3] ? (parseFloat(parts[3].replace('%', '')) / 100.0) : null,
+          hist2024: parts[4] ? (parseFloat(parts[4].replace('%', '')) / 100.0) : null
+        };
+      }
+    });
+  }
+
+  function parseDistrictDataText(text) {
+    text.trim().split('\n').forEach(line => {
+      const cols = line.split(',').map(c => c.trim());
+      if (cols.length >= 11) {
+        const num = cols[0].replace('HD-', '');
+        competitiveMap[num] = {
+          district: cols[0],
+          num: num,
+          demCandidate: cols[1],
+          repCandidate: cols[2],
+          baseline: parseFloat(cols[3]),
+          generic: parseFloat(cols[4]),
+          incumbency: parseFloat(cols[5]),
+          candidatePerf: parseFloat(cols[6]),
+          finance: parseFloat(cols[7]),
+          margin: parseFloat(cols[8]),
+          stdev: parseFloat(cols[9]),
+          winChance: parseFloat(cols[10])
+        };
+      }
+    });
+  }
+
+  // Load external repository files exclusively
   Promise.all([
     fetch('./districts.geojson').then(r => r.json()),
-    fetch('./ratings.txt').then(r => r.text()).catch(() => ""),
-    fetch('./district_data.txt').then(r => r.text()).catch(() => "")
+    fetch('./ratings.txt').then(r => r.text()),
+    fetch('./district_data.txt').then(r => r.text())
   ]).then(([geojson, ratingsTxt, districtTxt]) => {
-    // Fall back to script tags if text files not present
-    parseRatingsText(ratingsTxt || document.getElementById('ratingsData').textContent);
-    parseDistrictDataText(districtTxt || document.getElementById('rawInputData').textContent);
+    parseRatingsText(ratingsTxt);
+    parseDistrictDataText(districtTxt);
 
     updateDropdownList();
 
@@ -1062,7 +889,7 @@ HD-80, 	Lex Goff (Independent), 	Bill Rhiley, 	0.34621, 	-0.046, 	0.02, 	0, 	, 	
     applyHatchOverlay();
     map.fitBounds(geojsonLayer.getBounds(), { padding: [15, 15] });
   }).catch(err => {
-    console.error("Initialization error. Verify districts.geojson, ratings.txt, and district_data.txt exist in repository root.", err);
+    console.error("Initialization error. Verify districts.geojson, ratings.txt, and district_data.txt are committed to the repository root.", err);
   });
 
   let hatchOverlayGroup = L.featureGroup().addTo(map);
