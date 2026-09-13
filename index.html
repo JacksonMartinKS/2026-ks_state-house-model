@@ -53,7 +53,6 @@
       font-weight: 800;
     }
 
-    /* View Switcher Toggle */
     .view-toggle {
       display: flex;
       background: #f1f5f9;
@@ -126,7 +125,6 @@
       box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
     }
 
-    /* Hex Label Overlay */
     .hex-label-marker {
       background: transparent !important;
       border: none !important;
@@ -134,7 +132,7 @@
       pointer-events: none !important;
     }
     .hex-num {
-      font-size: 8.5px;
+      font-size: 8px;
       font-weight: 800;
       color: #0f172a;
       text-shadow:
@@ -306,7 +304,7 @@
     }
     svg.outcome-svg {
       width: 100%;
-      height: 70px;
+      height: 58px;
       display: block;
       overflow: visible;
     }
@@ -398,13 +396,11 @@
   <div id="hoverChip" class="map-hover-chip" style="display: none;">Hover over a district</div>
 
   <div class="sidebar">
-    <!-- 1. LEGISLATIVE DISTRICT DROPDOWN -->
     <label class="control-label" for="districtSelect">Select Legislative District</label>
     <select id="districtSelect">
       <option value="" disabled selected>-- Loading districts... --</option>
     </select>
 
-    <!-- 2. DISTRICT DETAILS CARD -->
     <div id="districtCard" class="card" style="display: none;">
       <div class="header-row">
         <div id="outDistrict" class="district-title"></div>
@@ -460,7 +456,7 @@
           <span>Range of Outcomes</span>
           <span id="outRangeSummary"></span>
         </div>
-        <svg id="rangeSvg" class="outcome-svg" viewBox="0 0 320 70">
+        <svg id="rangeSvg" class="outcome-svg" viewBox="0 0 320 58">
         </svg>
       </div>
     </div>
@@ -471,7 +467,6 @@
       <p style="margin: 6px 0 0; font-size: 0.78rem;">District is uncontested or non-competitive. Not tracked with itemized shift variables.</p>
     </div>
 
-    <!-- 3. NYT-STYLE FORECAST GAUGES -->
     <div class="needle-container">
       <div class="needle-block">
         <div class="needle-label">House Control Outcome</div>
@@ -838,89 +833,94 @@
     };
   }
 
-  // Generate a regular flat-topped hexagon polygon around [lat, lng]
-  function generateHexagon(centerLat, centerLng, radius) {
+  // -------------------------------------------------------------
+  // CONTIGUOUS KANSAS HEX CARTOGRAM LAYOUT (125 Flush Hexagons)
+  // -------------------------------------------------------------
+  // Coordinated [col, row] grid matching Kansas state outline:
+  // Rectangular silhouette, NE river cutout, relative geography.
+  const KS_HEX_GRID = {
+    // Row 0 (Northern Border, West to East)
+    118:[0,0], 120:[1,0], 109:[2,0], 106:[3,0], 62:[4,0], 63:[5,0], 61:[6,0], 47:[7,0], 42:[8,0], 40:[9,0], 36:[10,0], 35:[11,0],
+    
+    // Row 1
+    124:[0,1], 110:[1,1], 107:[2,1], 108:[3,1], 64:[4,1], 65:[5,1], 50:[6,1], 53:[7,1], 41:[8,1], 38:[9,1], 34:[10,1], 32:[11,1], 31:[12,1],
+    
+    // Row 2
+    125:[0,2], 111:[1,2], 71:[2,2], 69:[3,2], 66:[4,2], 67:[5,2], 57:[6,2], 55:[7,2], 58:[8,2], 39:[9,2], 33:[10,2], 37:[11,2], 25:[12,2],
+    
+    // Row 3
+    122:[0,3], 112:[1,3], 70:[2,3], 73:[3,3], 68:[4,3], 51:[5,3], 56:[6,3], 52:[7,3], 54:[8,3], 43:[9,3], 30:[10,3], 17:[11,3], 24:[12,3],
+    
+    // Row 4
+    123:[0,4], 114:[1,4], 113:[2,4], 74:[3,4], 72:[4,4], 60:[5,4], 76:[6,4], 10:[7,4], 45:[8,4], 44:[9,4], 46:[10,4], 18:[11,4], 23:[12,4],
+    
+    // Row 5
+    119:[0,5], 115:[1,5], 104:[2,5], 102:[3,5], 75:[4,5], 59:[5,5], 6:[6,5], 5:[7,5], 121:[8,5], 14:[9,5], 15:[10,5], 19:[11,5], 22:[12,5],
+    
+    // Row 6 (South Central & Greater Wichita & South Metro)
+    116:[0,6], 117:[1,6], 105:[2,6], 101:[3,6], 90:[4,6], 89:[5,6], 81:[6,6], 77:[7,6], 78:[8,6], 49:[9,6], 48:[10,6], 16:[11,6], 21:[12,6],
+    
+    // Row 7 (Wichita Metro & Flint Hills)
+    80:[1,7], 100:[2,7], 91:[3,7], 92:[4,7], 84:[5,7], 86:[6,7], 83:[7,7], 79:[8,7], 9:[9,7], 8:[10,7], 28:[11,7], 29:[12,7],
+    
+    // Row 8 (Wichita Urban & Southern Flank)
+    82:[2,8], 97:[3,8], 95:[4,8], 87:[5,8], 88:[6,8], 85:[7,8], 13:[8,8], 4:[9,8], 26:[10,8], 27:[11,8], 20:[12,8],
+    
+    // Row 9 (Southern Border Districts)
+    93:[3,9], 94:[4,9], 96:[5,9], 98:[6,9], 99:[7,9], 12:[8,9], 11:[9,9], 7:[10,9], 2:[11,9], 3:[12,9],
+    
+    // Row 10 (Southeast Corner)
+    1:[11,10]
+  };
+
+  // Regular flat-topped hexagon coordinate generator (Cartesian space)
+  function getFlatHexCoords(cx, cy, r) {
     const coords = [];
     for (let i = 0; i < 6; i++) {
       const angle = (Math.PI / 180) * (60 * i);
-      const lat = centerLat + radius * Math.sin(angle);
-      const lng = centerLng + (radius / Math.cos((centerLat * Math.PI) / 180)) * Math.cos(angle);
-      coords.push([lng, lat]);
+      coords.push([cx + r * Math.cos(angle), cy + r * Math.sin(angle)]);
     }
     coords.push(coords[0]);
     return coords;
   }
 
-  // Procedural Hex Cartogram Synthesizer
-  function buildHexCartogram(geojson) {
+  function buildContiguousHexCartogram() {
     const features = [];
-    const radius = 0.16; // Hex size in degrees
+    const hexRadius = 0.22;
+    // Mathematical spacing for flat-topped hexagons
+    const dx = hexRadius * 1.5;
+    const dy = hexRadius * Math.sqrt(3);
 
-    // Extract centroids and sort West-to-East
-    const districtPoints = geojson.features.map(f => {
-      const id = String(f.properties.NAME || f.properties.id);
-      return {
-        id: id,
-        numId: parseInt(id, 10),
-        rawX: f.properties.labelx,
-        rawY: f.properties.labely,
-        feature: f
-      };
-    }).sort((a, b) => a.rawX - b.rawX);
+    // Anchor origin so the cartogram aligns centrally over Kansas
+    const originLng = -101.5;
+    const originLat = 40.2;
 
-    // Collision-free hex grid allocation
-    const occupied = new Set();
-    const hexSpacingX = radius * Math.sqrt(3) * 0.98;
-    const hexSpacingY = radius * 1.5;
+    for (let i = 1; i <= 125; i++) {
+      const id = String(i);
+      const pos = KS_HEX_GRID[i] || [i % 12, Math.floor(i / 12)];
+      const col = pos[0];
+      const row = pos[1];
 
-    districtPoints.forEach(pt => {
-      // Find closest discrete row & col
-      let col = Math.round((pt.rawX - (-102.0)) / hexSpacingX);
-      let row = Math.round((pt.rawY - 37.0) / hexSpacingY);
+      // Flat-topped staggering: odd columns shift vertically by half dy
+      const cx = originLng + col * dx;
+      const cy = originLat - row * dy - ((col % 2 === 1) ? (dy / 2) : 0);
 
-      // Search outward for nearest free hex slot
-      let dist = 0;
-      let placed = false;
-      let finalCol = col, finalRow = row;
+      const hexCoords = getFlatHexCoords(cx, cy, hexRadius * 0.98);
 
-      while (!placed && dist < 12) {
-        for (let dc = -dist; dc <= dist && !placed; dc++) {
-          for (let dr = -dist; dr <= dist && !placed; dr++) {
-            if (Math.abs(dc) + Math.abs(dr) === dist) {
-              const testCol = col + dc;
-              const testRow = row + dr;
-              const key = `${testCol},${testRow}`;
-              if (!occupied.has(key)) {
-                occupied.add(key);
-                finalCol = testCol;
-                finalRow = testRow;
-                placed = true;
-              }
-            }
-          }
-        }
-        dist++;
-      }
-
-      // Compute geographic coordinates from slot
-      const hexCenterLat = 37.0 + finalRow * hexSpacingY;
-      const offsetX = (finalRow % 2 === 0) ? 0 : (hexSpacingX / 2);
-      const hexCenterLng = -102.0 + finalCol * hexSpacingX + offsetX;
-
-      const hexGeom = {
+      features.push({
         type: "Feature",
         properties: {
-          ...pt.feature.properties,
-          hexLat: hexCenterLat,
-          hexLng: hexCenterLng
+          id: i,
+          NAME: id,
+          hexLat: cy,
+          hexLng: cx
         },
         geometry: {
           type: "Polygon",
-          coordinates: [generateHexagon(hexCenterLat, hexCenterLng, radius)]
+          coordinates: [hexCoords]
         }
-      };
-      features.push(hexGeom);
-    });
+      });
+    }
 
     return { type: "FeatureCollection", features };
   }
@@ -1006,7 +1006,6 @@
     hoverHighlightLayer.bringToFront();
   }
 
-  // Core layer builder for either mode
   function buildInteractiveLayer(geoData, isHex = false) {
     return L.geoJSON(geoData, {
       style: getFeatureStyle,
@@ -1059,7 +1058,6 @@
     });
   }
 
-  // Map Mode Switcher
   function switchMapMode(mode) {
     if (mode === currentMapMode || !cachedGeojson) return;
     currentMapMode = mode;
@@ -1073,7 +1071,7 @@
     if (mode === 'hex') {
       if (map.hasLayer(geojsonLayer)) map.removeLayer(geojsonLayer);
       if (!hexCartoLayer) {
-        const hexData = buildHexCartogram(cachedGeojson);
+        const hexData = buildContiguousHexCartogram();
         hexCartoLayer = buildInteractiveLayer(hexData, true);
       }
       hexCartoLayer.addTo(map);
@@ -1088,7 +1086,6 @@
 
     applyHatchOverlay();
 
-    // Re-highlight current district if selected
     if (selectedId) {
       const activeL = (mode === 'hex') ? hexCartoLayer : geojsonLayer;
       activeL.eachLayer(l => {
@@ -1100,7 +1097,6 @@
     }
   }
 
-  // Load external repository data files and GeoJSON
   Promise.all([
     fetch('./districts.geojson').then(r => r.json()),
     fetch('./ratings.txt').then(r => r.text()),
@@ -1134,7 +1130,7 @@
         if (fid === id) {
           selectedHighlightLayer.addData(layer.feature);
           selectedHighlightLayer.bringToFront();
-          map.fitBounds(layer.getBounds(), { maxZoom: (currentMapMode === 'hex' ? 9 : 11) });
+          map.fitBounds(layer.getBounds(), { maxZoom: (currentMapMode === 'hex' ? 8.5 : 11) });
         }
       });
     }
