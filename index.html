@@ -1042,21 +1042,16 @@
     125:[0,8], 101:[1,8], 93:[2,8], 94:[3,8], 97:[4,8], 98:[5,8], 82:[6,8], 80:[7,8], 12:[8,8], 11:[9,8], 7:[10,8], 9:[11,8], 6:[12,8], 3:[13,8]
   };
 
+  
   function buildContiguousHexCartogram() {
     const features = [];
     const centerRefLat = 38.5;
     const cosFactor = Math.cos((centerRefLat * Math.PI) / 180);
 
-    // Radius in latitude degrees calibrated for 9 rows
     const hexRadius = 0.22;
-
-    // Pointy-topped spacing formulas with longitude aspect compensation:
-    // Horizontal step between columns: sqrt(3) * r
-    // Vertical step between rows: 1.5 * r
     const dx = (hexRadius * Math.sqrt(3)) / cosFactor;
     const dy = hexRadius * 1.5;
 
-    // Anchor origin to center Kansas
     const originLng = -101.8;
     const originLat = 40.0;
 
@@ -1068,8 +1063,8 @@
       const col = pos[0];
       const row = pos[1];
 
-      // Pointy-topped horizontal stagger: odd rows shift right by half dx
-      const offsetX = (row % 2 === 1) ? (dx / 2) : 0;
+      // Even rows (0, 2, 4, 6, 8) indent right by half-width; odd rows (1, 3, 5, 7) stay flush left
+      const offsetX = (row % 2 === 0) ? (dx / 2) : 0;
       const cx = originLng + col * dx + offsetX;
       const cy = originLat - row * dy;
 
