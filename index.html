@@ -36,10 +36,10 @@
     header {
       background: #ffffff;
       border-bottom: 1px solid var(--border);
-      padding: 10px 18px;
+      padding: 8px 14px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
       z-index: 1000;
       flex-shrink: 0;
     }
@@ -48,32 +48,38 @@
       justify-content: space-between;
       align-items: center;
       width: 100%;
+      flex-wrap: wrap;
+      gap: 6px;
     }
     .header-left {
       display: flex;
       align-items: center;
-      gap: 14px;
+      justify-content: space-between;
+      width: 100%;
+      gap: 8px;
     }
     header h1 {
-      font-size: 1.1rem;
+      font-size: 1.02rem;
       margin: 0;
       font-weight: 800;
       white-space: nowrap;
+      flex-shrink: 1;
     }
 
     .view-toggle {
       display: flex;
       background: #f1f5f9;
-      padding: 3px;
+      padding: 2px;
       border-radius: 8px;
       border: 1px solid var(--border);
       gap: 2px;
+      flex-shrink: 0;
     }
     .toggle-btn {
       border: none;
       background: transparent;
-      padding: 4px 10px;
-      font-size: 0.75rem;
+      padding: 4px 8px;
+      font-size: 0.72rem;
       font-weight: 700;
       color: var(--text-muted);
       border-radius: 6px;
@@ -89,15 +95,15 @@
 
     .legend {
       display: flex;
-      gap: 10px;
-      font-size: 0.72rem;
+      gap: 9px;
+      font-size: 0.69rem;
       font-weight: 600;
       align-items: center;
       overflow-x: auto;
-      padding-bottom: 2px;
+      padding-bottom: 1px;
     }
     .legend-item { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
-    .legend-box { width: 12px; height: 12px; border-radius: 2px; border: 1px solid #cbd5e1; flex-shrink: 0; }
+    .legend-box { width: 11px; height: 11px; border-radius: 2px; border: 1px solid #cbd5e1; flex-shrink: 0; }
     .legend-hatch {
       background: repeating-linear-gradient(
         45deg,
@@ -109,7 +115,7 @@
       border: 1px solid #000000;
     }
 
-    /* Compact Top Summary Banner (Right Below Legend) */
+    /* Stacked Centered Mobile Summary Header */
     .top-summary-bar {
       display: flex;
       justify-content: space-between;
@@ -119,40 +125,40 @@
       border-radius: 6px;
       padding: 5px 10px;
       cursor: pointer;
+      gap: 6px;
     }
     .summary-cell {
       display: flex;
-      align-items: baseline;
-      gap: 6px;
-    }
-    .summary-cell-title {
-      font-size: 0.68rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--text-muted);
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      flex: 1;
     }
     .summary-cell-stat {
-      font-size: 0.82rem;
+      font-size: 0.84rem;
       font-weight: 800;
       color: var(--text);
+      line-height: 1.15;
     }
     .summary-cell-sub {
-      font-size: 0.70rem;
+      font-size: 0.68rem;
       font-weight: 600;
       color: var(--text-muted);
+      line-height: 1.15;
+      margin-top: 1px;
     }
     .summary-expand-btn {
       background: #ffffff;
       border: 1px solid var(--border);
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 0.70rem;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 0.68rem;
       font-weight: 800;
       color: var(--text);
       display: flex;
       align-items: center;
       gap: 3px;
+      flex-shrink: 0;
     }
 
     .app-layout {
@@ -449,20 +455,13 @@
 
     @media (max-width: 860px) {
       header {
-        padding: 8px 12px;
-        gap: 6px;
+        padding: 6px 10px;
+        gap: 4px;
       }
-      .header-top {
-        gap: 8px;
-      }
-      header h1 { font-size: 0.95rem; }
+      header h1 { font-size: 0.88rem; }
 
       .legend {
         padding-top: 1px;
-      }
-
-      .top-summary-bar {
-        margin-top: 2px;
       }
 
       .map-hover-chip {
@@ -475,21 +474,24 @@
         font-size: 0.8rem;
       }
 
+      /* Expanded scrollable space for mobile drawer */
       .sidebar {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
         width: 100%;
-        max-height: 84vh;
+        max-height: 86vh;
         border-left: none;
         border-top: 1px solid var(--border);
         border-radius: 16px 16px 0 0;
         box-shadow: 0 -4px 20px rgba(0,0,0,0.18);
-        padding: 0 14px 24px 14px;
+        padding: 0 14px 72px 14px; /* Generous bottom padding to prevent gauge cutoff */
         transform: translateY(100%);
         z-index: 2000;
         background: #ffffff;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
       }
       .sidebar.open {
         transform: translateY(0);
@@ -501,7 +503,7 @@
         top: 0;
         background: #ffffff;
         z-index: 10;
-        padding: 10px 0 8px 0;
+        padding: 8px 0 6px 0;
         margin-bottom: 6px;
       }
     }
@@ -512,10 +514,10 @@
 <header>
   <div class="header-top">
     <div class="header-left">
-      <h1>Kansas House 2026 Forecast</h1>
+      <h1>Kansas House 2026</h1>
       <div class="view-toggle">
-        <button id="btnGeo" class="toggle-btn active" onclick="switchMapMode('geo')">Geographic Map</button>
-        <button id="btnHex" class="toggle-btn" onclick="switchMapMode('hex')">Hex Cartogram</button>
+        <button id="btnGeo" class="toggle-btn" onclick="switchMapMode('geo')">Map</button>
+        <button id="btnHex" class="toggle-btn active" onclick="switchMapMode('hex')">Hex Grid</button>
       </div>
     </div>
   </div>
@@ -526,18 +528,18 @@
     <div class="legend-item"><div class="legend-box" style="background: #ffe89a; border-color: #000;"></div> Tossup</div>
     <div class="legend-item"><div class="legend-box" style="background: #ff6259;"></div> Lean R</div>
     <div class="legend-item"><div class="legend-box" style="background: #820000;"></div> Safe R</div>
-    <div class="legend-item"><div class="legend-box legend-hatch"></div> Projected Flip</div>
+    <div class="legend-item"><div class="legend-box legend-hatch"></div> Flip</div>
   </div>
 
-  <!-- COMPACT SUMMARY ROW RIGHT BELOW LEGEND -->
+  <!-- CENTERED STACKED SUMMARY ROW -->
   <div class="top-summary-bar" onclick="openMobileDrawer()">
     <div class="summary-cell">
-      <span class="summary-cell-title">Dem Seats:</span>
-      <span class="summary-cell-stat" style="color: var(--rep);">47 Median <span class="summary-cell-sub">(67%: 42–51)</span></span>
+      <span class="summary-cell-stat" style="color: var(--rep);">47 Median</span>
+      <span class="summary-cell-sub">67%: 42–51</span>
     </div>
     <div class="summary-cell">
-      <span class="summary-cell-title">Control:</span>
-      <span class="summary-cell-stat" style="color: var(--rep);">87.4% <span class="summary-cell-sub">Plain Maj</span></span>
+      <span class="summary-cell-stat" style="color: var(--rep);">87.4% Plain Maj</span>
+      <span class="summary-cell-sub">12.6% Super</span>
     </div>
     <div class="summary-expand-btn">
       Details ▴
@@ -793,7 +795,7 @@
   let geojsonLayer;
   let hexCartoLayer = null;
   let hexLabelsGroup = L.layerGroup();
-  let currentMapMode = 'geo';
+  let currentMapMode = 'hex'; // HEX CARTOGRAM AS DEFAULT
   let cachedGeojson = null;
 
   let selectedId = null;
@@ -1008,55 +1010,22 @@
   }
 
   const KS_HEX_GRID = {
-    // Col 0 (7): Western border
     120:[0,1], 112:[0,2], 110:[0,3], 122:[0,4], 123:[0,5], 119:[0,6], 124:[0,7],
-
-    // Col 1 (8): [1,0] top bracket
     118:[1,0], 113:[1,1], 107:[1,2], 104:[1,3], 102:[1,4], 114:[1,5], 115:[1,6], 125:[1,7],
-
-    // Col 2 (7): HD-69 unstacked and placed with HD-71 (Salina)
     111:[2,1], 71:[2,2], 69:[2,3], 91:[2,4], 100:[2,5], 105:[2,6], 116:[2,7],
-
-    // Col 3 (8): [3,0] top bracket
     70:[3,0], 67:[3,1], 68:[3,2], 90:[3,3], 92:[3,4], 95:[3,5], 94:[3,6], 101:[3,7],
-
-    // Col 4 (7)
     109:[4,1], 66:[4,2], 65:[4,3], 103:[4,4], 84:[4,5], 86:[4,6], 93:[4,7],
-
-    // Col 5 (8): [5,0] top bracket
     106:[5,0], 64:[5,1], 50:[5,2], 73:[5,3], 89:[5,4], 83:[5,5], 96:[5,6], 97:[5,7],
-
-    // Col 6 (7)
     61:[6,1], 53:[6,2], 52:[6,3], 74:[6,4], 85:[6,5], 88:[6,6], 98:[6,7],
-
-    // Col 7 (8): [7,0] top bracket
     62:[7,0], 55:[7,1], 56:[7,2], 54:[7,3], 72:[7,4], 87:[7,5], 81:[7,6], 82:[7,7],
-
-    // Col 8 (7)
     63:[8,1], 57:[8,2], 58:[8,3], 51:[8,4], 75:[8,5], 99:[8,6], 79:[8,7],
-
-    // Col 9 (8): [9,0] top bracket
     42:[9,0], 47:[9,1], 44:[9,2], 45:[9,3], 76:[9,4], 60:[9,5], 77:[9,6], 80:[9,7],
-
-    // Col 10 (7): HD-108 adjacent to HD-30
     38:[10,1], 46:[10,2], 10:[10,3], 121:[10,4], 43:[10,5], 13:[10,6], 12:[10,7],
-
-    // Col 11 (8): [11,0] top bracket
     41:[11,0], 40:[11,1], 117:[11,2], 30:[11,3], 14:[11,4], 15:[11,5], 59:[11,6], 11:[11,7],
-
-    // Col 12 (7)
     33:[12,1], 39:[12,2], 17:[12,3], 108:[12,4], 49:[12,5], 78:[12,6], 7:[12,7],
-
-    // Col 13 (8): [13,0] top bracket
     36:[13,0], 34:[13,1], 18:[13,2], 23:[13,3], 16:[13,4], 8:[13,5], 5:[13,6], 9:[13,7],
-
-    // Col 14 (7): Start of NE river cutout step-down
     35:[14,1], 37:[14,2], 22:[14,3], 29:[14,4], 48:[14,5], 26:[14,6], 2:[14,7],
-
-    // Col 15 (7)
     32:[15,1], 24:[15,2], 21:[15,3], 20:[15,4], 27:[15,5], 6:[15,6], 1:[15,7],
-
-    // Col 16 (6): Eastern border (Row 2 to 7)
     31:[16,2], 25:[16,3], 19:[16,4], 28:[16,5], 4:[16,6], 3:[16,7]
   };
 
@@ -1296,11 +1265,18 @@
 
     updateDropdownList();
 
-    geojsonLayer = buildInteractiveLayer(geojson, false).addTo(map);
+    // Prepare geographic layer in memory
+    geojsonLayer = buildInteractiveLayer(geojson, false);
+
+    // Build and activate Hex Cartogram by default
+    const hexData = buildContiguousHexCartogram();
+    hexCartoLayer = buildInteractiveLayer(hexData, true);
+    hexCartoLayer.addTo(map);
+    hexLabelsGroup.addTo(map);
 
     injectHatchPattern();
     applyHatchOverlay();
-    map.fitBounds(geojsonLayer.getBounds(), { padding: [10, 10] });
+    map.fitBounds(hexCartoLayer.getBounds(), { padding: [10, 10] });
   }).catch(err => {
     console.error("Initialization error. Verify districts.geojson, ratings.txt, and district_data.txt are committed to the repository root.", err);
   });
