@@ -1,13 +1,13 @@
 {
   "median_dem_seats": 47,
-  "mean_dem_seats": 47.2,
+  "mean_dem_seats": 47.4,
   "stdev": 4.5,
   "ci_67_low": 43,
   "ci_67_high": 52,
   "ci_95_low": 39,
   "ci_95_high": 56,
-  "gop_plain_majority_prob": 89.2,
-  "gop_supermajority_prob": 10.8,
+  "gop_plain_majority_prob": 90.2,
+  "gop_supermajority_prob": 9.8,
   "dem_majority_prob": 0.0,
   "seats_before_election": 37
 }
