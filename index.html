@@ -5,13 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Kansas State House 2026 Forecast</title>
   
-  <!-- Standard Favicon (Browser Tabs) -->
   <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png" />
-  
-  <!-- Apple Touch Icon (Mobile bookmarks / Add to Home Screen) -->
   <link rel="apple-touch-icon" sizes="180x180" href="./favicon.png" />
-
-  
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <style>
@@ -321,6 +316,12 @@
     .party-tag.rep { background: #fee2e2; color: #991b1b; }
     .party-tag.ind { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
 
+    /* Card Tabs */
+    .card-tabs { display: flex; gap: 16px; border-bottom: 2px solid var(--border); margin-bottom: 12px; }
+    .card-tab { padding: 0 4px 6px 4px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+    .card-tab:hover { color: var(--text); }
+    .card-tab.active { color: var(--rep-dark); border-bottom-color: var(--rep-dark); }
+
     .stack-container {
       display: flex;
       flex-direction: column;
@@ -406,6 +407,21 @@
       display: block;
       overflow: visible;
     }
+
+    /* Demographics Styling */
+    .demo-block { margin-bottom: 16px; }
+    .demo-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: baseline; }
+    .h-stack { display: flex; height: 14px; border-radius: 4px; overflow: hidden; }
+    .h-seg { height: 100%; transition: width 0.4s ease; cursor: pointer; }
+    .h-seg:hover { filter: brightness(0.9); }
+    .demo-legend { display: flex; flex-wrap: wrap; gap: 8px 12px; margin-top: 6px; font-size: 0.65rem; font-weight: 700; color: var(--text); }
+    .dl-item { display: flex; align-items: center; gap: 4px; }
+    .dl-box { width: 10px; height: 10px; border-radius: 2px; }
+    .dl-item span { color: var(--text-muted); margin-left: 1px; }
+
+    .hist-container { display: flex; align-items: flex-end; height: 55px; gap: 1px; border-bottom: 1px solid var(--border); margin-top: 8px; }
+    .hist-bar { flex: 1; background: #cbd5e1; border-radius: 2px 2px 0 0; transition: height 0.4s ease; min-height: 1px; cursor: pointer; }
+    .hist-bar:hover { background: #64748b; }
 
     .uncontested-notice {
       padding: 16px 10px;
@@ -582,57 +598,124 @@
         <div id="outCandidates" class="candidates"></div>
       </div>
 
-      <div class="stack-container">
-        <div class="stack-row baseline">
-          <span>Baseline Partisanship</span>
-          <span id="outPartisanship"></span>
+      <div class="card-tabs">
+        <div class="card-tab active" onclick="switchDistrictTab('forecast')" id="tabBtnForecast">Forecast</div>
+        <div class="card-tab" onclick="switchDistrictTab('demographics')" id="tabBtnDemographics">Demographics</div>
+      </div>
+
+      <div id="cardContentForecast">
+        <div class="stack-container">
+          <div class="stack-row baseline">
+            <span>Baseline Partisanship</span>
+            <span id="outPartisanship"></span>
+          </div>
+          <div class="stack-row">
+            <span>+ Generic Ballot Shift</span>
+            <span id="outGeneric"></span>
+          </div>
+          <div class="stack-row">
+            <span>+ Incumbency Effect</span>
+            <span id="outIncumbency"></span>
+          </div>
+          <div class="stack-row">
+            <span>+ Candidate Quality / Perf</span>
+            <span id="outCandidatePerf"></span>
+          </div>
+          <div class="stack-row">
+            <span>+ Campaign Finance Effect</span>
+            <span id="outFinance"></span>
+          </div>
+          <div id="modifierRow" class="stack-row" style="display: none; background: #f5f3ff; padding: 4px 6px; border-radius: 4px;">
+            <span style="font-weight: 600; color: var(--mod);">+ Other / Manual Modifiers</span>
+            <span id="outModifier" class="val-mod"></span>
+          </div>
         </div>
-        <div class="stack-row">
-          <span>+ Generic Ballot Shift</span>
-          <span id="outGeneric"></span>
+
+        <div class="result-section">
+          <div class="result-row">
+            <span class="result-title">Predicted Margin</span>
+            <span id="outMargin" class="result-margin"></span>
+          </div>
+          <div class="meta-metrics">
+            <div class="meta-item">
+              <span class="meta-label">Model STDEV</span>
+              <span id="outStdev" class="meta-val"></span>
+            </div>
+            <div class="meta-item" style="text-align: right;">
+              <span class="meta-label">Win Probability</span>
+              <span id="outWinProb" class="meta-val"></span>
+            </div>
+          </div>
         </div>
-        <div class="stack-row">
-          <span>+ Incumbency Effect</span>
-          <span id="outIncumbency"></span>
-        </div>
-        <div class="stack-row">
-          <span>+ Candidate Quality / Perf</span>
-          <span id="outCandidatePerf"></span>
-        </div>
-        <div class="stack-row">
-          <span>+ Campaign Finance Effect</span>
-          <span id="outFinance"></span>
-        </div>
-        <div id="modifierRow" class="stack-row" style="display: none; background: #f5f3ff; padding: 4px 6px; border-radius: 4px;">
-          <span style="font-weight: 600; color: var(--mod);">+ Other / Manual Modifiers</span>
-          <span id="outModifier" class="val-mod"></span>
+
+        <div class="range-box">
+          <div class="range-title-row">
+            <span>Range of Outcomes</span>
+            <span id="outRangeSummary"></span>
+          </div>
+          <svg id="rangeSvg" class="outcome-svg" viewBox="0 0 320 58">
+          </svg>
         </div>
       </div>
 
-      <div class="result-section">
-        <div class="result-row">
-          <span class="result-title">Predicted Margin</span>
-          <span id="outMargin" class="result-margin"></span>
-        </div>
-        <div class="meta-metrics">
-          <div class="meta-item">
-            <span class="meta-label">Model STDEV</span>
-            <span id="outStdev" class="meta-val"></span>
-          </div>
-          <div class="meta-item" style="text-align: right;">
-            <span class="meta-label">Win Probability</span>
-            <span id="outWinProb" class="meta-val"></span>
+      <div id="cardContentDemographics" style="display: none;">
+        <!-- Race -->
+        <div class="demo-block">
+          <div class="demo-title">Race & Ethnicity</div>
+          <div class="h-stack" id="demoRaceBar"></div>
+          <div class="demo-legend">
+            <div class="dl-item"><div class="dl-box" style="background:#3b82f6;"></div>White <span id="r_wht"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#f59e0b;"></div>Hisp <span id="r_hsp"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#10b981;"></div>Black <span id="r_blk"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#8b5cf6;"></div>Asian <span id="r_asn"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#64748b;"></div>Other <span id="r_oth"></span></div>
           </div>
         </div>
-      </div>
+        
+        <!-- Education -->
+        <div class="demo-block">
+          <div class="demo-title">Educational Attainment</div>
+          <div class="h-stack" id="demoEduBar"></div>
+          <div class="demo-legend">
+            <div class="dl-item"><div class="dl-box" style="background:#ef4444;"></div>&lt;HS <span id="e_nohs"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#f59e0b;"></div>HS <span id="e_hs"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#10b981;"></div>Some Col/Assoc <span id="e_some"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#3b82f6;"></div>Bach <span id="e_bach"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#8b5cf6;"></div>Post-Grad <span id="e_post"></span></div>
+          </div>
+        </div>
 
-      <div class="range-box">
-        <div class="range-title-row">
-          <span>Range of Outcomes</span>
-          <span id="outRangeSummary"></span>
+        <!-- Age -->
+        <div class="demo-block">
+          <div class="demo-title">Age Distribution</div>
+          <div class="h-stack" id="demoAgeBar"></div>
+          <div class="demo-legend">
+            <div class="dl-item"><div class="dl-box" style="background:#38bdf8;"></div>&lt;20 <span id="a_youth"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#4ade80;"></div>20-34 <span id="a_young"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#fbbf24;"></div>35-64 <span id="a_estab"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#a78bfa;"></div>65+ <span id="a_senior"></span></div>
+          </div>
+          <div class="hist-container" id="demoAgeHist"></div>
+          <div style="position:relative; height:14px; font-size:0.65rem; color:var(--text-muted); font-weight:700; margin-top:2px;">
+            <span style="position:absolute; left:0%;">0</span>
+            <span style="position:absolute; left:22.2%; transform:translateX(-50%);">20</span>
+            <span style="position:absolute; left:44.4%; transform:translateX(-50%);">40</span>
+            <span style="position:absolute; left:66.6%; transform:translateX(-50%);">60</span>
+            <span style="position:absolute; right:0%;">85+</span>
+          </div>
         </div>
-        <svg id="rangeSvg" class="outcome-svg" viewBox="0 0 320 58">
-        </svg>
+
+        <!-- Income -->
+        <div class="demo-block" style="margin-bottom:0;">
+          <div class="demo-title">Household Income <span id="demoAvgIncome" style="color:var(--text);">Avg: $0</span></div>
+          <div class="hist-container" id="demoIncomeHist"></div>
+          <div style="position:relative; height:14px; font-size:0.65rem; color:var(--text-muted); font-weight:700; margin-top:2px;">
+            <span style="position:absolute; left:0%;">0</span>
+            <span style="position:absolute; left:50%; transform:translateX(-50%);">50k</span>
+            <span style="position:absolute; left:68.75%; transform:translateX(-50%);">100k</span>
+            <span style="position:absolute; right:0%;">200k+</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -647,9 +730,7 @@
       <div class="hist-title">Kansas House — Simulated Outcomes</div>
       <div id="histSubtitle" class="hist-sub">Loading simulation outcomes...</div>
 
-      <svg id="histSvg" class="hist-svg" viewBox="0 0 380 230">
-        <!-- Rendered dynamically via renderSimulationHistogram() -->
-      </svg>
+      <svg id="histSvg" class="hist-svg" viewBox="0 0 380 230"></svg>
 
       <div class="hist-legend-row">
         <div class="hist-legend-item">
@@ -717,12 +798,13 @@
   const competitiveMap = {};
   let overallForecast = {};
   let seatDistribution = [];
+  let demogMap = {};
 
   function formatCandidate(name, distNum, defaultParty) {
     if (!name || name.trim() === '') {
       return { fullName: 'None', party: defaultParty, isInd: false, html: `Uncontested` };
     }
-    const cleanName = name.replace(/\s*\((Independent|Ind|D|R)\)/gi, '').trim();
+    const cleanName = name.replace(/\s*\((Independent\vert{}Ind\vert{}D\vert{}R)\)/gi, '').trim();
     const isInd = (distNum === '62' && /Geiger/i.test(name)) || (distNum === '80' && /Goff/i.test(name));
     const party = isInd ? 'IND' : defaultParty;
     const tagClass = isInd ? 'ind' : (party === 'D' ? 'dem' : 'rep');
@@ -816,6 +898,25 @@
     const drawer = document.getElementById('sidebarDrawer');
     const isOpened = drawer.classList.toggle('open');
     document.getElementById('sheetArrow').textContent = isOpened ? '▼' : '▲';
+  }
+
+  function switchDistrictTab(tab) {
+    const btnF = document.getElementById('tabBtnForecast');
+    const btnD = document.getElementById('tabBtnDemographics');
+    const conF = document.getElementById('cardContentForecast');
+    const conD = document.getElementById('cardContentDemographics');
+    
+    if (tab === 'forecast') {
+      btnF.classList.add('active');
+      btnD.classList.remove('active');
+      conF.style.display = 'block';
+      conD.style.display = 'none';
+    } else {
+      btnF.classList.remove('active');
+      btnD.classList.add('active');
+      conF.style.display = 'none';
+      conD.style.display = 'block';
+    }
   }
 
   function renderOutcomeBar(comp, isInd, distNum) {
@@ -917,6 +1018,55 @@
     `;
   }
 
+  function renderDemographics(id) {
+    const d = demogMap[id];
+    if (!d) return;
+
+    // Helper to generate horizontal stacked bars and their legend values
+    const buildHStack = (kArr, vals, tot, colors, barId, prefix) => {
+      let html = '';
+      kArr.forEach((k, i) => {
+        const pct = (vals[k] / tot) * 100;
+        if (pct > 0) html += `<div class="h-seg" style="width:${pct}%; background:${colors[i]};" title="${pct.toFixed(1)}%"></div>`;
+        const leg = document.getElementById(`${prefix}_${k}`);
+        if(leg) leg.textContent = pct.toFixed(1) + '%';
+      });
+      document.getElementById(barId).innerHTML = html;
+    };
+
+    // 1. Race
+    buildHStack(['wht','hsp','blk','asn','oth'], d.race, d.rTot, ['#3b82f6', '#f59e0b', '#10b981', '#8b5cf6', '#64748b'], 'demoRaceBar', 'r');
+    
+    // 2. Education
+    buildHStack(['nohs','hs','some','bach','post'], d.edu, d.edu.tot, ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'], 'demoEduBar', 'e');
+
+    // 3. Age Groups
+    buildHStack(['youth','young','estab','senior'], d.ageGroup, d.aTot, ['#38bdf8', '#4ade80', '#fbbf24', '#a78bfa'], 'demoAgeBar', 'a');
+
+    // 4. Age Histogram (Fixed Max 40% height scaling)
+    const ageLabels = ['0-4', '5-9', '10-14', '15-19', '20-24', '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60-64', '65-69', '70-74', '75-79', '80-84', '85+'];
+    let aHistHtml = '';
+    d.ageArr.forEach((val, i) => {
+      const pct = (val / d.aTot) * 100;
+      const h = Math.min(100, (pct / 40) * 100);
+      aHistHtml += `<div class="hist-bar" style="height:${h}%;" title="${ageLabels[i]}: ${pct.toFixed(1)}%"></div>`;
+    });
+    document.getElementById('demoAgeHist').innerHTML = aHistHtml;
+
+    // 5. Income Histogram (Fixed Max 45% height scaling)
+    const incLabels = ['<10k', '10-15k', '15-20k', '20-25k', '25-30k', '30-35k', '35-40k', '40-45k', '45-50k', '50-60k', '60-75k', '75-100k', '100-125k', '125-150k', '150-200k', '200k+'];
+    let iHistHtml = '';
+    d.incArr.forEach((val, i) => {
+      const pct = (val / d.iTot) * 100;
+      const h = Math.min(100, (pct / 45) * 100);
+      iHistHtml += `<div class="hist-bar" style="height:${h}%;" title="${incLabels[i]}: ${pct.toFixed(1)}%"></div>`;
+    });
+    document.getElementById('demoIncomeHist').innerHTML = iHistHtml;
+
+    // 6. Avg Income
+    document.getElementById('demoAvgIncome').textContent = `Avg: $${Math.round(d.avgInc).toLocaleString()}`;
+  }
+
   function renderCard(distNum) {
     const comp = competitiveMap[distNum];
     const general = ratingsMap[distNum];
@@ -976,6 +1126,7 @@
       }
 
       renderOutcomeBar(comp, isInd, distNum);
+      renderDemographics(distNum);
     } else if (general) {
       card.style.display = 'none';
       uncontested.style.display = 'block';
@@ -1004,7 +1155,6 @@
     };
   }
 
-  // CONTIGUOUS KANSAS RECTILINEAR HEX CARTOGRAM
   const KS_HEX_GRID = {
     120:[0,1], 112:[0,2], 110:[0,3], 122:[0,4], 123:[0,5], 119:[0,6], 124:[0,7],
     118:[1,0], 113:[1,1], 107:[1,2], 104:[1,3], 102:[1,4], 114:[1,5], 115:[1,6], 125:[1,7],
@@ -1093,7 +1243,6 @@
     document.getElementById('legSuperProb').textContent = `${overallForecast.gop_supermajority_prob}%`;
     document.getElementById('legMajProb').textContent = `${overallForecast.gop_plain_majority_prob}%`;
 
-    // Coordinates setup
     const w = 380, h = 230;
     const padL = 30, padR = 20, padT = 20, padB = 60;
     const plotW = w - padL - padR;
@@ -1101,14 +1250,13 @@
 
     const minSeat = 32;
     const maxSeat = 64;
-    const maxProb = 0.095; // 9.5% height ceiling
+    const maxProb = 0.095;
 
     const scaleX = (val) => padL + ((val - minSeat) / (maxSeat - minSeat)) * plotW;
     const scaleY = (p) => padT + plotH - (p / maxProb) * plotH;
 
     let svgInner = '';
 
-    // Horizontal Grid Lines
     [0.02, 0.04, 0.06, 0.08].forEach(p => {
       const y = scaleY(p);
       svgInner += `
@@ -1117,11 +1265,9 @@
       `;
     });
 
-    // Zero Axis Line
     const y0 = scaleY(0);
     svgInner += `<line x1="${padL}" y1="${y0}" x2="${w - padR}" y2="${y0}" stroke="#94a3b8" stroke-width="1.2" />`;
 
-    // Histogram Bars
     const barW = Math.max(2, (plotW / (maxSeat - minSeat)) * 0.85);
     seatDistribution.forEach(d => {
       if (d.dem_seats < minSeat || d.dem_seats > maxSeat) return;
@@ -1138,35 +1284,30 @@
       `;
     });
 
-    // Reference Line 1: Before Election (37 seats)
     const x37 = scaleX(baseline);
     svgInner += `
       <line x1="${x37}" y1="${padT}" x2="${x37}" y2="${y0}" stroke="#475569" stroke-width="1.5" stroke-dasharray="3,2" />
       <text x="${x37}" y="${padT + 8}" font-size="7.5" font-weight="800" fill="#334155" text-anchor="middle">Before (${baseline})</text>
     `;
 
-    // Reference Line 2: GOP 2/3 Break (41.5 line)
     const x41 = scaleX(41.5);
     svgInner += `
       <line x1="${x41}" y1="${padT}" x2="${x41}" y2="${y0}" stroke="#0f172a" stroke-width="1.6" stroke-dasharray="3,2" />
       <text x="${x41 - 4}" y="${padT + 40}" font-size="7" font-weight="800" fill="#0f172a" text-anchor="end" transform="rotate(-90 ${x41 - 4} ${padT + 40})">GOP ⅔ (D &le; 41)</text>
     `;
 
-    // Reference Line 3: Model Median (47)
     const xMed = scaleX(median);
     svgInner += `
       <line x1="${xMed}" y1="${padT - 4}" x2="${xMed}" y2="${y0}" stroke="#d97706" stroke-width="2" />
       <text x="${xMed}" y="${padT - 7}" font-size="8.5" font-weight="900" fill="#b45309" text-anchor="middle">Median (${median})</text>
     `;
 
-    // Reference Line 4: Plain Majority Line (62.5 / 63 seats)
     const x63 = scaleX(62.5);
     svgInner += `
       <line x1="${x63}" y1="${padT}" x2="${x63}" y2="${y0}" stroke="#475569" stroke-width="1.5" stroke-dasharray="3,2" />
       <text x="${x63 - 3}" y="${padT + 40}" font-size="7" font-weight="800" fill="#475569" text-anchor="end" transform="rotate(-90 ${x63 - 3} ${padT + 40})">Maj (D &ge; 63)</text>
     `;
 
-    // X-Axis Numbers
     [35, 40, 45, 50, 55, 60].forEach(seat => {
       const xs = scaleX(seat);
       svgInner += `
@@ -1175,9 +1316,6 @@
       `;
     });
 
-    // -------------------------------------------------------------
-    // RANGE OF OUTCOMES BAR (Just below the X-axis: Y = 190 to 204)
-    // -------------------------------------------------------------
     const trackY = y0 + 26;
     const x95A = scaleX(ci95L);
     const x95B = scaleX(ci95H);
@@ -1185,20 +1323,12 @@
     const x67B = scaleX(ci67H);
 
     svgInner += `
-      <!-- Base Range Axis -->
       <line x1="${padL}" y1="${trackY}" x2="${w - padR}" y2="${trackY}" stroke="#e2e8f0" stroke-width="2" />
-
-      <!-- 95% Span -->
       <rect x="${x95A}" y="${trackY - 4}" width="${Math.max(2, x95B - x95A)}" height="8" rx="2" fill="#ffcdd2" opacity="0.9" />
-
-      <!-- 67% Span -->
       <rect x="${x67A}" y="${trackY - 6}" width="${Math.max(2, x67B - x67A)}" height="12" rx="3" fill="#ef5350" opacity="0.9" />
-
-      <!-- Median Center Pin -->
       <line x1="${xMed}" y1="${trackY - 8}" x2="${xMed}" y2="${trackY + 8}" stroke="#b45309" stroke-width="2.5" />
       <circle cx="${xMed}" cy="${trackY}" r="3.5" fill="#b45309" stroke="#ffffff" stroke-width="1" />
 
-      <!-- Sub-Bar Labels -->
       <text x="${w / 2}" y="${trackY + 18}" font-size="7.8" font-weight="700" fill="#64748b" text-anchor="middle">
         67% Range: <tspan font-weight="800" fill="#0f172a">${ci67L}–${ci67H}</tspan> | 95% Range: <tspan font-weight="800" fill="#0f172a">${ci95L}–${ci95H}</tspan>
       </text>
@@ -1273,6 +1403,59 @@
           cumulative_at_least: parts[2] ? parseFloat(parts[2]) : 0
         });
       }
+    }
+  }
+
+  function parseDemographicsCsv(csvText) {
+    const lines = csvText.trim().split('\n');
+    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g,''));
+    const hMap = {};
+    headers.forEach((h, i) => hMap[h] = i);
+    
+    for(let i=1; i<lines.length; i++) {
+      const cols = lines[i].split(',').map(c => c.trim().replace(/"/g,''));
+      if(cols.length < headers.length) continue;
+      
+      const id = cols[hMap['ID']];
+      if(!id || id === '0') continue;
+      
+      const val = (k) => parseInt(cols[hMap[k]], 10) || 0;
+      
+      const rTot = val('T_20_CENS_Total');
+      const race = {
+        wht: val('T_20_CENS_White'),
+        hsp: val('T_20_CENS_Hispanic'),
+        blk: val('T_20_CENS_Black'),
+        asn: val('T_20_CENS_Asian'),
+        oth: 0
+      };
+      race.oth = rTot - (race.wht + race.hsp + race.blk + race.asn);
+      
+      const eNohs = val('X_22_2022_Education_NoHS');
+      const eHs = val('X_22_2022_Education_HS');
+      const eSome = val('X_22_2022_Education_SomeCol') + val('X_22_2022_Education_Assoc');
+      const eBach = val('X_22_2022_Education_Bach');
+      const ePost = val('X_22_2022_Education_Master') + val('X_22_2022_Education_Prof') + val('X_22_2022_Education_Doc');
+      const eTot = eNohs + eHs + eSome + eBach + ePost;
+      const edu = { nohs: eNohs, hs: eHs, some: eSome, bach: eBach, post: ePost, tot: eTot };
+      
+      const ageKeys = ['Age_0_5', 'Age_5_9', 'Age_10_14', 'Age_15_19', 'Age_20_24', 'Age_25_29', 'Age_30_34', 'Age_35_39', 'Age_40_44', 'Age_45_49', 'Age_50_54', 'Age_55_59', 'Age_60_64', 'Age_65_69', 'Age_70_74', 'Age_75_79', 'Age_80_84', 'Age_O84'];
+      const ageArr = ageKeys.map(k => val('X_22_2022_Expanded_Age_' + k));
+      const aTot = ageArr.reduce((a,b)=>a+b, 0);
+      const ageGroup = {
+        youth: ageArr.slice(0,4).reduce((a,b)=>a+b,0),
+        young: ageArr.slice(4,7).reduce((a,b)=>a+b,0),
+        estab: ageArr.slice(7,13).reduce((a,b)=>a+b,0),
+        senior: ageArr.slice(13).reduce((a,b)=>a+b,0)
+      };
+      
+      const incKeys = ['U10K', 'U15K', 'U20K', 'U25K', 'U30K', 'U35K', 'U40K', 'U45K', 'U50K', 'U60K', 'U75K', 'U100K', 'U125K', 'U150K', 'U200K', 'O200K'];
+      const incMid = [5000, 12500, 17500, 22500, 27500, 32500, 37500, 42500, 47500, 55000, 67500, 87500, 112500, 137500, 175000, 250000];
+      const incArr = incKeys.map(k => val('X_22_2022_Income_Expanded_' + k));
+      const iTot = incArr.reduce((a,b)=>a+b, 0);
+      const avgInc = iTot > 0 ? incArr.reduce((sum, count, idx) => sum + count * incMid[idx], 0) / iTot : 0;
+      
+      demogMap[id] = { rTot, race, edu, aTot, ageArr, ageGroup, iTot, incArr, avgInc };
     }
   }
 
@@ -1405,8 +1588,9 @@
     fetch('./ratings.txt').then(r => r.text()),
     fetch('./district_data.txt').then(r => r.text()),
     fetch('./overall_forecast.json').then(r => r.json()),
-    fetch('./seat_distribution.csv').then(r => r.text())
-  ]).then(([geojson, ratingsTxt, districtTxt, forecastJson, seatDistCsv]) => {
+    fetch('./seat_distribution.csv').then(r => r.text()),
+    fetch('./district-data.csv').then(r => r.text())
+  ]).then(([geojson, ratingsTxt, districtTxt, forecastJson, seatDistCsv, demogCsv]) => {
     cachedGeojson = geojson;
     overallForecast = forecastJson;
 
@@ -1421,6 +1605,7 @@
     parseRatingsText(ratingsTxt);
     parseDistrictDataText(districtTxt);
     parseSeatDistributionCsv(seatDistCsv);
+    parseDemographicsCsv(demogCsv);
 
     updateDropdownList();
     renderSimulationHistogram();
@@ -1436,7 +1621,7 @@
     applyHatchOverlay();
     map.fitBounds(hexCartoLayer.getBounds(), { padding: [10, 10] });
   }).catch(err => {
-    console.error("Initialization error. Ensure districts.geojson, ratings.txt, district_data.txt, overall_forecast.json, and seat_distribution.csv exist in your root directory.", err);
+    console.error("Initialization error. Ensure districts.geojson, ratings.txt, district_data.txt, overall_forecast.json, seat_distribution.csv, and district-data.csv exist in your root directory.", err);
   });
 
   document.getElementById('districtSelect').addEventListener('change', (e) => {
