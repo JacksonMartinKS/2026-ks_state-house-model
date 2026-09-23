@@ -5,8 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Kansas State House 2026 Forecast</title>
   
+  <!-- Standard Favicon (Browser Tabs) -->
   <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png" />
+  
+  <!-- Apple Touch Icon (Mobile bookmarks / Add to Home Screen) -->
   <link rel="apple-touch-icon" sizes="180x180" href="./favicon.png" />
+
+  
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <style>
@@ -423,7 +428,8 @@
     .hist-bar { flex: 1; background: #cbd5e1; border-radius: 2px 2px 0 0; transition: height 0.4s ease; min-height: 1px; cursor: pointer; }
     .hist-bar:hover { background: #64748b; }
 
-    .uncontested-notice {
+    /* Uncontested Notice embedded in forecast tab */
+    #uncontestedNotice {
       padding: 16px 10px;
       text-align: center;
       color: var(--text-muted);
@@ -431,7 +437,7 @@
       background: #f8fafc;
       border: 1px solid var(--border);
       border-radius: 8px;
-      margin-bottom: 14px;
+      margin-top: 4px;
     }
 
     /* HISTOGRAM CARD CONTAINER */
@@ -604,57 +610,66 @@
       </div>
 
       <div id="cardContentForecast">
-        <div class="stack-container">
-          <div class="stack-row baseline">
-            <span>Baseline Partisanship</span>
-            <span id="outPartisanship"></span>
+        <!-- Forecast Stats Container (Hidden if Uncontested) -->
+        <div id="forecastDataContainer">
+          <div class="stack-container">
+            <div class="stack-row baseline">
+              <span>Baseline Partisanship</span>
+              <span id="outPartisanship"></span>
+            </div>
+            <div class="stack-row">
+              <span>+ Generic Ballot Shift</span>
+              <span id="outGeneric"></span>
+            </div>
+            <div class="stack-row">
+              <span>+ Incumbency Effect</span>
+              <span id="outIncumbency"></span>
+            </div>
+            <div class="stack-row">
+              <span>+ Candidate Quality / Perf</span>
+              <span id="outCandidatePerf"></span>
+            </div>
+            <div class="stack-row">
+              <span>+ Campaign Finance Effect</span>
+              <span id="outFinance"></span>
+            </div>
+            <div id="modifierRow" class="stack-row" style="display: none; background: #f5f3ff; padding: 4px 6px; border-radius: 4px;">
+              <span style="font-weight: 600; color: var(--mod);">+ Other / Manual Modifiers</span>
+              <span id="outModifier" class="val-mod"></span>
+            </div>
           </div>
-          <div class="stack-row">
-            <span>+ Generic Ballot Shift</span>
-            <span id="outGeneric"></span>
+
+          <div class="result-section">
+            <div class="result-row">
+              <span class="result-title">Predicted Margin</span>
+              <span id="outMargin" class="result-margin"></span>
+            </div>
+            <div class="meta-metrics">
+              <div class="meta-item">
+                <span class="meta-label">Model STDEV</span>
+                <span id="outStdev" class="meta-val"></span>
+              </div>
+              <div class="meta-item" style="text-align: right;">
+                <span class="meta-label">Win Probability</span>
+                <span id="outWinProb" class="meta-val"></span>
+              </div>
+            </div>
           </div>
-          <div class="stack-row">
-            <span>+ Incumbency Effect</span>
-            <span id="outIncumbency"></span>
-          </div>
-          <div class="stack-row">
-            <span>+ Candidate Quality / Perf</span>
-            <span id="outCandidatePerf"></span>
-          </div>
-          <div class="stack-row">
-            <span>+ Campaign Finance Effect</span>
-            <span id="outFinance"></span>
-          </div>
-          <div id="modifierRow" class="stack-row" style="display: none; background: #f5f3ff; padding: 4px 6px; border-radius: 4px;">
-            <span style="font-weight: 600; color: var(--mod);">+ Other / Manual Modifiers</span>
-            <span id="outModifier" class="val-mod"></span>
+
+          <div class="range-box">
+            <div class="range-title-row">
+              <span>Range of Outcomes</span>
+              <span id="outRangeSummary"></span>
+            </div>
+            <svg id="rangeSvg" class="outcome-svg" viewBox="0 0 320 58">
+            </svg>
           </div>
         </div>
 
-        <div class="result-section">
-          <div class="result-row">
-            <span class="result-title">Predicted Margin</span>
-            <span id="outMargin" class="result-margin"></span>
-          </div>
-          <div class="meta-metrics">
-            <div class="meta-item">
-              <span class="meta-label">Model STDEV</span>
-              <span id="outStdev" class="meta-val"></span>
-            </div>
-            <div class="meta-item" style="text-align: right;">
-              <span class="meta-label">Win Probability</span>
-              <span id="outWinProb" class="meta-val"></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="range-box">
-          <div class="range-title-row">
-            <span>Range of Outcomes</span>
-            <span id="outRangeSummary"></span>
-          </div>
-          <svg id="rangeSvg" class="outcome-svg" viewBox="0 0 320 58">
-          </svg>
+        <!-- Uncontested Notice embedded inside the Forecast Tab -->
+        <div id="uncontestedNotice" style="display: none;">
+          <strong id="uncontestedRatingText"></strong>
+          <p>District is uncontested or non-competitive. Not tracked with itemized shift variables.</p>
         </div>
       </div>
 
@@ -664,9 +679,9 @@
           <div class="demo-title">Race & Ethnicity</div>
           <div class="h-stack" id="demoRaceBar"></div>
           <div class="demo-legend">
-            <div class="dl-item"><div class="dl-box" style="background:#3b82f6;"></div>White <span id="r_wht"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#ef4444;"></div>White <span id="r_wht"></span></div>
             <div class="dl-item"><div class="dl-box" style="background:#f59e0b;"></div>Hisp <span id="r_hsp"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#10b981;"></div>Black <span id="r_blk"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#3b82f6;"></div>Black <span id="r_blk"></span></div>
             <div class="dl-item"><div class="dl-box" style="background:#8b5cf6;"></div>Asian <span id="r_asn"></span></div>
             <div class="dl-item"><div class="dl-box" style="background:#64748b;"></div>Other <span id="r_oth"></span></div>
           </div>
@@ -690,8 +705,10 @@
           <div class="demo-title">Age Distribution</div>
           <div class="h-stack" id="demoAgeBar"></div>
           <div class="demo-legend">
-            <div class="dl-item"><div class="dl-box" style="background:#38bdf8;"></div>&lt;20 <span id="a_youth"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#4ade80;"></div>20-34 <span id="a_young"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#7dd3fc;"></div>0-14 <span id="a_child"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#0284c7;"></div>15-19 <span id="a_teen"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#86efac;"></div>20-24 <span id="a_college"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#16a34a;"></div>25-34 <span id="a_young"></span></div>
             <div class="dl-item"><div class="dl-box" style="background:#fbbf24;"></div>35-64 <span id="a_estab"></span></div>
             <div class="dl-item"><div class="dl-box" style="background:#a78bfa;"></div>65+ <span id="a_senior"></span></div>
           </div>
@@ -719,18 +736,14 @@
       </div>
     </div>
 
-    <div id="uncontestedCard" class="uncontested-notice" style="display: none;">
-      <strong id="uncontestedDistrictTitle"></strong><br/>
-      <span id="uncontestedRatingText"></span>
-      <p style="margin: 6px 0 0; font-size: 0.78rem;">District is uncontested or non-competitive. Not tracked with itemized shift variables.</p>
-    </div>
-
     <!-- COMBINED SIMULATED SEAT OUTCOMES HISTOGRAM -->
     <div class="histogram-card">
       <div class="hist-title">Kansas House — Simulated Outcomes</div>
       <div id="histSubtitle" class="hist-sub">Loading simulation outcomes...</div>
 
-      <svg id="histSvg" class="hist-svg" viewBox="0 0 380 230"></svg>
+      <svg id="histSvg" class="hist-svg" viewBox="0 0 380 230">
+        <!-- Rendered dynamically via renderSimulationHistogram() -->
+      </svg>
 
       <div class="hist-legend-row">
         <div class="hist-legend-item">
@@ -1022,7 +1035,6 @@
     const d = demogMap[id];
     if (!d) return;
 
-    // Helper to generate horizontal stacked bars and their legend values
     const buildHStack = (kArr, vals, tot, colors, barId, prefix) => {
       let html = '';
       kArr.forEach((k, i) => {
@@ -1034,31 +1046,35 @@
       document.getElementById(barId).innerHTML = html;
     };
 
-    // 1. Race
-    buildHStack(['wht','hsp','blk','asn','oth'], d.race, d.rTot, ['#3b82f6', '#f59e0b', '#10b981', '#8b5cf6', '#64748b'], 'demoRaceBar', 'r');
+    // 1. Race: White -> Red, Black -> Blue
+    buildHStack(['wht','hsp','blk','asn','oth'], d.race, d.rTot, ['#ef4444', '#f59e0b', '#3b82f6', '#8b5cf6', '#64748b'], 'demoRaceBar', 'r');
     
     // 2. Education
     buildHStack(['nohs','hs','some','bach','post'], d.edu, d.edu.tot, ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'], 'demoEduBar', 'e');
 
-    // 3. Age Groups
-    buildHStack(['youth','young','estab','senior'], d.ageGroup, d.aTot, ['#38bdf8', '#4ade80', '#fbbf24', '#a78bfa'], 'demoAgeBar', 'a');
+    // 3. Age Distribution (New Groupings)
+    buildHStack(['child','teen','college','young','estab','senior'], d.ageGroup, d.aTot, ['#7dd3fc', '#0284c7', '#86efac', '#16a34a', '#fbbf24', '#a78bfa'], 'demoAgeBar', 'a');
 
-    // 4. Age Histogram (Fixed Max 40% height scaling)
+    // 4. Age Histogram (Dynamic District Scaling)
+    const maxAgePct = Math.max(...d.ageArr) / d.aTot * 100;
+    const ageScale = Math.max(maxAgePct * 1.1, 5); // Add slight headroom, minimum 5% max y-axis
     const ageLabels = ['0-4', '5-9', '10-14', '15-19', '20-24', '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60-64', '65-69', '70-74', '75-79', '80-84', '85+'];
     let aHistHtml = '';
     d.ageArr.forEach((val, i) => {
       const pct = (val / d.aTot) * 100;
-      const h = Math.min(100, (pct / 40) * 100);
+      const h = Math.min(100, (pct / ageScale) * 100);
       aHistHtml += `<div class="hist-bar" style="height:${h}%;" title="${ageLabels[i]}: ${pct.toFixed(1)}%"></div>`;
     });
     document.getElementById('demoAgeHist').innerHTML = aHistHtml;
 
-    // 5. Income Histogram (Fixed Max 45% height scaling)
+    // 5. Income Histogram (Dynamic District Scaling)
+    const maxIncPct = Math.max(...d.incArr) / d.iTot * 100;
+    const incScale = Math.max(maxIncPct * 1.1, 5); // Add slight headroom, minimum 5% max y-axis
     const incLabels = ['<10k', '10-15k', '15-20k', '20-25k', '25-30k', '30-35k', '35-40k', '40-45k', '45-50k', '50-60k', '60-75k', '75-100k', '100-125k', '125-150k', '150-200k', '200k+'];
     let iHistHtml = '';
     d.incArr.forEach((val, i) => {
       const pct = (val / d.iTot) * 100;
-      const h = Math.min(100, (pct / 45) * 100);
+      const h = Math.min(100, (pct / incScale) * 100);
       iHistHtml += `<div class="hist-bar" style="height:${h}%;" title="${incLabels[i]}: ${pct.toFixed(1)}%"></div>`;
     });
     document.getElementById('demoIncomeHist').innerHTML = iHistHtml;
@@ -1071,67 +1087,77 @@
     const comp = competitiveMap[distNum];
     const general = ratingsMap[distNum];
     const card = document.getElementById('districtCard');
-    const uncontested = document.getElementById('uncontestedCard');
 
-    if (comp && comp.demCandidate && comp.repCandidate) {
-      uncontested.style.display = 'none';
+    if (comp || general) {
       card.style.display = 'block';
 
-      const cand1 = formatCandidate(comp.demCandidate, distNum, 'D');
-      const cand2 = formatCandidate(comp.repCandidate, distNum, 'R');
+      if (comp && comp.demCandidate && comp.repCandidate) {
+        document.getElementById('forecastDataContainer').style.display = 'block';
+        document.getElementById('uncontestedNotice').style.display = 'none';
 
-      document.getElementById('outDistrict').textContent = comp.district;
-      document.getElementById('outCandidates').innerHTML = `${cand1.html} vs. ${cand2.html}`;
+        const cand1 = formatCandidate(comp.demCandidate, distNum, 'D');
+        const cand2 = formatCandidate(comp.repCandidate, distNum, 'R');
 
-      const isInd = cand1.isInd;
+        document.getElementById('outDistrict').textContent = comp.district;
+        document.getElementById('outCandidates').innerHTML = `${cand1.html} vs. ${cand2.html}`;
 
-      const setFormatted = (elemId, num) => {
-        const res = formatPartisanVal(num, isInd);
-        const el = document.getElementById(elemId);
-        el.textContent = res.text;
-        el.className = res.cls;
-      };
+        const isInd = cand1.isInd;
 
-      setFormatted('outPartisanship', comp.baseline);
-      setFormatted('outGeneric', comp.generic);
-      setFormatted('outIncumbency', comp.incumbency);
-      setFormatted('outCandidatePerf', comp.candidatePerf);
-      setFormatted('outFinance', comp.finance);
-      setFormatted('outMargin', comp.margin);
+        const setFormatted = (elemId, num) => {
+          const res = formatPartisanVal(num, isInd);
+          const el = document.getElementById(elemId);
+          el.textContent = res.text;
+          el.className = res.cls;
+        };
 
-      const sumKnown = Math.round((comp.baseline + comp.generic + comp.incumbency + comp.candidatePerf + (isNaN(comp.finance) ? 0 : comp.finance)) * 1e6) / 1e6;
-      const targetMargin = Math.round(comp.margin * 1e6) / 1e6;
-      const otherDiff = Math.round((targetMargin - sumKnown) * 1e6) / 1e6;
+        setFormatted('outPartisanship', comp.baseline);
+        setFormatted('outGeneric', comp.generic);
+        setFormatted('outIncumbency', comp.incumbency);
+        setFormatted('outCandidatePerf', comp.candidatePerf);
+        setFormatted('outFinance', comp.finance);
+        setFormatted('outMargin', comp.margin);
 
-      const modRow = document.getElementById('modifierRow');
-      if (Math.abs(otherDiff) >= 0.0005) {
-        const modRes = formatPartisanVal(otherDiff, isInd);
-        const modEl = document.getElementById('outModifier');
-        modEl.textContent = modRes.text;
-        modEl.className = modRes.cls;
-        modRow.style.display = 'flex';
+        const sumKnown = Math.round((comp.baseline + comp.generic + comp.incumbency + comp.candidatePerf + (isNaN(comp.finance) ? 0 : comp.finance)) * 1e6) / 1e6;
+        const targetMargin = Math.round(comp.margin * 1e6) / 1e6;
+        const otherDiff = Math.round((targetMargin - sumKnown) * 1e6) / 1e6;
+
+        const modRow = document.getElementById('modifierRow');
+        if (Math.abs(otherDiff) >= 0.0005) {
+          const modRes = formatPartisanVal(otherDiff, isInd);
+          const modEl = document.getElementById('outModifier');
+          modEl.textContent = modRes.text;
+          modEl.className = modRes.cls;
+          modRow.style.display = 'flex';
+        } else {
+          modRow.style.display = 'none';
+        }
+
+        document.getElementById('outStdev').textContent = `±${(comp.stdev * 100).toFixed(1)} pts`;
+        const winPercent = Math.round(comp.winChance * 100);
+        const winProbElem = document.getElementById('outWinProb');
+        winProbElem.textContent = `${winPercent}%`;
+        winProbElem.style.color = winPercent >= 50 ? (isInd ? 'var(--ind)' : 'var(--dem)') : 'var(--rep)';
+
+        const probLabel = document.querySelector('#districtCard .meta-item:last-child .meta-label');
+        if (probLabel) {
+          probLabel.textContent = isInd ? 'Ind Win Probability' : 'Dem Win Probability';
+        }
+
+        renderOutcomeBar(comp, isInd, distNum);
       } else {
-        modRow.style.display = 'none';
+        // District is Uncontested - Embed notice inside Forecast Tab
+        document.getElementById('forecastDataContainer').style.display = 'none';
+        document.getElementById('uncontestedNotice').style.display = 'block';
+        
+        document.getElementById('outDistrict').textContent = `Kansas House District ${distNum}`;
+        document.getElementById('outCandidates').innerHTML = `<span class="party-tag" style="background:#f1f5f9; color:var(--text-muted); border:1px solid var(--border);">Uncontested / Safe</span>`;
+        document.getElementById('uncontestedRatingText').textContent = `Rating: ${general.rating} (${general.prob} Win Prob)`;
       }
 
-      document.getElementById('outStdev').textContent = `±${(comp.stdev * 100).toFixed(1)} pts`;
-      const winPercent = Math.round(comp.winChance * 100);
-      const winProbElem = document.getElementById('outWinProb');
-      winProbElem.textContent = `${winPercent}%`;
-      winProbElem.style.color = winPercent >= 50 ? (isInd ? 'var(--ind)' : 'var(--dem)') : 'var(--rep)';
-
-      const probLabel = document.querySelector('#districtCard .meta-item:last-child .meta-label');
-      if (probLabel) {
-        probLabel.textContent = isInd ? 'Ind Win Probability' : 'Dem Win Probability';
-      }
-
-      renderOutcomeBar(comp, isInd, distNum);
+      // Always render demographics independently
       renderDemographics(distNum);
-    } else if (general) {
+    } else {
       card.style.display = 'none';
-      uncontested.style.display = 'block';
-      document.getElementById('uncontestedDistrictTitle').textContent = `Kansas House District ${distNum}`;
-      document.getElementById('uncontestedRatingText').textContent = `Rating: ${general.rating} (${general.prob} Win Prob)`;
     }
   }
 
@@ -1223,7 +1249,6 @@
     return { type: "FeatureCollection", features };
   }
 
-  // SIMULATED SEAT OUTCOMES HISTOGRAM RENDERER
   function renderSimulationHistogram() {
     if (!seatDistribution.length || !overallForecast.median_dem_seats) return;
 
@@ -1443,10 +1468,12 @@
       const ageArr = ageKeys.map(k => val('X_22_2022_Expanded_Age_' + k));
       const aTot = ageArr.reduce((a,b)=>a+b, 0);
       const ageGroup = {
-        youth: ageArr.slice(0,4).reduce((a,b)=>a+b,0),
-        young: ageArr.slice(4,7).reduce((a,b)=>a+b,0),
-        estab: ageArr.slice(7,13).reduce((a,b)=>a+b,0),
-        senior: ageArr.slice(13).reduce((a,b)=>a+b,0)
+        child: ageArr.slice(0, 3).reduce((a,b)=>a+b,0),   // 0-14
+        teen: ageArr.slice(3, 4).reduce((a,b)=>a+b,0),    // 15-19
+        college: ageArr.slice(4, 5).reduce((a,b)=>a+b,0), // 20-24
+        young: ageArr.slice(5, 7).reduce((a,b)=>a+b,0),   // 25-34
+        estab: ageArr.slice(7, 13).reduce((a,b)=>a+b,0),  // 35-64
+        senior: ageArr.slice(13).reduce((a,b)=>a+b,0)     // 65+
       };
       
       const incKeys = ['U10K', 'U15K', 'U20K', 'U25K', 'U30K', 'U35K', 'U40K', 'U45K', 'U50K', 'U60K', 'U75K', 'U100K', 'U125K', 'U150K', 'U200K', 'O200K'];
@@ -1582,7 +1609,6 @@
     }
   }
 
-  // Promise loads all repository files asynchronously
   Promise.all([
     fetch('./districts.geojson').then(r => r.json()),
     fetch('./ratings.txt').then(r => r.text()),
@@ -1594,7 +1620,6 @@
     cachedGeojson = geojson;
     overallForecast = forecastJson;
 
-    // Dynamically update mobile header banner with forecast JSON
     if (overallForecast.median_dem_seats) {
       document.getElementById('topBarMedian').textContent = `${overallForecast.median_dem_seats} Median`;
       document.getElementById('topBar67').textContent = `67%: ${overallForecast.ci_67_low}–${overallForecast.ci_67_high}`;
