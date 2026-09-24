@@ -5,8 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Kansas State House 2026 Forecast</title>
   
+  <!-- Standard Favicon (Browser Tabs) -->
   <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png" />
+  
+  <!-- Apple Touch Icon (Mobile bookmarks / Add to Home Screen) -->
   <link rel="apple-touch-icon" sizes="180x180" href="./favicon.png" />
+
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <style>
@@ -548,7 +552,10 @@
         </div>
 
         <div class="demo-block">
-          <div class="demo-title">Housing & Living Arrangements</div>
+          <div class="demo-title">
+            Housing & Living Arrangements (HH Eqv)
+            <span id="demoKids" style="color:var(--text); text-transform:none;"></span>
+          </div>
           <div class="h-stack" id="demoHousingBar"></div>
           <div class="demo-legend">
             <div class="dl-item"><div class="dl-box" style="background:#0ea5e9;"></div>Owner <span id="h_owner"></span></div>
@@ -863,6 +870,13 @@
     buildHStack(['owner','renter','nursing','otherGQ'], d.housing, d.housing.tot, ['#0ea5e9', '#f43f5e', '#8b5cf6', '#64748b'], 'demoHousingBar', 'h');
     buildHStack(['a0_17','a18_24','a25_39','a40_64','a65plus'], d.ageGroup, d.aTot, ['#7dd3fc', '#0284c7', '#86efac', '#16a34a', '#a78bfa'], 'demoAgeBar', 'a');
 
+    if (d.housing.hhTot > 0) {
+      const pctKids = (d.housing.familiesWithKids / d.housing.hhTot) * 100;
+      document.getElementById('demoKids').textContent = `Families w/ Kids: ${pctKids.toFixed(1)}%`;
+    } else {
+      document.getElementById('demoKids').textContent = '';
+    }
+
     let maxAgePct = 5;
     if (d.aTot > 0) maxAgePct = Math.max(...d.ageArr) / d.aTot * 100;
     const ageScale = Math.max(maxAgePct * 1.1, 5); 
@@ -898,10 +912,11 @@
       if (elec.tot === 0) return;
       const pctD = (elec.d / elec.tot) * 100;
       const pctR = (elec.r / elec.tot) * 100;
-      // Abortion Amendment: D = No, R = Yes. Display colors match standard lean for consistency, but labeled No/Yes
+      
       const isAmend = elec.label.includes('Amendment');
       const lblD = isAmend ? 'No' : 'D';
       const lblR = isAmend ? 'Yes' : 'R';
+      
       const margin = (pctR - pctD) / 100;
       const mStr = formatPartisanVal(margin, false, true).text;
 
@@ -1289,7 +1304,6 @@
       
       const val = (k) => parseFloat(cols[hMap[k]]) || 0;
       
-      // RACE
       const rTot = val('V_24_CVAP_Total') || val('T_20_CENS_Total');
       const race = {
         wht: val('V_24_CVAP_White') || val('T_20_CENS_White'),
@@ -1300,7 +1314,6 @@
       };
       race.oth = Math.max(0, rTot - (race.wht + race.hsp + race.blk + race.asn));
       
-      // EDUCATION
       const eNohs = val('X_22_2022_Education_NoHS');
       const eHs = val('X_22_2022_Education_HS');
       const eSome = val('X_22_2022_Education_SomeCol') + val('X_22_2022_Education_Assoc');
@@ -1309,19 +1322,26 @@
       const eTot = eNohs + eHs + eSome + eBach + ePost;
       const edu = { nohs: eNohs, hs: eHs, some: eSome, bach: eBach, post: ePost, tot: eTot };
 
-      // HOUSING
       const owner = val('Owner Occupied Housing');
       const renter = val('Renter Occupied Housing');
-      const nursing = val('Persons in nursing homes');
-      const totalGQ = val('Total Persons in Group Quarters');
-      const otherGQ = Math.max(0, totalGQ - nursing);
-      const hTot = owner + renter + nursing + otherGQ;
-      const housing = { owner, renter, nursing, otherGQ, tot: hTot };
+      const rawNursing = val('Persons in nursing homes');
+      const rawTotalGQ = val('Total Persons in Group Quarters');
+      const familiesWithKids = val('Family Households with Persons Under 18');
       
-      // AGE
+      const nursing = Math.round(rawNursing / 2);
+      const otherGQ = Math.round(Math.max(0, rawTotalGQ - rawNursing) / 2);
+      const hTot = owner + renter + nursing + otherGQ;
+      const hhTot = owner + renter; 
+      const housing = { owner, renter, nursing, otherGQ, tot: hTot, hhTot, familiesWithKids };
+      
       const ageVal = (suffix) => val('X_22_2022_Age_by_Sex_Male_' + suffix) + val('X_22_2022_Age_by_Sex_Female_' + suffix);
       const ageValOld = (suffix) => val('X_22_2022_Expanded_Age_' + suffix);
-      const vAge = (sfx, sfxOld) => { let v = ageVal(sfx); if (v === 0 && sfxOld) v = ageValOld(sfxOld); return v; };
+      
+      const vAge = (sfx, sfxOld) => {
+        let v = ageVal(sfx);
+        if (v === 0 && sfxOld) v = ageValOld(sfxOld);
+        return v;
+      };
 
       const a0_17 = vAge('U5','Age_0_5') + vAge('5_9','Age_5_9') + vAge('10_14','Age_10_14') + vAge('15_17','Age_15_19');
       const a18_24 = vAge('18_19','') + vAge('20','') + vAge('21','') + vAge('22_24','Age_20_24');
@@ -1333,14 +1353,12 @@
       const ageArr = [a0_17, a18_24, a25_39, a40_64, a65plus];
       const ageGroup = { a0_17, a18_24, a25_39, a40_64, a65plus };
       
-      // INCOME
       const incKeys = ['U10K', 'U15K', 'U20K', 'U25K', 'U30K', 'U35K', 'U40K', 'U45K', 'U50K', 'U60K', 'U75K', 'U100K', 'U125K', 'U150K', 'U200K', 'O200K'];
       const incMid = [5000, 12500, 17500, 22500, 27500, 32500, 37500, 42500, 47500, 55000, 67500, 87500, 112500, 137500, 175000, 250000];
       const incArr = incKeys.map(k => val('X_22_2022_Income_Expanded_' + k));
       const iTot = incArr.reduce((a,b)=>a+b, 0);
       const avgInc = iTot > 0 ? incArr.reduce((sum, count, idx) => sum + count * incMid[idx], 0) / iTot : 0;
-      
-      // ELECTIONS
+
       const elections = [
         { label: '2024 US President', d: val('E_24_PRES_Dem'), r: val('E_24_PRES_Rep'), tot: val('E_24_PRES_Total') },
         { label: '2022 Governor', d: val('E_22_GOV_Dem'), r: val('E_22_GOV_Rep'), tot: val('E_22_GOV_Total') },
@@ -1354,7 +1372,7 @@
         { label: '2020 US Senate', d: val('E_20_SEN_Dem'), r: val('E_20_SEN_Rep'), tot: val('E_20_SEN_Total') },
         { label: '2016 US President', d: val('E_16_PRES_Dem'), r: val('E_16_PRES_Rep'), tot: val('E_16_PRES_Total') }
       ];
-
+      
       demogMap[id] = { rTot, race, edu, aTot, ageArr, ageGroup, iTot, incArr, avgInc, housing, elections };
     }
   }
@@ -1488,7 +1506,7 @@
     fetch('./district_data.txt').then(r => r.text()),
     fetch('./overall_forecast.json').then(r => r.json()),
     fetch('./seat_distribution.csv').then(r => r.text()),
-    fetch('./district-data.csv').then(r => r.text())
+    fetch('./Untitled spreadsheet - district-data.csv').then(r => r.text())
   ]).then(([geojson, ratingsTxt, districtTxt, forecastJson, seatDistCsv, demogCsv]) => {
     cachedGeojson = geojson;
     overallForecast = forecastJson;
@@ -1519,7 +1537,7 @@
     applyHatchOverlay();
     map.fitBounds(hexCartoLayer.getBounds(), { padding: [10, 10] });
   }).catch(err => {
-    console.error("Initialization error. Ensure districts.geojson, ratings.txt, district_data.txt, overall_forecast.json, seat_distribution.csv, and district-data.csv exist in your root directory.", err);
+    console.error("Initialization error. Ensure all required files exist in your root directory.", err);
   });
 
   document.getElementById('districtSelect').addEventListener('change', (e) => {
