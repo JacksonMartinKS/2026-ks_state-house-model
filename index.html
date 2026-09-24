@@ -11,7 +11,6 @@
   <!-- Apple Touch Icon (Mobile bookmarks / Add to Home Screen) -->
   <link rel="apple-touch-icon" sizes="180x180" href="./favicon.png" />
 
-  
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <style>
@@ -610,7 +609,6 @@
       </div>
 
       <div id="cardContentForecast">
-        <!-- Forecast Stats Container (Hidden if Uncontested) -->
         <div id="forecastDataContainer">
           <div class="stack-container">
             <div class="stack-row baseline">
@@ -666,17 +664,16 @@
           </div>
         </div>
 
-        <!-- Uncontested Notice embedded inside the Forecast Tab -->
         <div id="uncontestedNotice" style="display: none;">
           <strong id="uncontestedRatingText"></strong>
-          <p>District is uncontested or non-competitive. Not tracked with itemized shift variables.</p>
+          <p style="margin: 6px 0 0; font-size: 0.78rem;">District is uncontested or non-competitive. Not tracked with itemized shift variables.</p>
         </div>
       </div>
 
       <div id="cardContentDemographics" style="display: none;">
         <!-- Race -->
         <div class="demo-block">
-          <div class="demo-title">Race & Ethnicity</div>
+          <div class="demo-title">Race & Ethnicity (2024 CVAP)</div>
           <div class="h-stack" id="demoRaceBar"></div>
           <div class="demo-legend">
             <div class="dl-item"><div class="dl-box" style="background:#ef4444;"></div>White <span id="r_wht"></span></div>
@@ -700,25 +697,38 @@
           </div>
         </div>
 
+        <!-- Housing -->
+        <div class="demo-block">
+          <div class="demo-title">Housing & Living Arrangements</div>
+          <div class="h-stack" id="demoHousingBar"></div>
+          <div class="demo-legend">
+            <div class="dl-item"><div class="dl-box" style="background:#0ea5e9;"></div>Owner <span id="h_owner"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#f43f5e;"></div>Renter <span id="h_renter"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#8b5cf6;"></div>Nursing <span id="h_nursing"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#64748b;"></div>Other GQ <span id="h_otherGQ"></span></div>
+          </div>
+        </div>
+
         <!-- Age -->
         <div class="demo-block">
           <div class="demo-title">Age Distribution</div>
           <div class="h-stack" id="demoAgeBar"></div>
           <div class="demo-legend">
-            <div class="dl-item"><div class="dl-box" style="background:#7dd3fc;"></div>0-14 <span id="a_child"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#0284c7;"></div>15-19 <span id="a_teen"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#86efac;"></div>20-24 <span id="a_college"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#16a34a;"></div>25-34 <span id="a_young"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#fbbf24;"></div>35-64 <span id="a_estab"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#a78bfa;"></div>65+ <span id="a_senior"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#7dd3fc;"></div>0-14 <span id="a_a0_14"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#0284c7;"></div>15-19 <span id="a_a15_19"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#86efac;"></div>20-24 <span id="a_a20_24"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#16a34a;"></div>25-34 <span id="a_a25_34"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#fbbf24;"></div>35-64 <span id="a_a35_64"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#a78bfa;"></div>65+ <span id="a_a65plus"></span></div>
           </div>
           <div class="hist-container" id="demoAgeHist"></div>
-          <div style="position:relative; height:14px; font-size:0.65rem; color:var(--text-muted); font-weight:700; margin-top:2px;">
-            <span style="position:absolute; left:0%;">0</span>
-            <span style="position:absolute; left:22.2%; transform:translateX(-50%);">20</span>
-            <span style="position:absolute; left:44.4%; transform:translateX(-50%);">40</span>
-            <span style="position:absolute; left:66.6%; transform:translateX(-50%);">60</span>
-            <span style="position:absolute; right:0%;">85+</span>
+          <div style="display:flex; justify-content:space-between; font-size:0.6rem; color:var(--text-muted); font-weight:700; margin-top:2px;">
+            <span style="flex:1; text-align:center;">0-14</span>
+            <span style="flex:1; text-align:center;">15-19</span>
+            <span style="flex:1; text-align:center;">20-24</span>
+            <span style="flex:1; text-align:center;">25-34</span>
+            <span style="flex:1; text-align:center;">35-64</span>
+            <span style="flex:1; text-align:center;">65+</span>
           </div>
         </div>
 
@@ -741,9 +751,7 @@
       <div class="hist-title">Kansas House — Simulated Outcomes</div>
       <div id="histSubtitle" class="hist-sub">Loading simulation outcomes...</div>
 
-      <svg id="histSvg" class="hist-svg" viewBox="0 0 380 230">
-        <!-- Rendered dynamically via renderSimulationHistogram() -->
-      </svg>
+      <svg id="histSvg" class="hist-svg" viewBox="0 0 380 230"></svg>
 
       <div class="hist-legend-row">
         <div class="hist-legend-item">
@@ -817,7 +825,7 @@
     if (!name || name.trim() === '') {
       return { fullName: 'None', party: defaultParty, isInd: false, html: `Uncontested` };
     }
-    const cleanName = name.replace(/\s*\((Independent\vert{}Ind\vert{}D\vert{}R)\)/gi, '').trim();
+    const cleanName = name.replace(/\s*\((Independent|Ind|D|R)\)/gi, '').trim();
     const isInd = (distNum === '62' && /Geiger/i.test(name)) || (distNum === '80' && /Goff/i.test(name));
     const party = isInd ? 'IND' : defaultParty;
     const tagClass = isInd ? 'ind' : (party === 'D' ? 'dem' : 'rep');
@@ -1037,12 +1045,14 @@
 
     const buildHStack = (kArr, vals, tot, colors, barId, prefix) => {
       let html = '';
-      kArr.forEach((k, i) => {
-        const pct = (vals[k] / tot) * 100;
-        if (pct > 0) html += `<div class="h-seg" style="width:${pct}%; background:${colors[i]};" title="${pct.toFixed(1)}%"></div>`;
-        const leg = document.getElementById(`${prefix}_${k}`);
-        if(leg) leg.textContent = pct.toFixed(1) + '%';
-      });
+      if (tot > 0) {
+        kArr.forEach((k, i) => {
+          const pct = (vals[k] / tot) * 100;
+          if (pct > 0) html += `<div class="h-seg" style="width:${pct}%; background:${colors[i]};" title="${pct.toFixed(1)}%"></div>`;
+          const leg = document.getElementById(`${prefix}_${k}`);
+          if(leg) leg.textContent = pct.toFixed(1) + '%';
+        });
+      }
       document.getElementById(barId).innerHTML = html;
     };
 
@@ -1052,34 +1062,43 @@
     // 2. Education
     buildHStack(['nohs','hs','some','bach','post'], d.edu, d.edu.tot, ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'], 'demoEduBar', 'e');
 
-    // 3. Age Distribution (New Groupings)
-    buildHStack(['child','teen','college','young','estab','senior'], d.ageGroup, d.aTot, ['#7dd3fc', '#0284c7', '#86efac', '#16a34a', '#fbbf24', '#a78bfa'], 'demoAgeBar', 'a');
+    // 3. Housing
+    buildHStack(['owner','renter','nursing','otherGQ'], d.housing, d.housing.tot, ['#0ea5e9', '#f43f5e', '#8b5cf6', '#64748b'], 'demoHousingBar', 'h');
 
-    // 4. Age Histogram (Dynamic District Scaling)
-    const maxAgePct = Math.max(...d.ageArr) / d.aTot * 100;
-    const ageScale = Math.max(maxAgePct * 1.1, 5); // Add slight headroom, minimum 5% max y-axis
-    const ageLabels = ['0-4', '5-9', '10-14', '15-19', '20-24', '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60-64', '65-69', '70-74', '75-79', '80-84', '85+'];
+    // 4. Age Distribution
+    buildHStack(['a0_14','a15_19','a20_24','a25_34','a35_64','a65plus'], d.ageGroup, d.aTot, ['#7dd3fc', '#0284c7', '#86efac', '#16a34a', '#fbbf24', '#a78bfa'], 'demoAgeBar', 'a');
+
+    // 5. Age Histogram (Dynamic Y-Axis Limit)
+    let maxAgePct = 5;
+    if (d.aTot > 0) {
+      maxAgePct = Math.max(...d.ageArr) / d.aTot * 100;
+    }
+    const ageScale = Math.max(maxAgePct * 1.1, 5); 
+    const ageLabels = ['0-14', '15-19', '20-24', '25-34', '35-64', '65+'];
     let aHistHtml = '';
     d.ageArr.forEach((val, i) => {
-      const pct = (val / d.aTot) * 100;
+      const pct = d.aTot > 0 ? (val / d.aTot) * 100 : 0;
       const h = Math.min(100, (pct / ageScale) * 100);
       aHistHtml += `<div class="hist-bar" style="height:${h}%;" title="${ageLabels[i]}: ${pct.toFixed(1)}%"></div>`;
     });
     document.getElementById('demoAgeHist').innerHTML = aHistHtml;
 
-    // 5. Income Histogram (Dynamic District Scaling)
-    const maxIncPct = Math.max(...d.incArr) / d.iTot * 100;
-    const incScale = Math.max(maxIncPct * 1.1, 5); // Add slight headroom, minimum 5% max y-axis
+    // 6. Income Histogram (Dynamic Y-Axis Limit)
+    let maxIncPct = 5;
+    if (d.iTot > 0) {
+      maxIncPct = Math.max(...d.incArr) / d.iTot * 100;
+    }
+    const incScale = Math.max(maxIncPct * 1.1, 5);
     const incLabels = ['<10k', '10-15k', '15-20k', '20-25k', '25-30k', '30-35k', '35-40k', '40-45k', '45-50k', '50-60k', '60-75k', '75-100k', '100-125k', '125-150k', '150-200k', '200k+'];
     let iHistHtml = '';
     d.incArr.forEach((val, i) => {
-      const pct = (val / d.iTot) * 100;
+      const pct = d.iTot > 0 ? (val / d.iTot) * 100 : 0;
       const h = Math.min(100, (pct / incScale) * 100);
       iHistHtml += `<div class="hist-bar" style="height:${h}%;" title="${incLabels[i]}: ${pct.toFixed(1)}%"></div>`;
     });
     document.getElementById('demoIncomeHist').innerHTML = iHistHtml;
 
-    // 6. Avg Income
+    // 7. Avg Income
     document.getElementById('demoAvgIncome').textContent = `Avg: $${Math.round(d.avgInc).toLocaleString()}`;
   }
 
@@ -1145,7 +1164,6 @@
 
         renderOutcomeBar(comp, isInd, distNum);
       } else {
-        // District is Uncontested - Embed notice inside Forecast Tab
         document.getElementById('forecastDataContainer').style.display = 'none';
         document.getElementById('uncontestedNotice').style.display = 'block';
         
@@ -1154,7 +1172,6 @@
         document.getElementById('uncontestedRatingText').textContent = `Rating: ${general.rating} (${general.prob} Win Prob)`;
       }
 
-      // Always render demographics independently
       renderDemographics(distNum);
     } else {
       card.style.display = 'none';
@@ -1444,18 +1461,20 @@
       const id = cols[hMap['ID']];
       if(!id || id === '0') continue;
       
-      const val = (k) => parseInt(cols[hMap[k]], 10) || 0;
+      const val = (k) => parseFloat(cols[hMap[k]]) || 0;
       
-      const rTot = val('T_20_CENS_Total');
+      // RACE & ETHNICITY (2024 CVAP Fallback to 2020 Census)
+      const rTot = val('V_24_CVAP_Total') || val('T_20_CENS_Total');
       const race = {
-        wht: val('T_20_CENS_White'),
-        hsp: val('T_20_CENS_Hispanic'),
-        blk: val('T_20_CENS_Black'),
-        asn: val('T_20_CENS_Asian'),
+        wht: val('V_24_CVAP_White') || val('T_20_CENS_White'),
+        hsp: val('V_24_CVAP_Hispanic') || val('T_20_CENS_Hispanic'),
+        blk: val('V_24_CVAP_Black') || val('T_20_CENS_Black'),
+        asn: val('V_24_CVAP_Asian') || val('T_20_CENS_Asian'),
         oth: 0
       };
-      race.oth = rTot - (race.wht + race.hsp + race.blk + race.asn);
+      race.oth = Math.max(0, rTot - (race.wht + race.hsp + race.blk + race.asn));
       
+      // EDUCATION
       const eNohs = val('X_22_2022_Education_NoHS');
       const eHs = val('X_22_2022_Education_HS');
       const eSome = val('X_22_2022_Education_SomeCol') + val('X_22_2022_Education_Assoc');
@@ -1463,26 +1482,45 @@
       const ePost = val('X_22_2022_Education_Master') + val('X_22_2022_Education_Prof') + val('X_22_2022_Education_Doc');
       const eTot = eNohs + eHs + eSome + eBach + ePost;
       const edu = { nohs: eNohs, hs: eHs, some: eSome, bach: eBach, post: ePost, tot: eTot };
+
+      // HOUSING
+      const owner = val('Owner Occupied Housing');
+      const renter = val('Renter Occupied Housing');
+      const nursing = val('Persons in nursing homes');
+      const totalGQ = val('Total Persons in Group Quarters');
+      const otherGQ = Math.max(0, totalGQ - nursing);
+      const hTot = owner + renter + nursing + otherGQ;
+      const housing = { owner, renter, nursing, otherGQ, tot: hTot };
       
-      const ageKeys = ['Age_0_5', 'Age_5_9', 'Age_10_14', 'Age_15_19', 'Age_20_24', 'Age_25_29', 'Age_30_34', 'Age_35_39', 'Age_40_44', 'Age_45_49', 'Age_50_54', 'Age_55_59', 'Age_60_64', 'Age_65_69', 'Age_70_74', 'Age_75_79', 'Age_80_84', 'Age_O84'];
-      const ageArr = ageKeys.map(k => val('X_22_2022_Expanded_Age_' + k));
-      const aTot = ageArr.reduce((a,b)=>a+b, 0);
-      const ageGroup = {
-        child: ageArr.slice(0, 3).reduce((a,b)=>a+b,0),   // 0-14
-        teen: ageArr.slice(3, 4).reduce((a,b)=>a+b,0),    // 15-19
-        college: ageArr.slice(4, 5).reduce((a,b)=>a+b,0), // 20-24
-        young: ageArr.slice(5, 7).reduce((a,b)=>a+b,0),   // 25-34
-        estab: ageArr.slice(7, 13).reduce((a,b)=>a+b,0),  // 35-64
-        senior: ageArr.slice(13).reduce((a,b)=>a+b,0)     // 65+
+      // AGE (0-14, 15-19, 20-24, 25-34, 35-64, 65+)
+      const ageVal = (suffix) => val('X_22_2022_Age_by_Sex_Male_' + suffix) + val('X_22_2022_Age_by_Sex_Female_' + suffix);
+      const ageValOld = (suffix) => val('X_22_2022_Expanded_Age_' + suffix);
+      
+      const vAge = (sfx, sfxOld) => {
+        let v = ageVal(sfx);
+        if (v === 0 && sfxOld) v = ageValOld(sfxOld);
+        return v;
       };
+
+      const a0_14 = vAge('U5','Age_0_5') + vAge('5_9','Age_5_9') + vAge('10_14','Age_10_14');
+      const a15_19 = vAge('15_17','Age_15_19') + vAge('18_19','');
+      const a20_24 = vAge('20','Age_20_24') + vAge('21','') + vAge('22_24','');
+      const a25_34 = vAge('25_29','Age_25_29') + vAge('30_34','Age_30_34');
+      const a35_64 = vAge('35_39','Age_35_39') + vAge('40_44','Age_40_44') + vAge('45_49','Age_45_49') + vAge('50_54','Age_50_54') + vAge('55_59','Age_55_59') + vAge('60_61','Age_60_64') + vAge('62_64','');
+      const a65plus = vAge('65_66','Age_65_69') + vAge('67_69','') + vAge('70_74','Age_70_74') + vAge('75_79','Age_75_79') + vAge('80_84','Age_80_84') + vAge('O84','Age_O84');
+
+      const aTot = a0_14 + a15_19 + a20_24 + a25_34 + a35_64 + a65plus;
+      const ageArr = [a0_14, a15_19, a20_24, a25_34, a35_64, a65plus];
+      const ageGroup = { a0_14, a15_19, a20_24, a25_34, a35_64, a65plus };
       
+      // INCOME
       const incKeys = ['U10K', 'U15K', 'U20K', 'U25K', 'U30K', 'U35K', 'U40K', 'U45K', 'U50K', 'U60K', 'U75K', 'U100K', 'U125K', 'U150K', 'U200K', 'O200K'];
       const incMid = [5000, 12500, 17500, 22500, 27500, 32500, 37500, 42500, 47500, 55000, 67500, 87500, 112500, 137500, 175000, 250000];
       const incArr = incKeys.map(k => val('X_22_2022_Income_Expanded_' + k));
       const iTot = incArr.reduce((a,b)=>a+b, 0);
       const avgInc = iTot > 0 ? incArr.reduce((sum, count, idx) => sum + count * incMid[idx], 0) / iTot : 0;
       
-      demogMap[id] = { rTot, race, edu, aTot, ageArr, ageGroup, iTot, incArr, avgInc };
+      demogMap[id] = { rTot, race, edu, aTot, ageArr, ageGroup, iTot, incArr, avgInc, housing };
     }
   }
 
@@ -1609,6 +1647,7 @@
     }
   }
 
+  // Promise loads all repository files asynchronously
   Promise.all([
     fetch('./districts.geojson').then(r => r.json()),
     fetch('./ratings.txt').then(r => r.text()),
@@ -1620,6 +1659,7 @@
     cachedGeojson = geojson;
     overallForecast = forecastJson;
 
+    // Dynamically update mobile header banner with forecast JSON
     if (overallForecast.median_dem_seats) {
       document.getElementById('topBarMedian').textContent = `${overallForecast.median_dem_seats} Median`;
       document.getElementById('topBar67').textContent = `67%: ${overallForecast.ci_67_low}–${overallForecast.ci_67_high}`;
