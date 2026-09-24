@@ -5,12 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Kansas State House 2026 Forecast</title>
   
-  <!-- Standard Favicon (Browser Tabs) -->
   <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png" />
-  
-  <!-- Apple Touch Icon (Mobile bookmarks / Add to Home Screen) -->
   <link rel="apple-touch-icon" sizes="180x180" href="./favicon.png" />
-
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <style>
@@ -23,6 +19,7 @@
       --text-muted: #64748b;
       --dem: #000082;
       --rep: #820000;
+      --dem-mid: #3b82f6;
       --rep-dark: #5c0000;
       --rep-mid: #cb4335;
       --ind: #d97706;
@@ -321,96 +318,35 @@
     .party-tag.ind { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
 
     /* Card Tabs */
-    .card-tabs { display: flex; gap: 16px; border-bottom: 2px solid var(--border); margin-bottom: 12px; }
+    .card-tabs { display: flex; gap: 14px; border-bottom: 2px solid var(--border); margin-bottom: 12px; }
     .card-tab { padding: 0 4px 6px 4px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
     .card-tab:hover { color: var(--text); }
     .card-tab.active { color: var(--rep-dark); border-bottom-color: var(--rep-dark); }
 
-    .stack-container {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin-bottom: 12px;
-    }
-    .stack-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 2px 0;
-      font-size: 0.85rem;
-    }
-    .stack-row.baseline {
-      font-size: 0.92rem;
-      font-weight: 800;
-      padding-bottom: 5px;
-      border-bottom: 1px dashed var(--border);
-      margin-bottom: 2px;
-    }
+    /* Forecast Layout */
+    .stack-container { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+    .stack-row { display: flex; justify-content: space-between; align-items: center; padding: 2px 0; font-size: 0.85rem; }
+    .stack-row.baseline { font-size: 0.92rem; font-weight: 800; padding-bottom: 5px; border-bottom: 1px dashed var(--border); margin-bottom: 2px; }
     .val-d { color: var(--dem); font-weight: 700; }
     .val-r { color: var(--rep); font-weight: 700; }
     .val-ind { color: var(--ind); font-weight: 700; }
     .val-mod { color: var(--mod); font-weight: 700; }
     .val-neutral { color: var(--text-muted); font-weight: 600; }
 
-    .result-section {
-      border-top: 2px solid var(--border-dark);
-      padding-top: 8px;
-    }
-    .result-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 6px;
-    }
-    .result-title {
-      font-size: 0.9rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .result-margin {
-      font-size: 1.15rem;
-      font-weight: 900;
-    }
-    .meta-metrics {
-      display: flex;
-      justify-content: space-between;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 6px 10px;
-      font-size: 0.8rem;
-    }
+    .result-section { border-top: 2px solid var(--border-dark); padding-top: 8px; }
+    .result-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+    .result-title { font-size: 0.9rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
+    .result-margin { font-size: 1.15rem; font-weight: 900; }
+    .meta-metrics { display: flex; justify-content: space-between; background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 0.8rem; }
     .meta-item { display: flex; flex-direction: column; }
-    .meta-label {
-      color: var(--text-muted);
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
+    .meta-label { color: var(--text-muted); font-size: 0.68rem; text-transform: uppercase; font-weight: 600; }
     .meta-val { font-size: 0.88rem; font-weight: 700; }
 
-    .range-box {
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px dashed var(--border);
-    }
-    .range-title-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-    svg.outcome-svg {
-      width: 100%;
-      height: 58px;
-      display: block;
-      overflow: visible;
-    }
+    .range-box { margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border); }
+    .range-title-row { display: flex; justify-content: space-between; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 4px; }
+    svg.outcome-svg { width: 100%; height: 58px; display: block; overflow: visible; }
+
+    #uncontestedNotice { padding: 16px 10px; text-align: center; color: var(--text-muted); font-size: 0.88rem; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; margin-top: 4px; }
 
     /* Demographics Styling */
     .demo-block { margin-bottom: 16px; }
@@ -427,117 +363,32 @@
     .hist-bar { flex: 1; background: #cbd5e1; border-radius: 2px 2px 0 0; transition: height 0.4s ease; min-height: 1px; cursor: pointer; }
     .hist-bar:hover { background: #64748b; }
 
-    #uncontestedNotice {
-      padding: 16px 10px;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.88rem;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      margin-top: 4px;
-    }
+    /* Past Elections Styling */
+    .elec-row { margin-bottom: 12px; }
+    .elec-title-row { display: flex; justify-content: space-between; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+    .elec-bar-bg { background: var(--border); height: 12px; border-radius: 4px; overflow: hidden; display: flex; position: relative; }
+    .elec-bar-d { background: var(--dem-mid); height: 100%; }
+    .elec-bar-r { background: var(--rep-mid); height: 100%; }
+    .elec-center-line { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: #0f172a; opacity: 0.4; }
 
     /* HISTOGRAM CARD CONTAINER */
-    .histogram-card {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 10px 10px 10px;
-      margin-bottom: 14px;
-    }
-    .hist-title {
-      font-size: 0.95rem;
-      font-weight: 900;
-      margin: 0 0 2px 0;
-      color: var(--text);
-    }
-    .hist-sub {
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-    svg.hist-svg {
-      width: 100%;
-      height: 230px;
-      display: block;
-      overflow: visible;
-    }
-    .hist-legend-row {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 8px;
-      padding-top: 6px;
-      border-top: 1px dashed var(--border);
-      font-size: 0.72rem;
-      font-weight: 700;
-    }
-    .hist-legend-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .hist-legend-swatch {
-      width: 12px;
-      height: 12px;
-      border-radius: 2px;
-    }
+    .histogram-card { background: #ffffff; border: 1px solid var(--border); border-radius: 10px; padding: 12px 10px 10px 10px; margin-bottom: 14px; }
+    .hist-title { font-size: 0.95rem; font-weight: 900; margin: 0 0 2px 0; color: var(--text); }
+    .hist-sub { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+    svg.hist-svg { width: 100%; height: 230px; display: block; overflow: visible; }
+    .hist-legend-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 8px; padding-top: 6px; border-top: 1px dashed var(--border); font-size: 0.72rem; font-weight: 700; }
+    .hist-legend-item { display: flex; align-items: center; gap: 5px; }
+    .hist-legend-swatch { width: 12px; height: 12px; border-radius: 2px; }
 
     @media (max-width: 860px) {
-      header {
-        padding: 6px 10px;
-        gap: 4px;
-      }
+      header { padding: 6px 10px; gap: 4px; }
       header h1 { font-size: 0.88rem; }
-
-      .legend {
-        padding-top: 1px;
-      }
-
-      .map-hover-chip {
-        left: 50% !important;
-        transform: translateX(-50%);
-        top: 8px;
-        width: calc(100% - 24px);
-        max-width: 360px;
-        text-align: center;
-        font-size: 0.8rem;
-      }
-
-      .sidebar {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        width: 100%;
-        max-height: 86vh;
-        border-left: none;
-        border-top: 1px solid var(--border);
-        border-radius: 16px 16px 0 0;
-        box-shadow: 0 -4px 20px rgba(0,0,0,0.18);
-        padding: 0 14px 72px 14px;
-        transform: translateY(100%);
-        z-index: 2000;
-        background: #ffffff;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-      .sidebar.open {
-        transform: translateY(0);
-      }
-
-      .sheet-handle {
-        display: block;
-        position: sticky;
-        top: 0;
-        background: #ffffff;
-        z-index: 10;
-        padding: 8px 0 6px 0;
-        margin-bottom: 6px;
-      }
+      .legend { padding-top: 1px; }
+      .map-hover-chip { left: 50% !important; transform: translateX(-50%); top: 8px; width: calc(100% - 24px); max-width: 360px; text-align: center; font-size: 0.8rem; }
+      
+      .sidebar { position: absolute; bottom: 0; left: 0; right: 0; width: 100%; max-height: 86vh; border-left: none; border-top: 1px solid var(--border); border-radius: 16px 16px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.18); padding: 0 14px 72px 14px; transform: translateY(100%); z-index: 2000; background: #ffffff; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+      .sidebar.open { transform: translateY(0); }
+      .sheet-handle { display: block; position: sticky; top: 0; background: #ffffff; z-index: 10; padding: 8px 0 6px 0; margin-bottom: 6px; }
     }
   </style>
 </head>
@@ -605,8 +456,10 @@
       <div class="card-tabs">
         <div class="card-tab active" onclick="switchDistrictTab('forecast')" id="tabBtnForecast">Forecast</div>
         <div class="card-tab" onclick="switchDistrictTab('demographics')" id="tabBtnDemographics">Demographics</div>
+        <div class="card-tab" onclick="switchDistrictTab('elections')" id="tabBtnElections">Past Elections</div>
       </div>
 
+      <!-- FORECAST TAB -->
       <div id="cardContentForecast">
         <div id="forecastDataContainer">
           <div class="stack-container">
@@ -658,8 +511,7 @@
               <span>Range of Outcomes</span>
               <span id="outRangeSummary"></span>
             </div>
-            <svg id="rangeSvg" class="outcome-svg" viewBox="0 0 320 58">
-            </svg>
+            <svg id="rangeSvg" class="outcome-svg" viewBox="0 0 320 58"></svg>
           </div>
         </div>
 
@@ -669,8 +521,8 @@
         </div>
       </div>
 
+      <!-- DEMOGRAPHICS TAB -->
       <div id="cardContentDemographics" style="display: none;">
-        <!-- Race -->
         <div class="demo-block">
           <div class="demo-title">Race & Ethnicity (2024 CVAP)</div>
           <div class="h-stack" id="demoRaceBar"></div>
@@ -683,7 +535,6 @@
           </div>
         </div>
         
-        <!-- Education -->
         <div class="demo-block">
           <div class="demo-title">Educational Attainment</div>
           <div class="h-stack" id="demoEduBar"></div>
@@ -696,7 +547,6 @@
           </div>
         </div>
 
-        <!-- Housing -->
         <div class="demo-block">
           <div class="demo-title">Housing & Living Arrangements</div>
           <div class="h-stack" id="demoHousingBar"></div>
@@ -708,7 +558,6 @@
           </div>
         </div>
 
-        <!-- Age Distribution (5 Categories) -->
         <div class="demo-block">
           <div class="demo-title">Age Distribution</div>
           <div class="h-stack" id="demoAgeBar"></div>
@@ -729,7 +578,6 @@
           </div>
         </div>
 
-        <!-- Income -->
         <div class="demo-block" style="margin-bottom:0;">
           <div class="demo-title">Household Income <span id="demoAvgIncome" style="color:var(--text);">Avg: $0</span></div>
           <div class="hist-container" id="demoIncomeHist"></div>
@@ -741,15 +589,18 @@
           </div>
         </div>
       </div>
+
+      <!-- PAST ELECTIONS TAB -->
+      <div id="cardContentElections" style="display: none;">
+        <div id="elecContainer"></div>
+      </div>
     </div>
 
     <!-- COMBINED SIMULATED SEAT OUTCOMES HISTOGRAM -->
     <div class="histogram-card">
       <div class="hist-title">Kansas House — Simulated Outcomes</div>
       <div id="histSubtitle" class="hist-sub">Loading simulation outcomes...</div>
-
       <svg id="histSvg" class="hist-svg" viewBox="0 0 380 230"></svg>
-
       <div class="hist-legend-row">
         <div class="hist-legend-item">
           <div class="hist-legend-swatch" style="background: var(--rep-dark);"></div>
@@ -768,7 +619,6 @@
 
 <script>
   const PROJECTED_FLIPS = new Set([67, 28, 14, 15, 39, 33, 88, 30, 41]);
-
   const CMAP_D = ["#ffffff", "#babaff", "#6363ff", "#0000f8", "#000082"];
   const CMAP_R = ["#ffffff", "#ffafab", "#ff6259", "#f80d00", "#820000"];
   const FLOOR = 0.1;
@@ -779,11 +629,9 @@
     const c = parseInt(hex.replace('#', ''), 16);
     return [(c >> 16) & 255, (c >> 8) & 255, c & 255];
   }
-
   function rgbToHex(r, g, b) {
     return "#" + [r, g, b].map(x => Math.round(x).toString(16).padStart(2, '0')).join('');
   }
-
   function interpolateColormap(cmap, t) {
     t = Math.max(0, Math.min(1, t));
     const n = cmap.length - 1;
@@ -799,7 +647,6 @@
       c1[2] + (c2[2] - c1[2]) * frac
     );
   }
-
   function probToColor(p, label = "") {
     if (label.includes("TOSSUP")) return "#ffe89a";
     let t;
@@ -834,14 +681,11 @@
     };
   }
 
-  function formatPartisanVal(num, isIndChallenger = false) {
+  function formatPartisanVal(num, isIndChallenger = false, ptStr = true) {
     if (isNaN(num) || Math.abs(num) < 0.00005) return { text: 'EVEN', cls: 'val-neutral' };
-    const pts = Math.abs(num * 100).toFixed(1);
+    const pts = Math.abs(num * 100).toFixed(1) + (ptStr ? '' : '%');
     if (num < 0) {
-      return { 
-        text: (isIndChallenger ? `IND+${pts}` : `D+${pts}`), 
-        cls: (isIndChallenger ? 'val-ind' : 'val-d') 
-      };
+      return { text: (isIndChallenger ? `IND+${pts}` : `D+${pts}`), cls: (isIndChallenger ? 'val-ind' : 'val-d') };
     } else {
       return { text: `R+${pts}`, cls: 'val-r' };
     }
@@ -868,21 +712,14 @@
     }
   }
 
-  const map = L.map('map', {
-    zoomControl: true,
-    attributionControl: false
-  }).setView([38.5, -98.3], 7);
+  const map = L.map('map', { zoomControl: true, attributionControl: false }).setView([38.5, -98.3], 7);
 
   map.on('load', injectHatchPattern);
   function injectHatchPattern() {
     const svg = document.querySelector('#map svg');
     if (svg && !svg.querySelector('#diagonalHatch')) {
       const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-      defs.innerHTML = `
-        <pattern id="diagonalHatch" width="7" height="7" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
-          <line x1="0" y1="0" x2="0" y2="7" stroke="#000000" stroke-width="2.6" />
-        </pattern>
-      `;
+      defs.innerHTML = `<pattern id="diagonalHatch" width="7" height="7" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="7" stroke="#000000" stroke-width="2.6" /></pattern>`;
       svg.appendChild(defs);
     }
   }
@@ -892,63 +729,47 @@
   let hexLabelsGroup = L.layerGroup();
   let currentMapMode = 'hex';
   let cachedGeojson = null;
-
   let selectedId = null;
   const hoverChip = document.getElementById('hoverChip');
 
-  let hoverHighlightLayer = L.geoJSON(null, {
-    interactive: false,
-    style: { fill: false, color: '#0f172a', weight: 2.8, opacity: 1 }
-  }).addTo(map);
-
-  let selectedHighlightLayer = L.geoJSON(null, {
-    interactive: false,
-    style: { fill: false, color: '#0f172a', weight: 3.4, opacity: 1 }
-  }).addTo(map);
+  let hoverHighlightLayer = L.geoJSON(null, { interactive: false, style: { fill: false, color: '#0f172a', weight: 2.8, opacity: 1 } }).addTo(map);
+  let selectedHighlightLayer = L.geoJSON(null, { interactive: false, style: { fill: false, color: '#0f172a', weight: 3.4, opacity: 1 } }).addTo(map);
 
   function openMobileDrawer() {
-    const drawer = document.getElementById('sidebarDrawer');
-    drawer.classList.add('open');
+    document.getElementById('sidebarDrawer').classList.add('open');
     document.getElementById('sheetArrow').textContent = '▼';
   }
 
   function toggleMobileDrawer() {
-    const drawer = document.getElementById('sidebarDrawer');
-    const isOpened = drawer.classList.toggle('open');
+    const isOpened = document.getElementById('sidebarDrawer').classList.toggle('open');
     document.getElementById('sheetArrow').textContent = isOpened ? '▼' : '▲';
   }
 
   function switchDistrictTab(tab) {
-    const btnF = document.getElementById('tabBtnForecast');
-    const btnD = document.getElementById('tabBtnDemographics');
-    const conF = document.getElementById('cardContentForecast');
-    const conD = document.getElementById('cardContentDemographics');
+    const tF = document.getElementById('tabBtnForecast');
+    const tD = document.getElementById('tabBtnDemographics');
+    const tE = document.getElementById('tabBtnElections');
+    const cF = document.getElementById('cardContentForecast');
+    const cD = document.getElementById('cardContentDemographics');
+    const cE = document.getElementById('cardContentElections');
     
-    if (tab === 'forecast') {
-      btnF.classList.add('active');
-      btnD.classList.remove('active');
-      conF.style.display = 'block';
-      conD.style.display = 'none';
-    } else {
-      btnF.classList.remove('active');
-      btnD.classList.add('active');
-      conF.style.display = 'none';
-      conD.style.display = 'block';
-    }
+    tF.classList.remove('active'); tD.classList.remove('active'); tE.classList.remove('active');
+    cF.style.display = 'none'; cD.style.display = 'none'; cE.style.display = 'none';
+
+    if (tab === 'forecast') { tF.classList.add('active'); cF.style.display = 'block'; }
+    else if (tab === 'demographics') { tD.classList.add('active'); cD.style.display = 'block'; }
+    else if (tab === 'elections') { tE.classList.add('active'); cE.style.display = 'block'; }
   }
 
   function renderOutcomeBar(comp, isInd, distNum) {
     const svg = document.getElementById('rangeSvg');
     const summarySpan = document.getElementById('outRangeSummary');
     if (!comp || isNaN(comp.margin) || isNaN(comp.stdev)) {
-      svg.innerHTML = '';
-      if (summarySpan) summarySpan.textContent = '';
-      return;
+      svg.innerHTML = ''; if (summarySpan) summarySpan.textContent = ''; return;
     }
 
     const margin = comp.margin * 100;
     const stdev = comp.stdev * 100;
-
     const lo67 = margin - (0.974 * stdev);
     const hi67 = margin + (0.974 * stdev);
     const lo95 = margin - (1.960 * stdev);
@@ -958,15 +779,9 @@
     const hist2024 = (rInfo.hist2024 !== null && rInfo.hist2024 !== undefined) ? (rInfo.hist2024 * 100) : null;
     const isHistContested = hist2024 !== null && Math.abs(hist2024) < 100;
 
-    const maxExtent = Math.max(
-      Math.abs(lo95), 
-      Math.abs(hi95), 
-      isHistContested ? Math.abs(hist2024) : 0, 
-      16
-    );
+    const maxExtent = Math.max(Math.abs(lo95), Math.abs(hi95), isHistContested ? Math.abs(hist2024) : 0, 16);
     const minDomain = -maxExtent - 2;
     const maxDomain = maxExtent + 2;
-
     const width = 320;
     const scaleX = (val) => ((val - minDomain) / (maxDomain - minDomain)) * width;
 
@@ -995,18 +810,12 @@
       return v < 0 ? (isInd ? `IND+${a}` : `D+${a}`) : `R+${a}`;
     };
 
-    if (summarySpan) {
-      summarySpan.textContent = `67%: ${fmtPt(lo67)} to ${fmtPt(hi67)}`;
-    }
+    if (summarySpan) summarySpan.textContent = `67%: ${fmtPt(lo67)} to ${fmtPt(hi67)}`;
 
     let histSvg = '';
     if (isHistContested) {
       const xHist = scaleX(hist2024);
-      histSvg = `
-        <line x1="${xHist}" y1="18" x2="${xHist}" y2="42" stroke="#475569" stroke-width="1.8" stroke-dasharray="2,2" />
-        <circle cx="${xHist}" cy="27" r="3" fill="#475569" />
-        <text x="${xHist}" y="52" font-size="8" font-weight="700" fill="#475569" text-anchor="middle">'24: ${fmtPt(hist2024)}</text>
-      `;
+      histSvg = `<line x1="${xHist}" y1="18" x2="${xHist}" y2="42" stroke="#475569" stroke-width="1.8" stroke-dasharray="2,2" /><circle cx="${xHist}" cy="27" r="3" fill="#475569" /><text x="${xHist}" y="52" font-size="8" font-weight="700" fill="#475569" text-anchor="middle">'24: ${fmtPt(hist2024)}</text>`;
     }
 
     svg.setAttribute("viewBox", "0 0 320 58");
@@ -1021,15 +830,11 @@
           <stop offset="${pctEven67}%" stop-color="${colorRight67}" />
         </linearGradient>
       </defs>
-
       <line x1="0" y1="27" x2="${width}" y2="27" stroke="#cbd5e1" stroke-width="2" />
       <rect x="${x95L}" y="20" width="${w95}" height="14" rx="4" fill="url(#grad95)" />
       <rect x="${x67L}" y="17" width="${w67}" height="20" rx="4" fill="url(#grad67)" />
-
       <line x1="${xEven}" y1="12" x2="${xEven}" y2="42" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="2,2" />
-
       ${histSvg}
-
       <text x="${xMedian}" y="10" font-size="9" font-weight="900" fill="${cBar}" text-anchor="middle">${fmtPt(margin)}</text>
       <line x1="${xMedian}" y1="13" x2="${xMedian}" y2="40" stroke="${cBar}" stroke-width="3" stroke-linecap="round" />
       <circle cx="${xMedian}" cy="27" r="4.5" fill="${cBar}" stroke="#ffffff" stroke-width="1.5" />
@@ -1053,23 +858,13 @@
       document.getElementById(barId).innerHTML = html;
     };
 
-    // 1. Race: White -> Red, Black -> Blue
     buildHStack(['wht','hsp','blk','asn','oth'], d.race, d.rTot, ['#ef4444', '#f59e0b', '#3b82f6', '#8b5cf6', '#64748b'], 'demoRaceBar', 'r');
-    
-    // 2. Education
     buildHStack(['nohs','hs','some','bach','post'], d.edu, d.edu.tot, ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'], 'demoEduBar', 'e');
-
-    // 3. Housing
     buildHStack(['owner','renter','nursing','otherGQ'], d.housing, d.housing.tot, ['#0ea5e9', '#f43f5e', '#8b5cf6', '#64748b'], 'demoHousingBar', 'h');
-
-    // 4. Age Distribution
     buildHStack(['a0_17','a18_24','a25_39','a40_64','a65plus'], d.ageGroup, d.aTot, ['#7dd3fc', '#0284c7', '#86efac', '#16a34a', '#a78bfa'], 'demoAgeBar', 'a');
 
-    // 5. Age Histogram (Dynamic Y-Axis Limit)
     let maxAgePct = 5;
-    if (d.aTot > 0) {
-      maxAgePct = Math.max(...d.ageArr) / d.aTot * 100;
-    }
+    if (d.aTot > 0) maxAgePct = Math.max(...d.ageArr) / d.aTot * 100;
     const ageScale = Math.max(maxAgePct * 1.1, 5); 
     const ageLabels = ['0-17', '18-24', '25-39', '40-64', '65+'];
     let aHistHtml = '';
@@ -1080,11 +875,8 @@
     });
     document.getElementById('demoAgeHist').innerHTML = aHistHtml;
 
-    // 6. Income Histogram (Dynamic Y-Axis Limit)
     let maxIncPct = 5;
-    if (d.iTot > 0) {
-      maxIncPct = Math.max(...d.incArr) / d.iTot * 100;
-    }
+    if (d.iTot > 0) maxIncPct = Math.max(...d.incArr) / d.iTot * 100;
     const incScale = Math.max(maxIncPct * 1.1, 5);
     const incLabels = ['<10k', '10-15k', '15-20k', '20-25k', '25-30k', '30-35k', '35-40k', '40-45k', '45-50k', '50-60k', '60-75k', '75-100k', '100-125k', '125-150k', '150-200k', '200k+'];
     let iHistHtml = '';
@@ -1094,9 +886,45 @@
       iHistHtml += `<div class="hist-bar" style="height:${h}%;" title="${incLabels[i]}: ${pct.toFixed(1)}%"></div>`;
     });
     document.getElementById('demoIncomeHist').innerHTML = iHistHtml;
-
-    // 7. Avg Income
     document.getElementById('demoAvgIncome').textContent = `Avg: $${Math.round(d.avgInc).toLocaleString()}`;
+  }
+
+  function renderElections(id) {
+    const d = demogMap[id];
+    if (!d || !d.elections) return;
+
+    let html = '';
+    d.elections.forEach(elec => {
+      if (elec.tot === 0) return;
+      const pctD = (elec.d / elec.tot) * 100;
+      const pctR = (elec.r / elec.tot) * 100;
+      // Abortion Amendment: D = No, R = Yes. Display colors match standard lean for consistency, but labeled No/Yes
+      const isAmend = elec.label.includes('Amendment');
+      const lblD = isAmend ? 'No' : 'D';
+      const lblR = isAmend ? 'Yes' : 'R';
+      const margin = (pctR - pctD) / 100;
+      const mStr = formatPartisanVal(margin, false, true).text;
+
+      html += `
+        <div class="elec-row">
+          <div class="elec-title-row">
+            <span>${elec.label}</span>
+            <span style="color: ${margin < 0 ? 'var(--dem-mid)' : 'var(--rep-mid)'}">${mStr}</span>
+          </div>
+          <div class="elec-bar-bg">
+            <div class="elec-bar-d" style="width: ${pctD}%;"></div>
+            <div class="elec-bar-r" style="width: ${pctR}%;"></div>
+            <div class="elec-center-line"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:0.65rem; color:var(--text-muted); margin-top:2px;">
+            <span>${pctD.toFixed(1)}% ${lblD}</span>
+            <span>${pctR.toFixed(1)}% ${lblR}</span>
+          </div>
+        </div>
+      `;
+    });
+
+    document.getElementById('elecContainer').innerHTML = html;
   }
 
   function renderCard(distNum) {
@@ -1170,6 +998,7 @@
       }
 
       renderDemographics(distNum);
+      renderElections(distNum);
     } else {
       card.style.display = 'none';
     }
@@ -1460,6 +1289,7 @@
       
       const val = (k) => parseFloat(cols[hMap[k]]) || 0;
       
+      // RACE
       const rTot = val('V_24_CVAP_Total') || val('T_20_CENS_Total');
       const race = {
         wht: val('V_24_CVAP_White') || val('T_20_CENS_White'),
@@ -1470,6 +1300,7 @@
       };
       race.oth = Math.max(0, rTot - (race.wht + race.hsp + race.blk + race.asn));
       
+      // EDUCATION
       const eNohs = val('X_22_2022_Education_NoHS');
       const eHs = val('X_22_2022_Education_HS');
       const eSome = val('X_22_2022_Education_SomeCol') + val('X_22_2022_Education_Assoc');
@@ -1478,6 +1309,7 @@
       const eTot = eNohs + eHs + eSome + eBach + ePost;
       const edu = { nohs: eNohs, hs: eHs, some: eSome, bach: eBach, post: ePost, tot: eTot };
 
+      // HOUSING
       const owner = val('Owner Occupied Housing');
       const renter = val('Renter Occupied Housing');
       const nursing = val('Persons in nursing homes');
@@ -1486,14 +1318,10 @@
       const hTot = owner + renter + nursing + otherGQ;
       const housing = { owner, renter, nursing, otherGQ, tot: hTot };
       
+      // AGE
       const ageVal = (suffix) => val('X_22_2022_Age_by_Sex_Male_' + suffix) + val('X_22_2022_Age_by_Sex_Female_' + suffix);
       const ageValOld = (suffix) => val('X_22_2022_Expanded_Age_' + suffix);
-      
-      const vAge = (sfx, sfxOld) => {
-        let v = ageVal(sfx);
-        if (v === 0 && sfxOld) v = ageValOld(sfxOld);
-        return v;
-      };
+      const vAge = (sfx, sfxOld) => { let v = ageVal(sfx); if (v === 0 && sfxOld) v = ageValOld(sfxOld); return v; };
 
       const a0_17 = vAge('U5','Age_0_5') + vAge('5_9','Age_5_9') + vAge('10_14','Age_10_14') + vAge('15_17','Age_15_19');
       const a18_24 = vAge('18_19','') + vAge('20','') + vAge('21','') + vAge('22_24','Age_20_24');
@@ -1505,13 +1333,29 @@
       const ageArr = [a0_17, a18_24, a25_39, a40_64, a65plus];
       const ageGroup = { a0_17, a18_24, a25_39, a40_64, a65plus };
       
+      // INCOME
       const incKeys = ['U10K', 'U15K', 'U20K', 'U25K', 'U30K', 'U35K', 'U40K', 'U45K', 'U50K', 'U60K', 'U75K', 'U100K', 'U125K', 'U150K', 'U200K', 'O200K'];
       const incMid = [5000, 12500, 17500, 22500, 27500, 32500, 37500, 42500, 47500, 55000, 67500, 87500, 112500, 137500, 175000, 250000];
       const incArr = incKeys.map(k => val('X_22_2022_Income_Expanded_' + k));
       const iTot = incArr.reduce((a,b)=>a+b, 0);
       const avgInc = iTot > 0 ? incArr.reduce((sum, count, idx) => sum + count * incMid[idx], 0) / iTot : 0;
       
-      demogMap[id] = { rTot, race, edu, aTot, ageArr, ageGroup, iTot, incArr, avgInc, housing };
+      // ELECTIONS
+      const elections = [
+        { label: '2024 US President', d: val('E_24_PRES_Dem'), r: val('E_24_PRES_Rep'), tot: val('E_24_PRES_Total') },
+        { label: '2022 Governor', d: val('E_22_GOV_Dem'), r: val('E_22_GOV_Rep'), tot: val('E_22_GOV_Total') },
+        { label: '2022 US Senate', d: val('E_22_SEN_Dem'), r: val('E_22_SEN_Rep'), tot: val('E_22_SEN_Total') },
+        { label: '2022 Attorney General', d: val('E_22_AG_Dem'), r: val('E_22_AG_Rep'), tot: val('E_22_AG_Total') },
+        { label: '2022 Sec. of State', d: val('E_22_SOS_Dem'), r: val('E_22_SOS_Rep'), tot: val('E_22_SOS_Total') },
+        { label: '2022 State Treasurer', d: val('E_22_TREAS_Dem'), r: val('E_22_TREAS_Rep'), tot: val('E_22_TREAS_Total') },
+        { label: '2022 Insurance Comm.', d: val('X_22_Commissioner_of_Insurance_2022_D'), r: val('X_22_Commissioner_of_Insurance_2022_R'), tot: val('X_22_Commissioner_of_Insurance_2022_Tot') },
+        { label: '2022 Abortion Amendment', d: val('X_22_KS_2022_Amendment_DRA_D'), r: val('X_22_KS_2022_Amendment_DRA_R'), tot: val('X_22_KS_2022_Amendment_DRA_Tot') },
+        { label: '2020 US President', d: val('E_20_PRES_Dem'), r: val('E_20_PRES_Rep'), tot: val('E_20_PRES_Total') },
+        { label: '2020 US Senate', d: val('E_20_SEN_Dem'), r: val('E_20_SEN_Rep'), tot: val('E_20_SEN_Total') },
+        { label: '2016 US President', d: val('E_16_PRES_Dem'), r: val('E_16_PRES_Rep'), tot: val('E_16_PRES_Total') }
+      ];
+
+      demogMap[id] = { rTot, race, edu, aTot, ageArr, ageGroup, iTot, incArr, avgInc, housing, elections };
     }
   }
 
