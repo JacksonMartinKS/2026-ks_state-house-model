@@ -404,6 +404,22 @@
     .hist-legend-item { display: flex; align-items: center; gap: 5px; }
     .hist-legend-swatch { width: 12px; height: 12px; border-radius: 2px; }
 
+    /* Demographics tab */
+    .demo-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+    .demo-tile { border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; background: #ffffff; }
+    .tile-label { font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
+    .tile-val { font-size: 1.35rem; font-weight: 800; line-height: 1.15; margin-top: 2px; color: var(--text); }
+    .tile-sub { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); }
+    .tile-rank { font-size: 0.68rem; font-weight: 700; color: var(--brand); margin-top: 2px; }
+    .bar-row { display: flex; align-items: center; gap: 6px; }
+    .bar-row + .bar-row { margin-top: 3px; }
+    .bar-tag { width: 40px; flex-shrink: 0; font-size: 0.6rem; font-weight: 800; color: var(--text-muted); text-align: right; }
+    .bar-row .h-stack { flex: 1; }
+    .h-stack.ks { height: 6px; opacity: 0.8; }
+    .demo-note { font-size: 0.72rem; color: var(--text-muted); margin-top: 6px; line-height: 1.45; }
+    .demo-note.gq { background: #fff7e6; border: 1px solid #f3d9a4; color: #7a4b00; border-radius: 6px; padding: 7px 9px; margin: 0 0 14px; }
+    .demo-source { font-size: 0.64rem; color: var(--text-muted); margin-top: 2px; }
+
     /* Brand + review additions */
     .brand-block { display: flex; align-items: center; gap: 9px; min-width: 0; }
     .brand-mark { display: block; width: 34px; height: 34px; flex-shrink: 0; }
@@ -562,74 +578,9 @@
 
       <!-- DEMOGRAPHICS TAB -->
       <div id="cardContentDemographics" style="display: none;">
-        <div class="demo-block">
-          <div class="demo-title">Race & Ethnicity (2024 CVAP)</div>
-          <div class="h-stack" id="demoRaceBar"></div>
-          <div class="demo-legend">
-            <div class="dl-item"><div class="dl-box" style="background:#8d99ae;"></div>White <span id="r_wht"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#e69f00;"></div>Hisp <span id="r_hsp"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#009e73;"></div>Black <span id="r_blk"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#cc79a7;"></div>Asian <span id="r_asn"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#d4cfc4;"></div>Other <span id="r_oth"></span></div>
-          </div>
-        </div>
-        
-        <div class="demo-block">
-          <div class="demo-title">Educational Attainment</div>
-          <div class="h-stack" id="demoEduBar"></div>
-          <div class="demo-legend">
-            <div class="dl-item"><div class="dl-box" style="background:#dbe9ee;"></div>&lt;HS <span id="e_nohs"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#a8cbd6;"></div>HS <span id="e_hs"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#6ea5b8;"></div>Some Col/Assoc <span id="e_some"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#3a7c95;"></div>Bach <span id="e_bach"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#1c4f64;"></div>Post-Grad <span id="e_post"></span></div>
-          </div>
-        </div>
-
-        <div class="demo-block">
-          <div class="demo-title">
-            Housing & Living Arrangements (HH Eqv)
-            <span id="demoKids" style="color:var(--text); text-transform:none;"></span>
-          </div>
-          <div class="h-stack" id="demoHousingBar"></div>
-          <div class="demo-legend">
-            <div class="dl-item"><div class="dl-box" style="background:#3a7c95;"></div>Owner <span id="h_owner"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#e69f00;"></div>Renter <span id="h_renter"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#cc79a7;"></div>Nursing <span id="h_nursing"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#d4cfc4;"></div>Other GQ <span id="h_otherGQ"></span></div>
-          </div>
-        </div>
-
-        <div class="demo-block">
-          <div class="demo-title">Age Distribution</div>
-          <div class="h-stack" id="demoAgeBar"></div>
-          <div class="demo-legend">
-            <div class="dl-item"><div class="dl-box" style="background:#f3e3c3;"></div>0-17 <span id="a_a0_17"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#e2bf7f;"></div>18-24 <span id="a_a18_24"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#c8913f;"></div>25-39 <span id="a_a25_39"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#96621f;"></div>40-64 <span id="a_a40_64"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#5f3b11;"></div>65+ <span id="a_a65plus"></span></div>
-          </div>
-          <div class="hist-container" id="demoAgeHist"></div>
-          <div style="display:flex; justify-content:space-between; font-size:0.6rem; color:var(--text-muted); font-weight:700; margin-top:2px;">
-            <span style="flex:1; text-align:center;">0-17</span>
-            <span style="flex:1; text-align:center;">18-24</span>
-            <span style="flex:1; text-align:center;">25-39</span>
-            <span style="flex:1; text-align:center;">40-64</span>
-            <span style="flex:1; text-align:center;">65+</span>
-          </div>
-        </div>
-
-        <div class="demo-block" style="margin-bottom:0;">
-          <div class="demo-title">Household Income <span id="demoAvgIncome" style="color:var(--text);">Avg: $0</span></div>
-          <div class="hist-container" id="demoIncomeHist"></div>
-          <div style="position:relative; height:14px; font-size:0.65rem; color:var(--text-muted); font-weight:700; margin-top:2px;">
-            <span style="position:absolute; left:0%;">0</span>
-            <span style="position:absolute; left:50%; transform:translateX(-50%);">50k</span>
-            <span style="position:absolute; left:68.75%; transform:translateX(-50%);">100k</span>
-            <span style="position:absolute; right:0%;">200k+</span>
-          </div>
-        </div>
+        <div id="demoTiles" class="demo-tiles"></div>
+        <div id="demoBars"></div>
+        <div class="demo-source">Eligible voters: 2024 CVAP. Education, age, income: 2022 ACS. Density: 2020 census population over district area. Via DRA.</div>
       </div>
 
       <!-- PAST ELECTIONS TAB -->
@@ -915,60 +866,208 @@
     `;
   }
 
-  function renderDemographics(id) {
-    const d = demogMap[id];
-    if (!d) return;
+  // DEMO-START: demographics parsing, statewide context, rendering
+  const DEMO_COLORS = {
+    race: ['#8d99ae', '#e69f00', '#009e73', '#cc79a7', '#d4cfc4'],
+    edu: ['#a8cbd6', '#6ea5b8', '#3a7c95', '#1c4f64'],
+    age: ['#e2bf7f', '#c8913f', '#96621f', '#5f3b11'],
+    inc: ['#d9dee7', '#a7b3c6', '#6f819e', '#3f4f6b'],
+    home: ['#3a7c95', '#e69f00']
+  };
+  const INC_KEYS = ['U10K', 'U15K', 'U20K', 'U25K', 'U30K', 'U35K', 'U40K', 'U45K', 'U50K', 'U60K', 'U75K', 'U100K', 'U125K', 'U150K', 'U200K', 'O200K'];
+  const INC_EDGES = [0, 10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 75, 100, 125, 150, 200, Infinity];   // $k
+  const AGE_KEYS = ['U5', '5_9', '10_14', '15_17', '18_19', '20', '21', '22_24', '25_29', '30_34', '35_39', '40_44', '45_49', '50_54', '55_59', '60_61', '62_64', '65_66', '67_69', '70_74', '75_79', '80_84', 'O84'];
+  const AGE_EDGES = [0, 5, 10, 15, 18, 20, 21, 22, 25, 30, 35, 40, 45, 50, 55, 60, 62, 65, 67, 70, 75, 80, 85, 100];
+  // People per square mile -> label. Judgment calls; tweak freely.
+  const DENSITY_TIERS = [[3000, 'Urban'], [800, 'Suburban / small city'], [100, 'Exurban / small town'], [0, 'Rural']];
+  const GQ_NOTE_MIN = 0.08;   // show the group-quarters note when at least this share of residents live in one
+  let demoState = null;   // statewide values, same shape as a district's
+  let demoRanks = {};     // metric -> { districtId: rank }, 1 = highest
 
-    const buildHStack = (kArr, vals, tot, colors, barId, prefix) => {
-      let html = '';
-      if (tot > 0) {
-        kArr.forEach((k, i) => {
-          const pct = (vals[k] / tot) * 100;
-          if (pct > 0) html += `<div class="h-seg" style="width:${pct}%; background:${colors[i]};" title="${pct.toFixed(1)}%"></div>`;
-          const leg = document.getElementById(`${prefix}_${k}`);
-          if(leg) leg.textContent = pct.toFixed(1) + '%';
-        });
+  function binMedian(counts, edges) {
+    const tot = counts.reduce((a, b) => a + b, 0);
+    if (!tot) return NaN;
+    let cum = 0;
+    for (let i = 0; i < counts.length; i++) {
+      if (cum + counts[i] >= tot / 2) {
+        if (!isFinite(edges[i + 1])) return edges[i];                 // median sits in the open-ended top bin
+        return edges[i] + ((tot / 2 - cum) / counts[i]) * (edges[i + 1] - edges[i]);
       }
-      document.getElementById(barId).innerHTML = html;
+      cum += counts[i];
+    }
+    return NaN;
+  }
+
+  function ringAreaSqMi(ring) {           // equirectangular projection around the ring's mean latitude
+    const lat0 = ring.reduce((a, p) => a + p[1], 0) / ring.length;
+    const kx = 69.172 * Math.cos(lat0 * Math.PI / 180), ky = 69.0;   // miles per degree
+    let a = 0;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      a += ring[j][0] * kx * ring[i][1] * ky - ring[i][0] * kx * ring[j][1] * ky;
+    }
+    return Math.abs(a) / 2;
+  }
+  function featureAreaSqMi(geom) {
+    const polys = geom.type === 'MultiPolygon' ? geom.coordinates : [geom.coordinates];
+    let total = 0;
+    polys.forEach(poly => poly.forEach((ring, k) => { total += (k === 0 ? 1 : -1) * ringAreaSqMi(ring); }));
+    return total;
+  }
+
+  function parseDemographicsCsv(csvText) {
+    // Strip commas out of values enclosed in quotes to prevent splitting errors
+    const cleanText = csvText.replace(/"([^"]*)"/g, (m, p1) => p1.replace(/,/g, ''));
+    const lines = cleanText.trim().split('\n');
+    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+    const hMap = {};
+    headers.forEach((h, i) => hMap[h] = i);
+
+    for (let i = 1; i < lines.length; i++) {
+      const cols = lines[i].split(',').map(c => c.trim().replace(/"/g, ''));
+      if (cols.length < headers.length) continue;
+      const rawId = cols[hMap['ID']];
+      if (!rawId) continue;
+      const id = String(parseInt(rawId, 10));
+      if (id === 'NaN' || id === '0') continue;
+      const val = (k) => parseFloat(cols[hMap[k]]) || 0;
+
+      const rTot = val('V_24_CVAP_Total') || val('T_20_CENS_Total');
+      const race = ['White', 'Hispanic', 'Black', 'Asian'].map(k => val('V_24_CVAP_' + k) || val('T_20_CENS_' + k));
+      race.push(Math.max(0, rTot - race.reduce((a, b) => a + b, 0)));
+
+      const raw = {
+        race, rTot,
+        edu: ['NoHS', 'HS', 'SomeCol', 'Assoc', 'Bach', 'Master', 'Prof', 'Doc'].map(k => val('X_22_2022_Education_' + k)),
+        age: AGE_KEYS.map(k => val('X_22_2022_Age_by_Sex_Male_' + k) + val('X_22_2022_Age_by_Sex_Female_' + k)),
+        inc: INC_KEYS.map(k => val('X_22_2022_Income_Expanded_' + k)),
+        owner: val('Owner Occupied Housing'), renter: val('Renter Occupied Housing'),
+        alone: val('Persons Living Alone'), famKids: val('Family Households with Persons Under 18'),
+        gq: val('Total Persons in Group Quarters'), nursing: val('Persons in nursing homes'),
+        pop: val('T_20_CENS_Total'), area: 0
+      };
+
+      const elections = [
+        { label: '2024 US President', d: val('E_24_PRES_Dem'), r: val('E_24_PRES_Rep'), tot: val('E_24_PRES_Total') },
+        { label: '2022 Governor', d: val('E_22_GOV_Dem'), r: val('E_22_GOV_Rep'), tot: val('E_22_GOV_Total') },
+        { label: '2022 US Senate', d: val('E_22_SEN_Dem'), r: val('E_22_SEN_Rep'), tot: val('E_22_SEN_Total') },
+        { label: '2022 Attorney General', d: val('E_22_AG_Dem'), r: val('E_22_AG_Rep'), tot: val('E_22_AG_Total') },
+        { label: '2022 Sec. of State', d: val('E_22_SOS_Dem'), r: val('E_22_SOS_Rep'), tot: val('E_22_SOS_Total') },
+        { label: '2022 State Treasurer', d: val('E_22_TREAS_Dem'), r: val('E_22_TREAS_Rep'), tot: val('E_22_TREAS_Total') },
+        { label: '2022 Insurance Comm.', d: val('X_22_Commissioner_of_Insurance_2022_D'), r: val('X_22_Commissioner_of_Insurance_2022_R'), tot: val('X_22_Commissioner_of_Insurance_2022_Tot') },
+        { label: '2022 Abortion Amendment', d: val('X_22_KS_2022_Amendment_DRA_D'), r: val('X_22_KS_2022_Amendment_DRA_R'), tot: val('X_22_KS_2022_Amendment_DRA_Tot') },
+        { label: '2020 US President', d: val('E_20_PRES_Dem'), r: val('E_20_PRES_Rep'), tot: val('E_20_PRES_Total') },
+        { label: '2020 US Senate', d: val('E_20_SEN_Dem'), r: val('E_20_SEN_Rep'), tot: val('E_20_SEN_Total') },
+        { label: '2016 US President', d: val('E_16_PRES_Dem'), r: val('E_16_PRES_Rep'), tot: val('E_16_PRES_Total') }
+      ];
+
+      demogMap[id] = { raw, elections };
+    }
+  }
+
+  function demoDerive(r) {
+    const sum = (arr, i, j) => arr.slice(i, j).reduce((x, y) => x + y, 0);
+    const share = (arr) => { const t = arr.reduce((x, y) => x + y, 0); return arr.map(v => (t > 0 ? v / t : 0)); };
+    const eduTot = sum(r.edu, 0, 8), hh = r.owner + r.renter, allAge = sum(r.age, 0, 23);
+    return {
+      race: share(r.race),
+      edu: share([sum(r.edu, 0, 2), sum(r.edu, 2, 4), r.edu[4], sum(r.edu, 5, 8)]),
+      bachPlus: eduTot > 0 ? sum(r.edu, 4, 8) / eduTot : NaN,
+      age: share([sum(r.age, 4, 9), sum(r.age, 9, 12), sum(r.age, 12, 17), sum(r.age, 17, 23)]),
+      under18: allAge > 0 ? sum(r.age, 0, 4) / allAge : NaN,
+      medAge: binMedian(r.age, AGE_EDGES),
+      inc: share([sum(r.inc, 0, 9), sum(r.inc, 9, 12), sum(r.inc, 12, 15), r.inc[15]]),
+      medInc: binMedian(r.inc, INC_EDGES),
+      home: hh > 0 ? [r.owner / hh, r.renter / hh] : [0, 0],
+      alone: hh > 0 ? r.alone / hh : NaN,
+      kids: hh > 0 ? r.famKids / hh : NaN,
+      gq: r.pop > 0 ? r.gq / r.pop : 0,
+      gqNursing: r.gq > 0 ? r.nursing / r.gq : 0,
+      density: r.area > 0 ? r.pop / r.area : NaN
+    };
+  }
+
+  function buildDemoContext(geojson) {
+    const ids = Object.keys(demogMap);
+    if (!ids.length) return;
+    ((geojson && geojson.features) || []).forEach(f => {
+      const id = String(parseInt(f.properties.NAME || f.properties.id, 10));
+      if (demogMap[id]) demogMap[id].raw.area = featureAreaSqMi(f.geometry);
+    });
+    const sum = (get) => ids.reduce((a, id) => a + get(demogMap[id].raw), 0);
+    const sumArr = (key) => demogMap[ids[0]].raw[key].map((_, i) => sum(r => r[key][i]));
+    const stateRaw = {
+      race: sumArr('race'), rTot: sum(r => r.rTot), edu: sumArr('edu'), age: sumArr('age'), inc: sumArr('inc'),
+      owner: sum(r => r.owner), renter: sum(r => r.renter), alone: sum(r => r.alone), famKids: sum(r => r.famKids),
+      gq: sum(r => r.gq), nursing: sum(r => r.nursing), pop: sum(r => r.pop), area: sum(r => r.area)
+    };
+    ids.forEach(id => { demogMap[id].d = demoDerive(demogMap[id].raw); });
+    demoState = demoDerive(stateRaw);
+    demoRanks = {};
+    ['bachPlus', 'medInc', 'medAge', 'density'].forEach(m => {
+      const order = ids.filter(id => isFinite(demogMap[id].d[m])).sort((x, y) => demogMap[y].d[m] - demogMap[x].d[m]);
+      demoRanks[m] = {};
+      order.forEach((id, i) => { demoRanks[m][id] = i + 1; });
+    });
+  }
+
+  function densityLabel(x) {
+    if (!isFinite(x)) return '';
+    return DENSITY_TIERS.find(([t]) => x >= t)[1];
+  }
+
+  function renderDemographics(id) {
+    const tilesEl = document.getElementById('demoTiles');
+    const barsEl = document.getElementById('demoBars');
+    const rec = demogMap[id];
+    if (!rec || !rec.d || !demoState) {
+      tilesEl.innerHTML = '';
+      barsEl.innerHTML = '<div class="demo-note">Demographic data unavailable for this district.</div>';
+      return;
+    }
+    const d = rec.d, S = demoState;
+    const pct = (x) => (isFinite(x) ? Math.round(x * 100) + '%' : '—');
+    const inc = (k) => (!isFinite(k) ? '—' : k >= 200 ? '$200k+' : '$' + Math.round(k) + 'k');
+    const dens = (x) => (!isFinite(x) ? '—' : x >= 100 ? Math.round(x).toLocaleString('en-US') : x.toFixed(1));
+    const num = (x) => (isFinite(x) ? x.toFixed(0) : '—');
+    const rank = (m, phrase) => (demoRanks[m] && demoRanks[m][id] ? `#${demoRanks[m][id]} ${phrase}` : '');
+    const tile = (label, value, sub, rk) =>
+      `<div class="demo-tile"><div class="tile-label">${label}</div><div class="tile-val">${value}</div>` +
+      `<div class="tile-sub">${sub}</div><div class="tile-rank">${rk}</div></div>`;
+
+    tilesEl.innerHTML =
+      tile('Bachelor\u2019s+', pct(d.bachPlus), `Kansas ${pct(S.bachPlus)}`, rank('bachPlus', 'most educated')) +
+      tile('Median income', inc(d.medInc), `Kansas ${inc(S.medInc)}`, rank('medInc', 'highest income')) +
+      tile('Median age', num(d.medAge), `Kansas ${num(S.medAge)}`, rank('medAge', 'oldest')) +
+      tile('People / sq mi', dens(d.density), `${densityLabel(d.density)} · Kansas ${dens(S.density)}`, rank('density', 'densest'));
+
+    const bar = (title, labels, colors, dv, sv, note = '') => {
+      const segs = (v) => v.map((x, i) => (x > 0
+        ? `<div class="h-seg" style="width:${(x * 100).toFixed(2)}%; background:${colors[i]};" title="${labels[i]}: ${(x * 100).toFixed(1)}%"></div>`
+        : '')).join('');
+      const legend = labels.map((l, i) =>
+        `<div class="dl-item" title="Kansas: ${(sv[i] * 100).toFixed(1)}%"><div class="dl-box" style="background:${colors[i]};"></div>${l} <span>${Math.round(dv[i] * 100)}%</span></div>`).join('');
+      return `<div class="demo-block"><div class="demo-title">${title}</div>` +
+        `<div class="bar-row"><span class="bar-tag">HD-${id}</span><div class="h-stack">${segs(dv)}</div></div>` +
+        `<div class="bar-row"><span class="bar-tag">KS</span><div class="h-stack ks">${segs(sv)}</div></div>` +
+        `<div class="demo-legend">${legend}</div>${note ? `<div class="demo-note">${note}</div>` : ''}</div>`;
     };
 
-    buildHStack(['wht','hsp','blk','asn','oth'], d.race, d.rTot, ['#8d99ae', '#e69f00', '#009e73', '#cc79a7', '#d4cfc4'], 'demoRaceBar', 'r');
-    buildHStack(['nohs','hs','some','bach','post'], d.edu, d.edu.tot, ['#dbe9ee', '#a8cbd6', '#6ea5b8', '#3a7c95', '#1c4f64'], 'demoEduBar', 'e');
-    buildHStack(['owner','renter','nursing','otherGQ'], d.housing, d.housing.tot, ['#3a7c95', '#e69f00', '#cc79a7', '#d4cfc4'], 'demoHousingBar', 'h');
-    buildHStack(['a0_17','a18_24','a25_39','a40_64','a65plus'], d.ageGroup, d.aTot, ['#f3e3c3', '#e2bf7f', '#c8913f', '#96621f', '#5f3b11'], 'demoAgeBar', 'a');
-
-    if (d.housing.hhTot > 0) {
-      const pctKids = (d.housing.familiesWithKids / d.housing.hhTot) * 100;
-      document.getElementById('demoKids').textContent = `Fam w/ Kids: ${pctKids.toFixed(1)}%`;
-    } else {
-      document.getElementById('demoKids').textContent = '';
+    let html = '';
+    if (d.gq >= GQ_NOTE_MIN) {
+      html += `<div class="demo-note gq"><strong>${pct(d.gq)} of residents live in group quarters</strong> ` +
+        `(${d.gqNursing > 0.5 ? 'mostly nursing homes' : 'dorms, military housing, or correctional facilities'}). ` +
+        `They count toward the population, but many don't vote here.</div>`;
     }
-
-    let maxAgePct = 5;
-    if (d.aTot > 0) maxAgePct = Math.max(...d.ageArr) / d.aTot * 100;
-    const ageScale = Math.max(maxAgePct * 1.1, 5); 
-    const ageLabels = ['0-17', '18-24', '25-39', '40-64', '65+'];
-    let aHistHtml = '';
-    d.ageArr.forEach((val, i) => {
-      const pct = d.aTot > 0 ? (val / d.aTot) * 100 : 0;
-      const h = Math.min(100, (pct / ageScale) * 100);
-      aHistHtml += `<div class="hist-bar" style="height:${h}%;" title="${ageLabels[i]}: ${pct.toFixed(1)}%"></div>`;
-    });
-    document.getElementById('demoAgeHist').innerHTML = aHistHtml;
-
-    let maxIncPct = 5;
-    if (d.iTot > 0) maxIncPct = Math.max(...d.incArr) / d.iTot * 100;
-    const incScale = Math.max(maxIncPct * 1.1, 5);
-    const incLabels = ['<10k', '10-15k', '15-20k', '20-25k', '25-30k', '30-35k', '35-40k', '40-45k', '45-50k', '50-60k', '60-75k', '75-100k', '100-125k', '125-150k', '150-200k', '200k+'];
-    let iHistHtml = '';
-    d.incArr.forEach((val, i) => {
-      const pct = d.iTot > 0 ? (val / d.iTot) * 100 : 0;
-      const h = Math.min(100, (pct / incScale) * 100);
-      iHistHtml += `<div class="hist-bar" style="height:${h}%;" title="${incLabels[i]}: ${pct.toFixed(1)}%"></div>`;
-    });
-    document.getElementById('demoIncomeHist').innerHTML = iHistHtml;
-    document.getElementById('demoAvgIncome').textContent = `Avg: $${Math.round(d.avgInc).toLocaleString()}`;
+    html += bar('Race & ethnicity · eligible voters', ['White', 'Hispanic', 'Black', 'Asian', 'Other'], DEMO_COLORS.race, d.race, S.race);
+    html += bar('Education · adults 25+', ['HS or less', 'Some college', 'Bachelor\u2019s', 'Post-grad'], DEMO_COLORS.edu, d.edu, S.edu);
+    html += bar('Age · adults 18+', ['18–29', '30–44', '45–64', '65+'], DEMO_COLORS.age, d.age, S.age,
+      `Under 18: ${pct(d.under18)} of residents (Kansas ${pct(S.under18)})`);
+    html += bar('Household income', ['<$50k', '$50–100k', '$100–200k', '$200k+'], DEMO_COLORS.inc, d.inc, S.inc);
+    html += bar('Housing', ['Own', 'Rent'], DEMO_COLORS.home, d.home, S.home,
+      `Live alone: ${pct(d.alone)} of households (Kansas ${pct(S.alone)}) · Families with kids: ${pct(d.kids)} (Kansas ${pct(S.kids)})`);
+    barsEl.innerHTML = html;
   }
+  // DEMO-END
 
   function renderElections(id) {
     const d = demogMap[id];
@@ -1357,99 +1456,6 @@
     }
   }
 
-  function parseDemographicsCsv(csvText) {
-    // Strip commas out of values enclosed in quotes to prevent splitting errors
-    const cleanText = csvText.replace(/"([^"]*)"/g, (m, p1) => p1.replace(/,/g, ''));
-    const lines = cleanText.trim().split('\n');
-    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g,''));
-    const hMap = {};
-    headers.forEach((h, i) => hMap[h] = i);
-    
-    for(let i=1; i<lines.length; i++) {
-      const cols = lines[i].split(',').map(c => c.trim().replace(/"/g,''));
-      if(cols.length < headers.length) continue;
-      
-      let rawId = cols[hMap['ID']];
-      if(!rawId) continue;
-      
-      const id = String(parseInt(rawId, 10));
-      if(id === 'NaN' || id === '0') continue;
-      
-      const val = (k) => parseFloat(cols[hMap[k]]) || 0;
-      
-      const rTot = val('V_24_CVAP_Total') || val('T_20_CENS_Total');
-      const race = {
-        wht: val('V_24_CVAP_White') || val('T_20_CENS_White'),
-        hsp: val('V_24_CVAP_Hispanic') || val('T_20_CENS_Hispanic'),
-        blk: val('V_24_CVAP_Black') || val('T_20_CENS_Black'),
-        asn: val('V_24_CVAP_Asian') || val('T_20_CENS_Asian'),
-        oth: 0
-      };
-      race.oth = Math.max(0, rTot - (race.wht + race.hsp + race.blk + race.asn));
-      
-      const eNohs = val('X_22_2022_Education_NoHS');
-      const eHs = val('X_22_2022_Education_HS');
-      const eSome = val('X_22_2022_Education_SomeCol') + val('X_22_2022_Education_Assoc');
-      const eBach = val('X_22_2022_Education_Bach');
-      const ePost = val('X_22_2022_Education_Master') + val('X_22_2022_Education_Prof') + val('X_22_2022_Education_Doc');
-      const eTot = eNohs + eHs + eSome + eBach + ePost;
-      const edu = { nohs: eNohs, hs: eHs, some: eSome, bach: eBach, post: ePost, tot: eTot };
-
-      const owner = val('Owner Occupied Housing');
-      const renter = val('Renter Occupied Housing');
-      const rawNursing = val('Persons in nursing homes');
-      const rawTotalGQ = val('Total Persons in Group Quarters');
-      const familiesWithKids = val('Family Households with Persons Under 18');
-      
-      const nursing = Math.round(rawNursing / 2);
-      const otherGQ = Math.round(Math.max(0, rawTotalGQ - rawNursing) / 2);
-      const hTot = owner + renter + nursing + otherGQ;
-      const hhTot = owner + renter; 
-      const housing = { owner, renter, nursing, otherGQ, tot: hTot, hhTot, familiesWithKids };
-      
-      const ageVal = (suffix) => val('X_22_2022_Age_by_Sex_Male_' + suffix) + val('X_22_2022_Age_by_Sex_Female_' + suffix);
-      const ageValOld = (suffix) => val('X_22_2022_Expanded_Age_' + suffix);
-      
-      const vAge = (sfx, sfxOld) => {
-        let v = ageVal(sfx);
-        if (v === 0 && sfxOld) v = ageValOld(sfxOld);
-        return v;
-      };
-
-      const a0_17 = vAge('U5','Age_0_5') + vAge('5_9','Age_5_9') + vAge('10_14','Age_10_14') + vAge('15_17','Age_15_19');
-      const a18_24 = vAge('18_19','') + vAge('20','') + vAge('21','') + vAge('22_24','Age_20_24');
-      const a25_39 = vAge('25_29','Age_25_29') + vAge('30_34','Age_30_34') + vAge('35_39','Age_35_39');
-      const a40_64 = vAge('40_44','Age_40_44') + vAge('45_49','Age_45_49') + vAge('50_54','Age_50_54') + vAge('55_59','Age_55_59') + vAge('60_61','Age_60_64') + vAge('62_64','');
-      const a65plus = vAge('65_66','Age_65_69') + vAge('67_69','') + vAge('70_74','Age_70_74') + vAge('75_79','Age_75_79') + vAge('80_84','Age_80_84') + vAge('O84','Age_O84');
-
-      const aTot = a0_17 + a18_24 + a25_39 + a40_64 + a65plus;
-      const ageArr = [a0_17, a18_24, a25_39, a40_64, a65plus];
-      const ageGroup = { a0_17, a18_24, a25_39, a40_64, a65plus };
-      
-      const incKeys = ['U10K', 'U15K', 'U20K', 'U25K', 'U30K', 'U35K', 'U40K', 'U45K', 'U50K', 'U60K', 'U75K', 'U100K', 'U125K', 'U150K', 'U200K', 'O200K'];
-      const incMid = [5000, 12500, 17500, 22500, 27500, 32500, 37500, 42500, 47500, 55000, 67500, 87500, 112500, 137500, 175000, 250000];
-      const incArr = incKeys.map(k => val('X_22_2022_Income_Expanded_' + k));
-      const iTot = incArr.reduce((a,b)=>a+b, 0);
-      const avgInc = iTot > 0 ? incArr.reduce((sum, count, idx) => sum + count * incMid[idx], 0) / iTot : 0;
-
-      const elections = [
-        { label: '2024 US President', d: val('E_24_PRES_Dem'), r: val('E_24_PRES_Rep'), tot: val('E_24_PRES_Total') },
-        { label: '2022 Governor', d: val('E_22_GOV_Dem'), r: val('E_22_GOV_Rep'), tot: val('E_22_GOV_Total') },
-        { label: '2022 US Senate', d: val('E_22_SEN_Dem'), r: val('E_22_SEN_Rep'), tot: val('E_22_SEN_Total') },
-        { label: '2022 Attorney General', d: val('E_22_AG_Dem'), r: val('E_22_AG_Rep'), tot: val('E_22_AG_Total') },
-        { label: '2022 Sec. of State', d: val('E_22_SOS_Dem'), r: val('E_22_SOS_Rep'), tot: val('E_22_SOS_Total') },
-        { label: '2022 State Treasurer', d: val('E_22_TREAS_Dem'), r: val('E_22_TREAS_Rep'), tot: val('E_22_TREAS_Total') },
-        { label: '2022 Insurance Comm.', d: val('X_22_Commissioner_of_Insurance_2022_D'), r: val('X_22_Commissioner_of_Insurance_2022_R'), tot: val('X_22_Commissioner_of_Insurance_2022_Tot') },
-        { label: '2022 Abortion Amendment', d: val('X_22_KS_2022_Amendment_DRA_D'), r: val('X_22_KS_2022_Amendment_DRA_R'), tot: val('X_22_KS_2022_Amendment_DRA_Tot') },
-        { label: '2020 US President', d: val('E_20_PRES_Dem'), r: val('E_20_PRES_Rep'), tot: val('E_20_PRES_Total') },
-        { label: '2020 US Senate', d: val('E_20_SEN_Dem'), r: val('E_20_SEN_Rep'), tot: val('E_20_SEN_Total') },
-        { label: '2016 US President', d: val('E_16_PRES_Dem'), r: val('E_16_PRES_Rep'), tot: val('E_16_PRES_Total') }
-      ];
-      
-      demogMap[id] = { rTot, race, edu, aTot, ageArr, ageGroup, iTot, incArr, avgInc, housing, elections };
-    }
-  }
-
   let hatchOverlayGroup = L.featureGroup().addTo(map);
 
   function applyHatchOverlay() {
@@ -1610,6 +1616,7 @@
     parseDistrictDataText(districtTxt);
     parseSeatDistributionCsv(seatDistCsv);
     parseDemographicsCsv(demogCsv);
+    buildDemoContext(geojson);
 
     updateDropdownList();
     renderSimulationHistogram();
