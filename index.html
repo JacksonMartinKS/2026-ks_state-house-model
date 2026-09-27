@@ -2,19 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Kansas State House 2026 Forecast</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kansas House 2026 Forecast · Jackson Martin Forecasts</title>
+  <meta name="description" content="Simulation-based forecast of all 125 Kansas House districts: win probabilities, seat outcomes, and district-level detail." />
+
+  <!-- Link previews (X, iMessage, Discord, Slack) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://jacksonmartinks.github.io/2026-ks_state-house-model/" />
+  <meta property="og:title" content="Kansas House 2026 Forecast" />
+  <meta property="og:description" content="Can Democrats break the Republican supermajority? District-by-district win probabilities and simulated seat outcomes." />
+  <meta property="og:image" content="https://jacksonmartinks.github.io/2026-ks_state-house-model/og-card-ks-house.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
   
-  <!-- Standard Favicon -->
-  <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="./favicon.png" />
+  <!-- Brand icons (relative paths work on a GitHub Pages project site) -->
+  <link rel="icon" href="./favicon.ico" sizes="48x48" />
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+  <link rel="manifest" href="./site.webmanifest" />
+  <meta name="theme-color" content="#7a1951" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" />
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <style>
     :root {
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
+      --bg: #f5f3ec;
+      --card-bg: #fffdf8;
       --border: #e2e8f0;
       --border-dark: #94a3b8;
       --text: #0f172a;
@@ -26,12 +44,16 @@
       --rep-mid: #cb4335;
       --ind: #d97706;
       --mod: #7c3aed;
+      --brand-start: #55145b;
+      --brand-end: #9f1e47;
+      --brand: #7a1951;
+      --brand-tint: #eab6ca;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: "Barlow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: var(--text);
       background: var(--bg);
       display: flex;
@@ -41,7 +63,7 @@
     }
 
     header {
-      background: #ffffff;
+      background: var(--card-bg);
       border-bottom: 1px solid var(--border);
       padding: 8px 14px;
       display: flex;
@@ -176,7 +198,7 @@
     #map {
       flex: 1;
       height: 100%;
-      background: #ffffff;
+      background: var(--bg);
     }
 
     .map-hover-chip {
@@ -323,7 +345,7 @@
     .card-tabs { display: flex; gap: 14px; border-bottom: 2px solid var(--border); margin-bottom: 12px; }
     .card-tab { padding: 0 4px 6px 4px; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
     .card-tab:hover { color: var(--text); }
-    .card-tab.active { color: var(--rep-dark); border-bottom-color: var(--rep-dark); }
+    .card-tab.active { color: var(--brand); border-bottom-color: var(--brand); }
 
     /* Forecast Layout */
     .stack-container { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
@@ -382,7 +404,23 @@
     .hist-legend-item { display: flex; align-items: center; gap: 5px; }
     .hist-legend-swatch { width: 12px; height: 12px; border-radius: 2px; }
 
+    /* Brand + review additions */
+    .brand-block { display: flex; align-items: center; gap: 9px; min-width: 0; }
+    .brand-mark { display: block; width: 34px; height: 34px; flex-shrink: 0; }
+    .brand-mark svg { width: 100%; height: 100%; display: block; }
+    .brand-name { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); line-height: 1.15; }
+    .updated-stamp { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); margin-left: 6px; }
+    #topBarMedian, #topBarMaj { color: var(--dem); }
+    :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+    .method-card { border: 1px solid var(--border); border-radius: 10px; background: var(--card-bg); padding: 10px 12px; margin-bottom: 12px; font-size: 0.8rem; line-height: 1.5; color: var(--text); }
+    .method-card summary { font-weight: 800; cursor: pointer; color: var(--brand); }
+    .method-card p { margin: 8px 0 0; color: var(--text-muted); }
+    .site-foot { font-size: 0.7rem; color: var(--text-muted); line-height: 1.6; padding: 2px 2px 16px; }
+    .share-btn { font: inherit; font-weight: 700; color: var(--brand); background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; cursor: pointer; }
+
     @media (max-width: 860px) {
+      .brand-mark { width: 28px; height: 28px; }
+      .brand-name { font-size: 0.56rem; }
       header { padding: 6px 10px; gap: 4px; }
       header h1 { font-size: 0.88rem; }
       .legend { padding-top: 1px; }
@@ -399,7 +437,13 @@
 <header>
   <div class="header-top">
     <div class="header-left">
-      <h1>Kansas House 2026</h1>
+      <div class="brand-block">
+        <a class="brand-mark" href="./" aria-label="Jackson Martin Forecasts"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><defs><linearGradient id="brandGrad" gradientUnits="userSpaceOnUse" x1="15.36" y1="15.36" x2="539.47" y2="444.18"><stop offset="0" stop-color="#55145b"/><stop offset="1" stop-color="#9f1e47"/></linearGradient></defs><path d="M222.66 34.61 Q256.00 15.36 289.34 34.61 L431.06 116.43 Q464.40 135.68 464.40 174.18 L464.40 337.82 Q464.40 376.32 431.06 395.57 L289.34 477.39 Q256.00 496.64 222.66 477.39 L80.94 395.57 Q47.60 376.32 47.60 337.82 L47.60 174.18 Q47.60 135.68 80.94 116.43 Z" fill="url(#brandGrad)"/><path d="M125.45 291.21 Q125.45 282.47 134.19 282.47 L156.42 282.47 Q165.16 282.47 165.16 291.21 L165.16 345.93 Q165.16 354.66 156.42 354.66 L134.19 354.66 Q125.45 354.66 125.45 345.93 Z" fill="#ffffff"/><path d="M180.80 223.83 Q180.80 215.09 189.54 215.09 L211.77 215.09 Q220.51 215.09 220.51 223.83 L220.51 345.93 Q220.51 354.66 211.77 354.66 L189.54 354.66 Q180.80 354.66 180.80 345.93 Z" fill="#ffffff"/><path d="M236.15 149.23 Q236.15 140.49 244.88 140.49 L267.12 140.49 Q275.85 140.49 275.85 149.23 L275.85 345.93 Q275.85 354.66 267.12 354.66 L244.88 354.66 Q236.15 354.66 236.15 345.93 Z" fill="#ffffff"/><path d="M291.49 194.95 Q291.49 186.21 300.23 186.21 L322.46 186.21 Q331.20 186.21 331.20 194.95 L331.20 345.93 Q331.20 354.66 322.46 354.66 L300.23 354.66 Q291.49 354.66 291.49 345.93 Z" fill="#ffffff"/><path d="M346.84 269.55 Q346.84 260.81 355.58 260.81 L377.81 260.81 Q386.55 260.81 386.55 269.55 L386.55 345.93 Q386.55 354.66 377.81 354.66 L355.58 354.66 Q346.84 354.66 346.84 345.93 Z" fill="#ffffff"/></svg></a>
+        <div>
+          <div class="brand-name">Jackson Martin Forecasts</div>
+          <h1>Kansas House 2026<span id="updatedStamp" class="updated-stamp"></span></h1>
+        </div>
+      </div>
       <div class="view-toggle">
         <button id="btnGeo" class="toggle-btn" onclick="switchMapMode('geo')">Map</button>
         <button id="btnHex" class="toggle-btn active" onclick="switchMapMode('hex')">Hex Grid</button>
@@ -407,23 +451,16 @@
     </div>
   </div>
 
-  <div class="legend">
-    <div class="legend-item"><div class="legend-box" style="background: #000082;"></div> Safe D</div>
-    <div class="legend-item"><div class="legend-box" style="background: #6363ff;"></div> Lean D</div>
-    <div class="legend-item"><div class="legend-box" style="background: #ffe89a; border-color: #000;"></div> Tossup</div>
-    <div class="legend-item"><div class="legend-box" style="background: #ff6259;"></div> Lean R</div>
-    <div class="legend-item"><div class="legend-box" style="background: #820000;"></div> Safe R</div>
-    <div class="legend-item"><div class="legend-box legend-hatch"></div> Flip</div>
-  </div>
+  <div class="legend" id="mapLegend" aria-label="Map legend"></div>
 
   <div class="top-summary-bar" onclick="openMobileDrawer()">
     <div class="summary-cell">
-      <span id="topBarMedian" class="summary-cell-stat" style="color: var(--rep);">47 Median</span>
-      <span id="topBar67" class="summary-cell-sub">67%: 43–52</span>
+      <span id="topBarMedian" class="summary-cell-stat">—</span>
+      <span id="topBar67" class="summary-cell-sub">loading…</span>
     </div>
     <div class="summary-cell">
-      <span id="topBarMaj" class="summary-cell-stat" style="color: var(--rep);">89.2% Plain Maj</span>
-      <span id="topBarSuper" class="summary-cell-sub">10.8% Super</span>
+      <span id="topBarMaj" class="summary-cell-stat">—</span>
+      <span id="topBarSuper" class="summary-cell-sub">&nbsp;</span>
     </div>
     <div class="summary-expand-btn">
       Details ▴
@@ -529,11 +566,11 @@
           <div class="demo-title">Race & Ethnicity (2024 CVAP)</div>
           <div class="h-stack" id="demoRaceBar"></div>
           <div class="demo-legend">
-            <div class="dl-item"><div class="dl-box" style="background:#ef4444;"></div>White <span id="r_wht"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#f59e0b;"></div>Hisp <span id="r_hsp"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#3b82f6;"></div>Black <span id="r_blk"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#8b5cf6;"></div>Asian <span id="r_asn"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#64748b;"></div>Other <span id="r_oth"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#8d99ae;"></div>White <span id="r_wht"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#e69f00;"></div>Hisp <span id="r_hsp"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#009e73;"></div>Black <span id="r_blk"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#cc79a7;"></div>Asian <span id="r_asn"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#d4cfc4;"></div>Other <span id="r_oth"></span></div>
           </div>
         </div>
         
@@ -541,11 +578,11 @@
           <div class="demo-title">Educational Attainment</div>
           <div class="h-stack" id="demoEduBar"></div>
           <div class="demo-legend">
-            <div class="dl-item"><div class="dl-box" style="background:#ef4444;"></div>&lt;HS <span id="e_nohs"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#f59e0b;"></div>HS <span id="e_hs"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#10b981;"></div>Some Col/Assoc <span id="e_some"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#3b82f6;"></div>Bach <span id="e_bach"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#8b5cf6;"></div>Post-Grad <span id="e_post"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#dbe9ee;"></div>&lt;HS <span id="e_nohs"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#a8cbd6;"></div>HS <span id="e_hs"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#6ea5b8;"></div>Some Col/Assoc <span id="e_some"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#3a7c95;"></div>Bach <span id="e_bach"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#1c4f64;"></div>Post-Grad <span id="e_post"></span></div>
           </div>
         </div>
 
@@ -556,10 +593,10 @@
           </div>
           <div class="h-stack" id="demoHousingBar"></div>
           <div class="demo-legend">
-            <div class="dl-item"><div class="dl-box" style="background:#0ea5e9;"></div>Owner <span id="h_owner"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#f43f5e;"></div>Renter <span id="h_renter"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#8b5cf6;"></div>Nursing <span id="h_nursing"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#64748b;"></div>Other GQ <span id="h_otherGQ"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#3a7c95;"></div>Owner <span id="h_owner"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#e69f00;"></div>Renter <span id="h_renter"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#cc79a7;"></div>Nursing <span id="h_nursing"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#d4cfc4;"></div>Other GQ <span id="h_otherGQ"></span></div>
           </div>
         </div>
 
@@ -567,11 +604,11 @@
           <div class="demo-title">Age Distribution</div>
           <div class="h-stack" id="demoAgeBar"></div>
           <div class="demo-legend">
-            <div class="dl-item"><div class="dl-box" style="background:#7dd3fc;"></div>0-17 <span id="a_a0_17"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#0284c7;"></div>18-24 <span id="a_a18_24"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#86efac;"></div>25-39 <span id="a_a25_39"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#16a34a;"></div>40-64 <span id="a_a40_64"></span></div>
-            <div class="dl-item"><div class="dl-box" style="background:#a78bfa;"></div>65+ <span id="a_a65plus"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#f3e3c3;"></div>0-17 <span id="a_a0_17"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#e2bf7f;"></div>18-24 <span id="a_a18_24"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#c8913f;"></div>25-39 <span id="a_a25_39"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#96621f;"></div>40-64 <span id="a_a40_64"></span></div>
+            <div class="dl-item"><div class="dl-box" style="background:#5f3b11;"></div>65+ <span id="a_a65plus"></span></div>
           </div>
           <div class="hist-container" id="demoAgeHist"></div>
           <div style="display:flex; justify-content:space-between; font-size:0.6rem; color:var(--text-muted); font-weight:700; margin-top:2px;">
@@ -609,13 +646,25 @@
       <div class="hist-legend-row">
         <div class="hist-legend-item">
           <div class="hist-legend-swatch" style="background: var(--rep-dark);"></div>
-          <span>GOP ⅔ (D &le; 41): <strong id="legSuperProb">10.8%</strong></span>
+          <span>GOP ⅔ (D &le; 41): <strong id="legSuperProb">—</strong></span>
         </div>
         <div class="hist-legend-item">
           <div class="hist-legend-swatch" style="background: var(--rep-mid);"></div>
-          <span>GOP Maj (D 42–62): <strong id="legMajProb">89.2%</strong></span>
+          <span>GOP Maj (D 42–62): <strong id="legMajProb">—</strong></span>
         </div>
       </div>
+    </div>
+    <details class="method-card">
+      <summary>How the forecast works</summary>
+      <p>Each contested district starts from a baseline partisan lean (recent presidential results blended with
+      down-ballot statewide races), then adds a statewide generic-ballot shift, an incumbency effect, a candidate-quality
+      rating built from each candidate's past over- or underperformance, and a campaign-finance effect. The simulated
+      elections share statewide errors, so districts rise and fall together.</p>
+    </details>
+
+    <div class="site-foot">
+      Model and site by Jackson Martin · Demographics and past results via Dave's Redistricting App (DRA)<br />
+      <button class="share-btn" onclick="copyShareLink(this)">Copy link</button> to the district you're viewing
     </div>
   </div>
 </div>
@@ -625,8 +674,17 @@
 <script>
   // Removed HD-121 from the projected flips set
   const PROJECTED_FLIPS = new Set([67, 28, 14, 15, 39, 33, 88, 30, 41]);
-  const CMAP_D = ["#ffffff", "#babaff", "#6363ff", "#0000f8", "#000082"];
-  const CMAP_R = ["#ffffff", "#ffafab", "#ff6259", "#f80d00", "#820000"];
+  // Map color ramps. "original" is the bright navy/maroon the site launched with.
+  // To revert, set MAP_PALETTE = 'original'. Muted versions keep the same lightness steps
+  // (only saturation drops), so districts stay just as easy to tell apart by darkness.
+  const MAP_PALETTES = {
+    original: { D: ["#ffffff", "#babaff", "#6363ff", "#0000f8", "#000082"], R: ["#ffffff", "#ffafab", "#ff6259", "#f80d00", "#820000"] },
+    muted:    { D: ["#ffffff", "#bcbdee", "#6870dc", "#0d3eca", "#031c69"], R: ["#ffffff", "#f1b6b3", "#e7786e", "#dc4f3f", "#73241c"] },   // ~28% less saturated
+    soft:     { D: ["#ffffff", "#bdbee4", "#6c75c6", "#2049af", "#0b225a"], R: ["#ffffff", "#e7bbb8", "#d8837a", "#cb6152", "#692e27"] }    // ~45% less saturated
+  };
+  const MAP_PALETTE = 'muted';
+  const CMAP_D = MAP_PALETTES[MAP_PALETTE].D;
+  const CMAP_R = MAP_PALETTES[MAP_PALETTE].R;
   const FLOOR = 0.1;
   const GAMMA = 1.5;
   const CONTESTED_MAX = 0.95;
@@ -664,6 +722,16 @@
     }
     return interpolateColormap(p >= 0.5 ? CMAP_D : CMAP_R, t);
   }
+
+  function buildLegend() {
+    const stops = [[0.99, 'D 95%+'], [0.8, 'D 80%'], [0.5, 'Tossup', 'TOSSUP'], [0.2, 'R 80%'], [0.01, 'R 95%+']];
+    let html = stops.map(([p, lab, tag]) =>
+      `<div class="legend-item"><div class="legend-box" style="background:${probToColor(p, tag || '')};${tag ? ' border-color:#000;' : ''}"></div> ${lab}</div>`
+    ).join('');
+    html += '<div class="legend-item"><div class="legend-box legend-hatch"></div> Projected flip</div>';
+    document.getElementById('mapLegend').innerHTML = html;
+  }
+  buildLegend();
 
   const ratingsMap = {};
   const competitiveMap = {};
@@ -864,10 +932,10 @@
       document.getElementById(barId).innerHTML = html;
     };
 
-    buildHStack(['wht','hsp','blk','asn','oth'], d.race, d.rTot, ['#ef4444', '#f59e0b', '#3b82f6', '#8b5cf6', '#64748b'], 'demoRaceBar', 'r');
-    buildHStack(['nohs','hs','some','bach','post'], d.edu, d.edu.tot, ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'], 'demoEduBar', 'e');
-    buildHStack(['owner','renter','nursing','otherGQ'], d.housing, d.housing.tot, ['#0ea5e9', '#f43f5e', '#8b5cf6', '#64748b'], 'demoHousingBar', 'h');
-    buildHStack(['a0_17','a18_24','a25_39','a40_64','a65plus'], d.ageGroup, d.aTot, ['#7dd3fc', '#0284c7', '#86efac', '#16a34a', '#a78bfa'], 'demoAgeBar', 'a');
+    buildHStack(['wht','hsp','blk','asn','oth'], d.race, d.rTot, ['#8d99ae', '#e69f00', '#009e73', '#cc79a7', '#d4cfc4'], 'demoRaceBar', 'r');
+    buildHStack(['nohs','hs','some','bach','post'], d.edu, d.edu.tot, ['#dbe9ee', '#a8cbd6', '#6ea5b8', '#3a7c95', '#1c4f64'], 'demoEduBar', 'e');
+    buildHStack(['owner','renter','nursing','otherGQ'], d.housing, d.housing.tot, ['#3a7c95', '#e69f00', '#cc79a7', '#d4cfc4'], 'demoHousingBar', 'h');
+    buildHStack(['a0_17','a18_24','a25_39','a40_64','a65plus'], d.ageGroup, d.aTot, ['#f3e3c3', '#e2bf7f', '#c8913f', '#96621f', '#5f3b11'], 'demoAgeBar', 'a');
 
     if (d.housing.hhTot > 0) {
       const pctKids = (d.housing.familiesWithKids / d.housing.hhTot) * 100;
@@ -1130,16 +1198,17 @@
     const plotW = w - padL - padR;
     const plotH = h - padT - padB;
 
-    const minSeat = 32;
-    const maxSeat = 64;
-    const maxProb = 0.095;
+    const seatsSeen = seatDistribution.map(d => d.dem_seats);
+    const minSeat = Math.min(32, Math.min(...seatsSeen) - 1);
+    const maxSeat = Math.max(64, Math.max(...seatsSeen) + 1);
+    const maxProb = Math.max(0.05, Math.max(...seatDistribution.map(d => d.probability)) * 1.12);
 
     const scaleX = (val) => padL + ((val - minSeat) / (maxSeat - minSeat)) * plotW;
     const scaleY = (p) => padT + plotH - (p / maxProb) * plotH;
 
     let svgInner = '';
 
-    [0.02, 0.04, 0.06, 0.08].forEach(p => {
+    [0.02, 0.04, 0.06, 0.08, 0.10, 0.12].filter(p => p < maxProb).forEach(p => {
       const y = scaleY(p);
       svgInner += `
         <line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="#e2e8f0" stroke-width="1" />
@@ -1458,6 +1527,7 @@
             hoverChip.style.display = 'block';
 
             document.getElementById('districtSelect').value = id;
+            if (history.replaceState) history.replaceState(null, '', '#hd-' + id);
             renderCard(id);
           }
         });
@@ -1504,22 +1574,36 @@
     }
   }
 
+  // GitHub Pages caches files for ~10 minutes; revalidate so model updates show up right away.
+  const getFresh = (url) => fetch(url, { cache: 'no-cache' }).then(r => {
+    if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
+    return r;
+  });
+  let dataUpdated = null;
+
   Promise.all([
-    fetch('./districts.geojson').then(r => r.json()),
-    fetch('./ratings.txt').then(r => r.text()),
-    fetch('./district_data.txt').then(r => r.text()),
-    fetch('./overall_forecast.json').then(r => r.json()),
-    fetch('./seat_distribution.csv').then(r => r.text()),
-    fetch('./district-data.csv').then(r => r.text())
+    getFresh('./districts.geojson').then(r => r.json()),
+    getFresh('./ratings.txt').then(r => r.text()),
+    getFresh('./district_data.txt').then(r => r.text()),
+    getFresh('./overall_forecast.json').then(r => { dataUpdated = r.headers.get('last-modified'); return r.json(); }),
+    getFresh('./seat_distribution.csv').then(r => r.text()),
+    getFresh('./district-data.csv').then(r => r.text())
   ]).then(([geojson, ratingsTxt, districtTxt, forecastJson, seatDistCsv, demogCsv]) => {
     cachedGeojson = geojson;
     overallForecast = forecastJson;
 
     if (overallForecast.median_dem_seats) {
-      document.getElementById('topBarMedian').textContent = `${overallForecast.median_dem_seats} Median`;
-      document.getElementById('topBar67').textContent = `67%: ${overallForecast.ci_67_low}–${overallForecast.ci_67_high}`;
-      document.getElementById('topBarMaj').textContent = `${overallForecast.gop_plain_majority_prob}% Plain Maj`;
-      document.getElementById('topBarSuper').textContent = `${overallForecast.gop_supermajority_prob}% Super`;
+      const supP = Number(overallForecast.gop_supermajority_prob);
+      document.getElementById('topBarMedian').textContent = `${overallForecast.median_dem_seats} Dem seats`;
+      document.getElementById('topBar67').textContent = `median · 67% range ${overallForecast.ci_67_low}–${overallForecast.ci_67_high}`;
+      document.getElementById('topBarMaj').textContent = `${(100 - supP).toFixed(1)}% Dems break ⅔`;
+      document.getElementById('topBarSuper').textContent = `${supP.toFixed(1)}% GOP keeps ⅔`;
+    }
+    // Prefer an explicit "updated" field in overall_forecast.json; fall back to the file's Last-Modified header.
+    const upd = overallForecast.updated || dataUpdated;
+    if (upd && !isNaN(new Date(upd))) {
+      document.getElementById('updatedStamp').textContent =
+        'Updated ' + new Date(upd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
 
     parseRatingsText(ratingsTxt);
@@ -1540,13 +1624,21 @@
     injectHatchPattern();
     applyHatchOverlay();
     map.fitBounds(hexCartoLayer.getBounds(), { padding: [10, 10] });
+
+    // Deep links: .../#hd-28 opens that district (share a single race on X).
+    const hm = location.hash.match(/hd-?(\d{1,3})/i);
+    if (hm) selectDistrict(String(parseInt(hm[1], 10)), true);
   }).catch(err => {
     console.error("Initialization error. Ensure districts.geojson, ratings.txt, district_data.txt, overall_forecast.json, seat_distribution.csv, and district-data.csv exist in your root directory.", err);
+    const sub = document.getElementById('histSubtitle');
+    if (sub) sub.textContent = 'Could not load the forecast data. Try refreshing the page.';
   });
 
-  document.getElementById('districtSelect').addEventListener('change', (e) => {
-    const id = e.target.value;
+  function selectDistrict(id, fromLoad = false) {
+    if (!id || !(ratingsMap[id] || competitiveMap[id])) return;
     selectedId = id;
+    document.getElementById('districtSelect').value = id;
+    if (history.replaceState) history.replaceState(null, '', '#hd-' + id);
 
     selectedHighlightLayer.clearLayers();
     const activeLayer = (currentMapMode === 'hex') ? hexCartoLayer : geojsonLayer;
@@ -1564,10 +1656,23 @@
 
     renderCard(id);
 
-    if (window.innerWidth <= 860) {
+    if (window.innerWidth <= 860 && !fromLoad) {
       openMobileDrawer();
     }
+  }
+
+  document.getElementById('districtSelect').addEventListener('change', (e) => selectDistrict(e.target.value));
+  window.addEventListener('hashchange', () => {
+    const m = location.hash.match(/hd-?(\d{1,3})/i);
+    if (m && String(parseInt(m[1], 10)) !== selectedId) selectDistrict(String(parseInt(m[1], 10)));
   });
+
+  function copyShareLink(btn) {
+    navigator.clipboard.writeText(location.href).then(() => {
+      btn.textContent = 'Link copied';
+      setTimeout(() => { btn.textContent = 'Copy link'; }, 1600);
+    });
+  }
 </script>
 </body>
 </html>
