@@ -424,6 +424,15 @@ function parseHexGrid(html) {
   while ((e = re.exec(m[1]))) grid[+e[1]] = [+e[2], +e[3]];
   return Object.keys(grid).length >= 100 ? grid : null;
 }
+// index.html holds the model settings; read them so the two pages can't drift apart
+function parseModelSettings(html) {
+  const out = {};
+  const c = html.match(/CORR_SD:\s*([0-9]*\.?[0-9]+)/);
+  if (c) out.corr = parseFloat(c[1]);
+  const d = html.match(/DEM_HELD:\s*new Set\(\[([\d,\s]+)\]\)/);
+  if (d) out.demHeld = new Set(d[1].split(',').map(x => parseInt(x, 10)).filter(Number.isFinite));
+  return out;
+}
 // SIM-CORE-END
 </script>
 <script>
@@ -852,6 +861,9 @@ function parseHexGrid(html) {
     get('./districts.geojson').then(r => r.json()),
     get('./index.html').then(r => r.text()).catch(() => '')
   ]).then(([districtText, geojson, indexHtml]) => {
+    const settings = parseModelSettings(indexHtml);
+    if (settings.corr > 0) SIM.CORR_SD = settings.corr;
+    if (settings.demHeld && settings.demHeld.size) SIM.DEM_HELD = settings.demHeld;
     PREP = prepare(parseDistrictData(districtText));
     PREP.forEach(p => { BY_ID[p.district] = p; });
     const grid = parseHexGrid(indexHtml) || FALLBACK_GRID;
