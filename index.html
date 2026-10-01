@@ -446,6 +446,12 @@
       .sidebar.open { transform: translateY(0); }
       .sheet-handle { display: block; position: sticky; top: 0; background: #ffffff; z-index: 10; padding: 8px 0 6px 0; margin-bottom: 6px; }
     }
+    .sim-link {
+      display: inline-block; text-decoration: none; font-weight: 700; font-size: 0.9rem; white-space: nowrap;
+      color: #fff; background: linear-gradient(135deg, var(--brand-start), var(--brand-end));
+      padding: 6px 12px; border-radius: 8px;
+    }
+    .sim-link:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
   </style>
 </head>
 <body>
@@ -464,6 +470,7 @@
         <button id="btnGeo" class="toggle-btn" onclick="switchMapMode('geo')">Map</button>
         <button id="btnHex" class="toggle-btn active" onclick="switchMapMode('hex')">Hex Grid</button>
       </div>
+      <a class="sim-link" href="./simulate.html">Simulate an election</a>
     </div>
   </div>
 
@@ -624,7 +631,100 @@
 
 <script>
   // Removed HD-121 from the projected flips set
-  const PROJECTED_FLIPS = new Set([67, 28, 14, 15, 39, 33, 88, 30, 41,121,78]);
+  // ---------------------------------------------------------------------------------------
+  // MODEL. Everything below is computed from district_data.txt (each district's predicted
+  // margin and uncertainty): win chances, ratings, projected flips, the seat distribution and
+  // the summary numbers. Update that file and the whole page follows.
+  // ---------------------------------------------------------------------------------------
+  const MODEL = {
+    // Shared statewide swing: SD of the GOP-minus-DEM margin, in decimals. In ks_seat_sim this is
+    // sqrt(NATIONAL^2 + REGIONAL^2 + MODEL_RISK^2). 0.0425 reproduces the sim's Sept 30 output
+    // (median 48, 67% range 43-53, GOP keeps two-thirds 8.7%). Change it if you change the sim.
+    CORR_SD: 0.0425,
+    UNCONTESTED_AT: 0.99,      // |margin| at or above this = uncontested (the file uses 1.01)
+    CHAMBER: 125,
+    // Seats Democrats hold going in; every other seat is held by the GOP. Used for projected flips.
+    DEM_HELD: new Set([10, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 29, 31, 32, 34, 35, 36, 37,
+                       44, 45, 46, 48, 49, 53, 55, 56, 57, 58, 66, 83, 84, 86, 89, 92, 95, 103, 108]),
+    // Rating cutoffs on the trailing party's win chance (mirrored for each side).
+    RATINGS: [[0.02, 'SAFE'], [0.10, 'VERY LIKELY'], [0.25, 'LIKELY'], [0.40, 'LEAN'], [0.45, 'TILT']]
+  };
+  const PROJECTED_FLIPS = new Set();          // filled in by computeForecast()
+
+  function normCdf(x) {                       // standard normal CDF (error < 1.5e-7)
+    const t = 1 / (1 + (0.3275911 * Math.abs(x)) / Math.SQRT2);
+    const erf = 1 - (((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t) * Math.exp(-(x * x) / 2);
+    return x >= 0 ? 0.5 * (1 + erf) : 0.5 * (1 - erf);
+  }
+
+  function ratingFor(p, margin) {
+    if (Math.abs(margin) >= MODEL.UNCONTESTED_AT) return margin < 0 ? 'UNCONTESTED D' : 'UNCONTESTED R';
+    const trailing = p > 0.5 ? 1 - p : p;
+    const step = MODEL.RATINGS.find(([cut]) => trailing < cut);
+    return step ? `${step[1]} ${p > 0.5 ? 'D' : 'R'}` : 'TOSSUP';
+  }
+
+  function computeForecast() {
+    const live = [];
+    let lockedD = 0;
+    PROJECTED_FLIPS.clear();
+    for (let i = 1; i <= MODEL.CHAMBER; i++) {
+      const id = String(i), comp = competitiveMap[id];
+      if (!comp || !Number.isFinite(comp.margin)) continue;
+      const m = comp.margin, sd = comp.stdev;
+      const locked = Math.abs(m) >= MODEL.UNCONTESTED_AT || !(sd > 0);
+      const p = locked ? (m < 0 ? 1 : 0) : normCdf(-m / sd);         // Democratic (non-GOP) win chance
+      comp.winChance = p;
+      const prev = ratingsMap[id] || {};
+      ratingsMap[id] = { rating: ratingFor(p, m), prob: `${Math.round(p * 100)}%`, pdem: p, predMargin: m,
+                         hist2024: prev.hist2024 !== undefined ? prev.hist2024 : null };
+      const demHeld = MODEL.DEM_HELD.has(i);
+      if ((!demHeld && p > 0.5) || (demHeld && p < 0.5)) PROJECTED_FLIPS.add(i);
+      if (locked) { if (m < 0) lockedD++; }
+      else live.push({ m, u: Math.sqrt(Math.max(sd * sd - MODEL.CORR_SD * MODEL.CORR_SD, 0)) });
+    }
+
+    // Seat distribution, computed exactly (no random draws): average over the shared swing; for a given
+    // swing the districts are independent, so the count of Democratic wins is a Poisson-binomial.
+    const n = live.length, C = MODEL.CHAMBER, dist = new Float64Array(C + 1), pk = new Float64Array(n + 1);
+    const STEPS = 561, Z = 7;
+    let wsum = 0;
+    for (let j = 0; j < STEPS; j++) {
+      const z = -Z + (2 * Z * j) / (STEPS - 1), w = Math.exp(-(z * z) / 2);
+      wsum += w;
+      pk.fill(0); pk[0] = 1;
+      for (let k = 0; k < n; k++) {
+        const x = live[k].m + MODEL.CORR_SD * z, u = live[k].u;
+        const q = u > 0 ? normCdf(-x / u) : (x < 0 ? 1 : 0);
+        for (let c = k + 1; c >= 1; c--) pk[c] = pk[c] * (1 - q) + pk[c - 1] * q;
+        pk[0] *= 1 - q;
+      }
+      for (let c = 0; c <= n && lockedD + c <= C; c++) dist[lockedD + c] += w * pk[c];
+    }
+    let mean = 0;
+    for (let k = 0; k <= C; k++) { dist[k] /= wsum; mean += k * dist[k]; }
+    let variance = 0;
+    const cdf = new Float64Array(C + 1);
+    for (let k = 0, acc = 0; k <= C; k++) { variance += (k - mean) ** 2 * dist[k]; acc += dist[k]; cdf[k] = acc; }
+    const quantile = a => { let k = 0; while (k < C && cdf[k] < a - 1e-12) k++; return k; };
+    const majority = Math.floor(C / 2) + 1, supermajority = Math.ceil((2 * C) / 3);
+    const gopSuper = cdf[C - supermajority], demMaj = 1 - cdf[majority - 1];
+    overallForecast = {
+      median_dem_seats: quantile(0.5),
+      mean_dem_seats: Number(mean.toFixed(1)),
+      stdev: Number(Math.sqrt(variance).toFixed(1)),
+      ci_67_low: quantile(0.165), ci_67_high: quantile(0.835),
+      ci_95_low: quantile(0.025), ci_95_high: quantile(0.975),
+      gop_plain_majority_prob: Number((100 * (1 - gopSuper - demMaj)).toFixed(1)),
+      gop_supermajority_prob: Number((100 * gopSuper).toFixed(1)),
+      dem_majority_prob: Number((100 * demMaj).toFixed(1)),
+      seats_before_election: MODEL.DEM_HELD.size
+    };
+    seatDistribution = [];
+    for (let k = 0; k <= C; k++) {
+      if (dist[k] >= 5e-6) seatDistribution.push({ dem_seats: k, probability: dist[k], cumulative_at_least: 1 - (k > 0 ? cdf[k - 1] : 0) });
+    }
+  }
   // Map color ramps. "original" is the bright navy/maroon the site launched with.
   // To revert, set MAP_PALETTE = 'original'. Muted versions keep the same lightness steps
   // (only saturation drops), so districts stay just as easy to tell apart by darkness.
@@ -1421,7 +1521,7 @@
   function parseDistrictDataText(text) {
     text.trim().split('\n').forEach(line => {
       const cols = line.split(',').map(c => c.trim());
-      if (cols.length >= 11) {
+      if (cols.length >= 10) {
         const num = cols[0].replace('HD-', '');
         competitiveMap[num] = {
           district: cols[0],
@@ -1589,14 +1689,15 @@
 
   Promise.all([
     getFresh('./districts.geojson').then(r => r.json()),
-    getFresh('./ratings.txt').then(r => r.text()),
-    getFresh('./district_data.txt').then(r => r.text()),
-    getFresh('./overall_forecast.json').then(r => { dataUpdated = r.headers.get('last-modified'); return r.json(); }),
-    getFresh('./seat_distribution.csv').then(r => r.text()),
+    getFresh('./ratings.txt').then(r => r.text()).catch(() => ''),     // optional: only the 2024-result column is used now
+    getFresh('./district_data.txt').then(r => { dataUpdated = r.headers.get('last-modified'); return r.text(); }),
     getFresh('./district-data.csv').then(r => r.text())
-  ]).then(([geojson, ratingsTxt, districtTxt, forecastJson, seatDistCsv, demogCsv]) => {
+  ]).then(([geojson, ratingsTxt, districtTxt, demogCsv]) => {
     cachedGeojson = geojson;
-    overallForecast = forecastJson;
+
+    parseRatingsText(ratingsTxt);
+    parseDistrictDataText(districtTxt);
+    computeForecast();      // win chances, ratings, flips, seat distribution and summary, all from district_data.txt
 
     if (overallForecast.median_dem_seats) {
       const supP = Number(overallForecast.gop_supermajority_prob);
@@ -1605,16 +1706,11 @@
       document.getElementById('topBarMaj').textContent = `${(100 - supP).toFixed(1)}% Dems break ⅔`;
       document.getElementById('topBarSuper').textContent = `${supP.toFixed(1)}% GOP keeps ⅔`;
     }
-    // Prefer an explicit "updated" field in overall_forecast.json; fall back to the file's Last-Modified header.
-    const upd = overallForecast.updated || dataUpdated;
-    if (upd && !isNaN(new Date(upd))) {
+    // "Updated" = when district_data.txt was last changed.
+    if (dataUpdated && !isNaN(new Date(dataUpdated))) {
       document.getElementById('updatedStamp').textContent =
-        'Updated ' + new Date(upd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        'Updated ' + new Date(dataUpdated).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     }
-
-    parseRatingsText(ratingsTxt);
-    parseDistrictDataText(districtTxt);
-    parseSeatDistributionCsv(seatDistCsv);
     parseDemographicsCsv(demogCsv);
     buildDemoContext(geojson);
 
@@ -1636,7 +1732,7 @@
     const hm = location.hash.match(/hd-?(\d{1,3})/i);
     if (hm) selectDistrict(String(parseInt(hm[1], 10)), true);
   }).catch(err => {
-    console.error("Initialization error. Ensure districts.geojson, ratings.txt, district_data.txt, overall_forecast.json, seat_distribution.csv, and district-data.csv exist in your root directory.", err);
+    console.error("Initialization error. Ensure districts.geojson, district_data.txt and district-data.csv are in the same folder as index.html.", err);
     const sub = document.getElementById('histSubtitle');
     if (sub) sub.textContent = 'Could not load the forecast data. Try refreshing the page.';
   });
