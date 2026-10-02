@@ -152,6 +152,11 @@
       font-size: 11px; font-weight: 700; line-height: 16px; pointer-events: none;
     }
     .leaflet-container { font-family: inherit; }
+    /* Leaflet adds focus listeners to districts with tooltips, which makes Chrome treat them as
+       focusable and draw its focus ring (a box around the district's bounding box) on tap.
+       Turn that box off; keyboard users get a thick district outline instead. */
+    .leaflet-container path.leaflet-interactive { outline: none; }
+    .leaflet-container path.leaflet-interactive:focus-visible { stroke: #1c2230; stroke-width: 3px; }
     .leaflet-tooltip.dist-tip { font-family: inherit; font-size: 0.85rem; border-radius: 8px; padding: 6px 9px; }
 
     /* Tally */
