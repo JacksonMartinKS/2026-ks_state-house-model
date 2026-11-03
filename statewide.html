@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kansas Statewide 2026 Forecast · Jackson Martin Forecasts</title>
+<meta name="description" content="Forecast of Kansas's 2026 statewide races (U.S. Senate, Governor, Attorney General, Secretary of State, Treasurer, Insurance Commissioner) and its four U.S. House districts: win probabilities, polling averages and every model input.">
+<link rel="canonical" href="https://jacksonmartinks.github.io/2026-ks_state-house-model/statewide.html">
+
+<!-- Link previews (X, iMessage, Discord, Slack) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://jacksonmartinks.github.io/2026-ks_state-house-model/statewide.html">
+<meta property="og:title" content="Kansas Statewide 2026 Forecast">
+<meta property="og:description" content="Senate, Governor, four more statewide races and all four U.S. House seats: win probabilities from Kansas fundamentals and a weighted polling average.">
+<meta property="og:image" content="https://jacksonmartinks.github.io/2026-ks_state-house-model/og-card-ks-statewide.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Brand icons live at the site root (jacksonmartinks.github.io) -->
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#7a1951">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Semi+Condensed:wght@600;700;800&display=swap">
+<style>
+/* Layout: the House site's paper ground and plum brand; sticky brand header + tab strip over one centered column of cards.
+   Single light theme on purpose, to match jacksonmartinks.github.io. */
+:root {
+  --bg: #f5f3ec; --card: #fffdf8; --card-2: #ffffff; --line: #e2e8f0; --line-2: #cbd5e1;
+  --ink: #0f172a; --muted: #64748b; --faint: #94a3b8;
+  --brand: #7a1951; --brand-1: #55145b; --brand-2: #9f1e47; --brand-tint: #f6eaf0;
+  --dem: #1f2c8a; --dem-mid: #3d55c4; --dem-soft: #c9d2f4; --dem-tag: #e0e4fb;
+  --rep: #f2aca3; --rep-ink: #5c0f08; --rep-strong: #8a1f17; --rep-soft: #fbdcd8; --rep-tag: #fde4e1;
+  --mod: #6d3fc7; --mod-soft: #f1ecfb; --ok: #24663a; --ok-soft: #e4f2e7; --warn: #8a5300; --warn-soft: #fff3d6;
+  --f-display: "Barlow Semi Condensed", "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-body: "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --r: 10px;
+  color-scheme: light;
+}
+html, body { background: var(--bg); color: var(--ink); }
+body { font-family: var(--f-body); font-size: 15px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--card); }
+* { box-sizing: border-box; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* header */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: var(--card); border-bottom: 1px solid var(--line); }
+.top-inner { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 10px 0; }
+.brandrow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.brandrow svg { width: 34px; height: 34px; flex: none; }
+.kicker { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; background: linear-gradient(90deg, var(--brand-1), var(--brand-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+h1 { margin: 0; font-family: var(--f-display); font-size: 24px; font-weight: 800; line-height: 1.05; text-wrap: balance; }
+.asof { margin-left: auto; text-align: right; font-size: 12.5px; font-weight: 600; color: var(--muted); line-height: 1.3; }
+.tabs { display: flex; gap: 2px; margin-top: 8px; overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { border: 0; background: transparent; padding: 8px 12px 9px; font-size: 14px; font-weight: 700; color: var(--muted); border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; }
+.tab[aria-selected="true"] { color: var(--brand); border-bottom-color: var(--brand); }
+.tab:hover { color: var(--ink); }
+
+/* page */
+main { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 16px 40px; display: grid; gap: 16px; }
+.banner { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: var(--mod-soft); border: 1px solid #d9cdf5; color: var(--mod); border-radius: var(--r); padding: 9px 12px; font-size: 14px; font-weight: 700; }
+.banner .sp { flex: 1 1 220px; min-width: 0; }
+[hidden] { display: none !important; }
+.btn { border: 1px solid var(--line-2); background: var(--card-2); border-radius: 8px; padding: 6px 11px; font-size: 13.5px; font-weight: 700; cursor: pointer; }
+.btn:hover { border-color: var(--brand); color: var(--brand); }
+.btn.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+.btn.primary:hover { background: var(--brand-1); color: #fff; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; min-width: 0; }
+.ct { font-family: var(--f-display); font-size: 19px; font-weight: 800; margin: 0; }
+.cs { font-size: 13px; font-weight: 600; color: var(--muted); margin: 2px 0 0; }
+.view[hidden] { display: none !important; }
+.view { display: grid; gap: 16px; }
+
+/* tiles */
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.tile { background: var(--card-2); border: 1px solid var(--line); border-radius: var(--r); padding: 10px 12px; }
+.tl { font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.tv { font-family: var(--f-display); font-size: 32px; font-weight: 800; line-height: 1.05; margin-top: 2px; }
+.ts { font-size: 12.5px; font-weight: 600; color: var(--muted); }
+@media (max-width: 720px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* race rows */
+.rows { display: grid; }
+.rrow { display: grid; grid-template-columns: 200px minmax(0, 1fr) 140px; gap: 14px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
+.rrow:first-child { border-top: 0; }
+.off { font-family: var(--f-display); font-size: 18px; font-weight: 800; line-height: 1.1; }
+.cands { font-size: 13.5px; font-weight: 600; color: var(--muted); line-height: 1.35; margin-top: 2px; }
+.tag { display: inline-block; font-size: 10.5px; font-weight: 800; padding: 0 5px; border-radius: 4px; margin-left: 3px; vertical-align: 1px; }
+.tag.r { background: var(--rep-tag); color: var(--rep-strong); } .tag.d { background: var(--dem-tag); color: var(--dem); }
+.pbar { position: relative; display: flex; height: 26px; border-radius: 6px; overflow: hidden; font-size: 13.5px; font-weight: 800; border: 1px solid rgba(15, 23, 42, .1); }
+.pbar .d { background: var(--dem); color: #fff; display: flex; align-items: center; padding-left: 8px; white-space: nowrap; overflow: hidden; }
+.pbar .r { background: var(--rep); color: var(--rep-ink); display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; white-space: nowrap; overflow: hidden; }
+.pbar .mid { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 0; border-left: 1.5px dashed rgba(15, 23, 42, .45); }
+.meta { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: 12.5px; font-weight: 600; color: var(--muted); margin-top: 4px; }
+.meta b { color: var(--ink); }
+.chips { display: grid; gap: 5px; justify-items: end; }
+.chiprow { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+.chip { display: inline-block; min-width: 118px; text-align: center; font-size: 12.5px; font-weight: 800; letter-spacing: .03em; padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(15, 23, 42, .14); text-transform: uppercase; }
+@media (max-width: 820px) {
+  .rrow { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .chips { justify-items: start; grid-template-columns: repeat(2, max-content); align-items: center; }
+}
+
+/* histogram */
+.hist { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; align-items: end; height: 190px; padding: 8px 4px 0; border-bottom: 1px solid var(--line-2); }
+.hb { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+.hv { font-size: 13px; font-weight: 800; margin-bottom: 4px; }
+.hbar { width: 100%; border-radius: 6px 6px 0 0; }
+.hx { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; padding: 5px 4px 0; text-align: center; font-size: 13px; font-weight: 800; color: var(--muted); }
+.legendline { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12.5px; font-weight: 600; color: var(--muted); margin-top: 8px; }
+.legendline b { color: var(--ink); }
+
+/* race detail cards */
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 860px) { .grid2 { grid-template-columns: minmax(0, 1fr); } }
+.dhead { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+.sr { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 3px 0; font-size: 14.5px; font-weight: 600; }
+.sr .n { color: var(--muted); font-weight: 600; font-size: 12px; margin-left: 4px; }
+.sr.base { font-weight: 800; border-bottom: 1px dashed var(--line-2); padding-bottom: 5px; }
+.sr.tot { font-weight: 800; border-top: 1px solid var(--line); margin-top: 3px; padding-top: 6px; }
+.sr.poll { background: var(--brand-tint); border-radius: 6px; padding: 5px 7px; margin-top: 6px; font-weight: 700; color: var(--brand); }
+.sr.nopoll { background: #f1f5f9; border-radius: 6px; padding: 5px 7px; margin-top: 6px; font-weight: 700; color: var(--muted); }
+.sr.modrow { background: var(--mod-soft); border-radius: 6px; padding: 4px 7px; color: var(--mod); font-weight: 700; }
+.res { display: flex; justify-content: space-between; align-items: baseline; margin-top: 10px; padding-top: 8px; border-top: 2px solid var(--ink); }
+.res .k { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; }
+.res .v { font-family: var(--f-display); font-size: 28px; font-weight: 800; }
+.mm { display: flex; justify-content: space-between; gap: 10px; margin-top: 3px; flex-wrap: wrap; }
+.mm .l { font-size: 10.5px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.mm .x { font-size: 15px; font-weight: 800; }
+.rt { display: flex; justify-content: space-between; gap: 8px; font-size: 11.5px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-top: 10px; }
+.rt span:last-child { text-transform: none; color: var(--ink); }
+svg.rng { width: 100%; height: auto; display: block; }
+details.math { margin-top: 8px; border-top: 1px dashed var(--line-2); padding-top: 6px; }
+details.math summary { cursor: pointer; font-size: 13px; font-weight: 800; color: var(--brand); }
+.mt { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 6px; }
+.mt td { padding: 3px 4px; border-bottom: 1px solid #eef2f6; vertical-align: top; }
+.mt td:last-child { text-align: right; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.mt tr.sum td { font-weight: 800; border-bottom: 1px solid var(--line-2); }
+.mt .f { color: var(--muted); font-size: 11.5px; }
+
+/* tables */
+.tw { overflow-x: auto; margin-top: 8px; }
+table.t { width: 100%; border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+table.t th { font-size: 10.5px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; text-align: right; padding: 5px 6px; border-bottom: 1px solid var(--line-2); white-space: nowrap; }
+table.t td { padding: 6px 6px; text-align: right; border-bottom: 1px solid #eef2f6; white-space: nowrap; font-weight: 600; }
+table.t th.l, table.t td.l { text-align: left; }
+table.t td.b { font-weight: 800; }
+table.t tr.off td { color: var(--faint); text-decoration: line-through; text-decoration-color: rgba(148, 163, 184, .6); }
+table.t tr.off td.keep { text-decoration: none; }
+.note { display: block; font-size: 11.5px; font-weight: 600; color: var(--muted); white-space: normal; max-width: 280px; }
+.flag { color: var(--warn); font-weight: 800; }
+.wbar { display: inline-block; height: 8px; border-radius: 3px; background: var(--brand); vertical-align: 0; margin-right: 5px; }
+.sumline { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; font-size: 13.5px; font-weight: 700; }
+.sumline span { color: var(--muted); font-weight: 600; }
+
+/* controls */
+.ctrlgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 860px) { .ctrlgrid { grid-template-columns: minmax(0, 1fr); } }
+.ctrl { display: grid; gap: 4px; padding: 10px 0; border-top: 1px solid var(--line); }
+.ctrl:first-of-type { border-top: 0; }
+.ctrl label, .ctrl .lab { font-size: 14px; font-weight: 700; display: flex; justify-content: space-between; gap: 8px; }
+.ctrl .val { font-weight: 800; color: var(--brand); font-variant-numeric: tabular-nums; }
+.ctrl .hint { font-size: 12.5px; color: var(--muted); font-weight: 500; }
+.ctrl .def { font-size: 12px; color: var(--faint); font-weight: 600; }
+input[type="range"] { width: 100%; accent-color: var(--brand); }
+input[type="number"] { width: 90px; padding: 4px 6px; border: 1px solid var(--line-2); border-radius: 6px; background: var(--card-2); font-variant-numeric: tabular-nums; }
+.seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 8px; overflow: hidden; }
+.seg button { border: 0; background: var(--card-2); padding: 5px 10px; font-size: 13px; font-weight: 700; cursor: pointer; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--brand); color: #fff; }
+.chk { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; cursor: pointer; }
+.chk input { width: 17px; height: 17px; accent-color: var(--brand); }
+.pwrow { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 10px; align-items: center; padding: 6px 0; }
+.pwrow .nm { font-weight: 800; }
+.chkrow { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.chkrow .chk { font-size: 13.5px; }
+.othgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 14px; }
+@media (max-width: 520px) { .othgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.othgrid label { display: grid; gap: 3px; font-size: 13px; font-weight: 700; }
+
+/* prose */
+.prose { max-width: 72ch; font-size: 15px; }
+.prose h3 { font-family: var(--f-display); font-size: 17px; margin: 16px 0 4px; }
+.prose p, .prose li { margin: 6px 0; }
+.prose ul { padding-left: 20px; margin: 6px 0; }
+.prose a { color: var(--brand); font-weight: 600; }
+.foot { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+.foot b { color: var(--ink); }
+.toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: #fff; padding: 8px 14px; border-radius: 8px; font-size: 13.5px; font-weight: 700; z-index: 20; }
+@media (prefers-reduced-motion: no-preference) { .pbar .d, .pbar .r, .hbar { transition: width .25s ease, height .25s ease; } }
+.brand-mark { display: block; width: 34px; height: 34px; flex: none; }
+.brand-mark svg { width: 100%; height: 100%; display: block; }
+a.kicker { text-decoration: none; }
+.xlink { font-size: 12.5px; font-weight: 700; color: var(--brand); text-decoration: none; }
+.xlink:hover { text-decoration: underline; }
+.dek { margin: 0; max-width: 78ch; font-size: 15px; font-weight: 500; color: var(--muted); }
+.dek b { color: var(--ink); }
+.foot a { color: var(--brand); font-weight: 700; }
+.site-foot { border-top: 1px solid var(--line); padding-top: 12px; font-size: 12.5px; color: var(--muted); line-height: 1.6; }
+.site-foot a { color: var(--brand); font-weight: 700; text-decoration: none; }
+.asof { display: grid; justify-items: end; }
+@media (max-width: 520px) {
+  .asof { margin-left: 0; width: 100%; display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 12px; }
+  .brandrow { gap: 4px 10px; }
+  .tab { padding: 8px 8px 9px; font-size: 13.5px; }
+}
+.caveat { background: var(--warn-soft); border: 1px solid #f0d58a; color: #5c3a00; border-radius: var(--r); padding: 10px 12px; font-size: 14px; font-weight: 600; line-height: 1.45; }
+.caveat b { color: var(--warn); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brandrow">
+      <a class="brand-mark" href="/" aria-label="Jackson Martin Forecasts home"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><defs><linearGradient id="jmg" gradientUnits="userSpaceOnUse" x1="15.36" y1="15.36" x2="539.47" y2="444.18"><stop offset="0" stop-color="#55145b"/><stop offset="1" stop-color="#9f1e47"/></linearGradient></defs><g transform="translate(256 256) scale(0.92) translate(-256 -256)"><path d="M77.42 216.04 Q85.11 211.60 92.80 216.04 L115.87 229.36 Q123.56 233.80 123.56 242.68 L123.56 269.32 Q123.56 278.20 115.87 282.64 L92.80 295.96 Q85.11 300.40 77.42 295.96 L54.35 282.64 Q46.66 278.20 46.66 269.32 L46.66 242.68 Q46.66 233.80 54.35 229.36 Z" fill="#661656"/><path d="M120.14 290.04 Q127.83 285.60 135.52 290.04 L158.59 303.36 Q166.28 307.80 166.28 316.68 L166.28 343.32 Q166.28 352.20 158.59 356.64 L135.52 369.96 Q127.83 374.39 120.14 369.96 L97.07 356.64 Q89.38 352.20 89.38 343.32 L89.38 316.68 Q89.38 307.80 97.07 303.36 Z" fill="#731853"/><path d="M162.87 364.04 Q170.56 359.60 178.25 364.04 L201.32 377.35 Q209.01 381.79 209.01 390.67 L209.01 417.31 Q209.01 426.19 201.32 430.63 L178.25 443.95 Q170.56 448.39 162.87 443.95 L139.80 430.63 Q132.11 426.19 132.11 417.31 L132.11 390.67 Q132.11 381.79 139.80 377.35 Z" fill="#801a4f"/><path d="M120.14 142.04 Q127.83 137.61 135.52 142.04 L158.59 155.36 Q166.28 159.80 166.28 168.68 L166.28 195.32 Q166.28 204.20 158.59 208.64 L135.52 221.96 Q127.83 226.40 120.14 221.96 L97.07 208.64 Q89.38 204.20 89.38 195.32 L89.38 168.68 Q89.38 159.80 97.07 155.36 Z" fill="#621657"/><path d="M162.87 216.04 Q170.56 211.60 178.25 216.04 L201.32 229.36 Q209.01 233.80 209.01 242.68 L209.01 269.32 Q209.01 278.20 201.32 282.64 L178.25 295.96 Q170.56 300.40 162.87 295.96 L139.80 282.64 Q132.11 278.20 132.11 269.32 L132.11 242.68 Q132.11 233.80 139.80 229.36 Z" fill="#701854"/><path d="M205.59 290.04 Q213.28 285.60 220.97 290.04 L244.04 303.36 Q251.73 307.80 251.73 316.68 L251.73 343.32 Q251.73 352.20 244.04 356.64 L220.97 369.96 Q213.28 374.39 205.59 369.96 L182.52 356.64 Q174.83 352.20 174.83 343.32 L174.83 316.68 Q174.83 307.80 182.52 303.36 Z" fill="#7d1950"/><path d="M248.31 364.04 Q256.00 359.60 263.69 364.04 L286.76 377.35 Q294.45 381.79 294.45 390.67 L294.45 417.31 Q294.45 426.19 286.76 430.63 L263.69 443.95 Q256.00 448.39 248.31 443.95 L225.24 430.63 Q217.55 426.19 217.55 417.31 L217.55 390.67 Q217.55 381.79 225.24 377.35 Z" fill="#8b1b4c"/><path d="M162.87 68.05 Q170.56 63.61 178.25 68.05 L201.32 81.37 Q209.01 85.81 209.01 94.69 L209.01 121.33 Q209.01 130.21 201.32 134.65 L178.25 147.96 Q170.56 152.40 162.87 147.96 L139.80 134.65 Q132.11 130.21 132.11 121.33 L132.11 94.69 Q132.11 85.81 139.80 81.37 Z" fill="#5f1558"/><path d="M205.59 142.04 Q213.28 137.61 220.97 142.04 L244.04 155.36 Q251.73 159.80 251.73 168.68 L251.73 195.32 Q251.73 204.20 244.04 208.64 L220.97 221.96 Q213.28 226.40 205.59 221.96 L182.52 208.64 Q174.83 204.20 174.83 195.32 L174.83 168.68 Q174.83 159.80 182.52 155.36 Z" fill="#6d1755"/><path d="M248.31 216.04 Q256.00 211.60 263.69 216.04 L286.76 229.36 Q294.45 233.80 294.45 242.68 L294.45 269.32 Q294.45 278.20 286.76 282.64 L263.69 295.96 Q256.00 300.40 248.31 295.96 L225.24 282.64 Q217.55 278.20 217.55 269.32 L217.55 242.68 Q217.55 233.80 225.24 229.36 Z" fill="#7a1951"/><path d="M291.03 290.04 Q298.72 285.60 306.41 290.04 L329.48 303.36 Q337.17 307.80 337.17 316.68 L337.17 343.32 Q337.17 352.20 329.48 356.64 L306.41 369.96 Q298.72 374.39 291.03 369.96 L267.96 356.64 Q260.27 352.20 260.27 343.32 L260.27 316.68 Q260.27 307.80 267.96 303.36 Z" fill="#871b4d"/><path d="M333.75 364.04 Q341.44 359.60 349.13 364.04 L372.20 377.35 Q379.89 381.79 379.89 390.67 L379.89 417.31 Q379.89 426.19 372.20 430.63 L349.13 443.95 Q341.44 448.39 333.75 443.95 L310.68 430.63 Q302.99 426.19 302.99 417.31 L302.99 390.67 Q302.99 381.79 310.68 377.35 Z" fill="#951d4a"/><path d="M248.31 68.05 Q256.00 63.61 263.69 68.05 L286.76 81.37 Q294.45 85.81 294.45 94.69 L294.45 121.33 Q294.45 130.21 286.76 134.65 L263.69 147.96 Q256.00 152.40 248.31 147.96 L225.24 134.65 Q217.55 130.21 217.55 121.33 L217.55 94.69 Q217.55 85.81 225.24 81.37 Z" fill="#691756"/><path d="M291.03 142.04 Q298.72 137.61 306.41 142.04 L329.48 155.36 Q337.17 159.80 337.17 168.68 L337.17 195.32 Q337.17 204.20 329.48 208.64 L306.41 221.96 Q298.72 226.40 291.03 221.96 L267.96 208.64 Q260.27 204.20 260.27 195.32 L260.27 168.68 Q260.27 159.80 267.96 155.36 Z" fill="#771952"/><path d="M333.75 216.04 Q341.44 211.60 349.13 216.04 L372.20 229.36 Q379.89 233.80 379.89 242.68 L379.89 269.32 Q379.89 278.20 372.20 282.64 L349.13 295.96 Q341.44 300.40 333.75 295.96 L310.68 282.64 Q302.99 278.20 302.99 269.32 L302.99 242.68 Q302.99 233.80 310.68 229.36 Z" fill="#841a4e"/><path d="M376.48 290.04 Q384.17 285.60 391.86 290.04 L414.93 303.36 Q422.62 307.80 422.62 316.68 L422.62 343.32 Q422.62 352.20 414.93 356.64 L391.86 369.96 Q384.17 374.39 376.48 369.96 L353.41 356.64 Q345.72 352.20 345.72 343.32 L345.72 316.68 Q345.72 307.80 353.41 303.36 Z" fill="#921c4b"/><path d="M333.75 68.05 Q341.44 63.61 349.13 68.05 L372.20 81.37 Q379.89 85.81 379.89 94.69 L379.89 121.33 Q379.89 130.21 372.20 134.65 L349.13 147.96 Q341.44 152.40 333.75 147.96 L310.68 134.65 Q302.99 130.21 302.99 121.33 L302.99 94.69 Q302.99 85.81 310.68 81.37 Z" fill="#741853"/><path d="M376.48 142.04 Q384.17 137.61 391.86 142.04 L414.93 155.36 Q422.62 159.80 422.62 168.68 L422.62 195.32 Q422.62 204.20 414.93 208.64 L391.86 221.96 Q384.17 226.40 376.48 221.96 L353.41 208.64 Q345.72 204.20 345.72 195.32 L345.72 168.68 Q345.72 159.80 353.41 155.36 Z" fill="#811a4f"/><path d="M419.20 216.04 Q426.89 211.60 434.58 216.04 L457.65 229.36 Q465.34 233.80 465.34 242.68 L465.34 269.32 Q465.34 278.20 457.65 282.64 L434.58 295.96 Q426.89 300.40 419.20 295.96 L396.13 282.64 Q388.44 278.20 388.44 269.32 L388.44 242.68 Q388.44 233.80 396.13 229.36 Z" fill="#8e1c4c"/></g></svg></a>
+      <div><a class="kicker" href="/">Jackson Martin Forecasts</a><h1>Kansas Statewide 2026</h1></div>
+      <div class="asof"><span id="asofText">Updated Nov 2, 2026</span><a class="xlink" href="./">← Kansas House map</a></div>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button class="tab" role="tab" data-tab="overview" id="tab-overview">Overview</button>
+      <button class="tab" role="tab" data-tab="races" id="tab-races">Races</button>
+      <button class="tab" role="tab" data-tab="house" id="tab-house">U.S. House</button>
+      <button class="tab" role="tab" data-tab="polls" id="tab-polls">Polls</button>
+      <button class="tab" role="tab" data-tab="history" id="tab-history">History &amp; fit</button>
+      <button class="tab" role="tab" data-tab="method" id="tab-method">Method</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="caveat" role="note"><b>Personal ratings, not a back-tested model.</b> These forecasts have not been calibrated against past elections. Treat them as my own race ratings, built from fundamentals, polling averages and judgment calls (including a manual D+2 in the Attorney General race).</div>
+  <section class="view" id="v-overview" data-view="overview">
+    <p class="dek">Forecast for Kansas's six statewide races and four U.S. House seats on <b>November 3</b>. Each race blends a fundamentals estimate (partisanship, the national environment, incumbency, candidates and money) with a weighted average of public polls.</p>
+    <div class="card">
+      <h2 class="ct">Statewide races</h2>
+      <p class="cs">Democratic win chance · margins are Republican minus Democrat</p>
+      <div class="rows" id="raceRows"></div>
+    </div>
+    <div class="card">
+      <h2 class="ct">U.S. House</h2>
+      <p class="cs">Democratic win chance · same method as the Senate race, district by district</p>
+      <div class="rows" id="houseRows"></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-races" data-view="races" hidden>
+    <div class="grid2" id="raceCards"></div>
+    <p class="foot">Each card builds the forecast in the same rows as the district cards in the <a href="./">Kansas House forecast</a>: baseline partisanship, generic ballot shift, incumbency, candidate quality and campaign finance add up to the fundamentals, which are then blended with the polling average. Open <b>Show the math</b> on any race to see every term and variance with its formula.</p>
+  </section>
+
+  <section class="view" id="v-house" data-view="house" hidden>
+    <div class="grid2" id="houseCards"></div>
+    <div class="card">
+      <h2 class="ct">House races vs the federal baseline</h2>
+      <p class="cs">Current district lines (2022 map). Expected = the district's presidential lean vs the nation (same year, or the prior one in a midterm) + generic ballot × elasticity + incumbency. Each miss feeds the candidate ratings, fit jointly with the statewide races.</p>
+      <div class="tw"><table class="t" id="ushTable"></table></div>
+    </div>
+    <p class="foot">Each district card uses the Senate race's method: baseline partisanship is the district's 2024 presidential margin relative to the nation, the full generic-ballot shift applies, and candidate ratings come from the same joint fit. Campaign finance uses FEC candidate spending with a $625K visibility threshold (the statewide $2.5M split across four districts).</p>
+  </section>
+
+  <section class="view" id="v-polls" data-view="polls" hidden>
+    <div id="pollCards" class="view"></div>
+    <p class="foot" id="pollFoot"></p>
+  </section>
+
+  <section class="view" id="v-history" data-view="history" hidden>
+    <div class="grid2">
+      <div class="card">
+        <h2 class="ct">Baseline partisanship</h2>
+        <p class="cs">Senate: Kansas 2024 presidential lean vs the nation. Governor: average lean of governor races. Other state offices: average lean of past statewide-office results.</p>
+        <div class="tw"><table class="t" id="leanTable"></table></div>
+      </div>
+      <div class="card">
+        <h2 class="ct">Candidate ratings</h2>
+        <p class="cs">R−D points; negative = ran ahead for Democrats or behind for Republicans. Fit from every 2014–2024 race's miss vs its baseline; older races count less (weight halves every 8 years), and each miss is credited by candidate profile.</p>
+        <div class="tw"><table class="t" id="candTable"></table></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2 class="ct">Candidate profiles: who a race's miss is credited to</h2>
+      <p class="cs">Judgment calls. Each race's miss vs its baseline is split between the two candidates in proportion to their prior variance. High-profile candidates get 1.5× the usual spread and low-profile or underfunded ones 0.5×, so a race against a well-known opponent is read mostly as that opponent's result (a High vs Low race splits about 90 / 10). Everyone else splits evenly.</p>
+      <div class="tw"><table class="t" id="profTable"></table></div>
+    </div>
+    <div class="card">
+      <h2 class="ct">State-office results, 2014–2022</h2>
+      <p class="cs">Lean = margin − generic ballot × elasticity − incumbency bonus. Rows marked "state" are averaged for the AG, SoS, Treasurer and Insurance baseline; rows marked "gov" are the governor races in the Governor baseline. 2010 is left out of the averages and the candidate ratings: its Kansas-specific wave swing would otherwise land on individual candidates.</p>
+      <div class="tw"><table class="t" id="histTable"></table></div>
+    </div>
+    <div class="card">
+      <h2 class="ct">Senate races vs the federal baseline</h2>
+      <p class="cs">Expected = presidential lean vs nation (same year, or prior in a midterm) + generic ballot × elasticity + incumbency. The miss feeds candidate ratings.</p>
+      <div class="tw"><table class="t" id="senTable"></table></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-method" data-view="method" hidden>
+    <div class="card prose" id="methodCard"></div>
+  </section>
+
+  <footer class="site-foot">
+    Model and site by Jackson Martin · <a href="/">More forecasts</a> · <a href="./">Kansas House 2026</a><br>
+    Results: Kansas Secretary of State · Campaign finance: Kansas Public Disclosure Commission (KPDC), FEC, VoteLog and Ballotpedia · Generic ballot: national average + NYT/Siena Kansas poll · Pollster ratings: 538 · Updated Nov 2, 2026
+  </footer>
+</main>
+
+<script type="application/json" id="data">{"version": "0.31", "asof": "2026-11-02", "params": {"ELAST": 1.0, "ELAST_ST": 0.85, "GB_2026": -9.774157909208371, "INC_R": 1.5, "INC_D": -1.5, "SIG_RACE": 4.0, "SIG_OFFICE": {"GOV": 5.0, "SEN": 5.0, "USH": 5.0}, "K": 1.0, "TAU_C": 4.0, "TAU_YEAR": 3.0, "TAU_FED": 5.0, "TAU_ST": 6.0, "TAU_STO": 2.5, "TAU_GOV": 10.0, "TAU_SEN": 5.0, "TAU_DB": 6.0, "TAU_DBO": 3.0, "SIG_GB": 3.0, "LEG_TRANSFER": 0.5, "FIN_MULT": 2.0, "FIN_CAP": 2.0, "FIN_UNC": 1.0, "LEAN_MODE": "generic", "USE_SEBELIUS": false, "USE_HOUSE": false, "PARTISAN_SHIFT": 0.0, "HALF_LIFE_TAU": 24.0, "TRUST_FULL": 3.0, "Q_UNGRADED": 0.5, "Q_FLOOR": 0.25, "Q_SPONSOR": 0.5, "HOUSE_BASE": 1.5, "HOUSE_SLOPE": 6.0, "HOUSE_SPONSOR": 3.0, "POLL_SYS_SHARED": 4.0, "POLL_SYS_RACE": {"SEN": 3.5, "GOV": 3.5, "AG": 4.5, "KS2": 4.5}, "LATE_SHARED": 1.5, "LATE_RACE": 1.0, "POLL_W_OVERRIDE": {}, "OTHER": {"AG": -2.0}, "OUTSIDE_WEIGHT": 1.0, "FIN_EDGE": 3.0, "FIN_DIFF": 0.5, "FIN_INC_SIDE": 0.75, "FIN_VIS": 2500000.0, "GB_UNC": 2.5, "KS_UNC": 3.0, "PART_UNC": 4.0, "CAND_UNC_MULT": 0.6, "POLL_K": 2.0, "USH_VIS_SCALE": 0.25, "USH_INC_R": 2.0, "USH_INC_D": -3.0, "FIT_HALF_LIFE": 8.0, "FIT_SKIP_YEARS": [2010], "PROFILE_MULT": {"H": 1.5, "L": 0.5}, "THIRD_PARTY_W": 1.2, "Q_EXP": 1.5, "PPM_TOP": -0.8, "PPM_SPAN": 3.0, "SELECT_FIRMS": ["NYT/Siena", "Emerson", "CNN/SSRS"], "SELECT_W": 1.5}, "PRES": {"2000": 20.8, "2004": 25.4, "2008": 14.96, "2012": 21.7, "2016": 20.6, "2020": 14.6, "2024": 16.1}, "GB": {"2000": 0.5, "2002": 4.8, "2004": 2.6, "2006": -8.0, "2008": -10.6, "2010": 6.8, "2012": -1.1, "2014": 5.7, "2016": 1.0, "2018": -8.6, "2020": -3.1, "2022": 2.7, "2024": 2.6}, "HIST": [[2010, "GOV", "Sam Brownback", "Tom Holland", 63.28, 32.21, null], [2010, "SEN", "Jerry Moran", "Lisa Johnston", 70.27, 26.23, null], [2010, "SOS", "Kris Kobach", "Chris Biggs", 59.08, 37.2, null], [2010, "AG", "Derek Schmidt", "Steve Six", 55.07, 41.99, null], [2010, "TREAS", "Ron Estes", "Dennis McKinney", 58.53, 41.47, null], [2014, "GOV", "Sam Brownback", "Paul Davis", 49.82, 46.13, "R"], [2014, "SOS", "Kris Kobach", "Jean Schodorf", 59.2, 40.8, "R"], [2014, "AG", "Derek Schmidt", "A.J. Kotich", 66.7, 33.3, "R"], [2014, "TREAS", "Ron Estes", "Carmen Alldritt", 67.5, 32.5, "R"], [2014, "INS", "Ken Selzer", "Dennis Anderson", 61.5, 38.5, null], [2016, "SEN", "Jerry Moran", "Patrick Wiesner", 62.2, 32.3, "R"], [2018, "GOV", "Kris Kobach", "Laura Kelly", 42.98, 48.01, null], [2018, "SOS", "Scott Schwab", "Brian McClendon", 52.6, 43.87, null], [2018, "AG", "Derek Schmidt", "Sarah Swain", 58.98, 41.02, "R"], [2018, "TREAS", "Jake LaTurner", "Marci Francisco", 57.74, 42.26, null], [2018, "INS", "Vicki Schmidt", "Nathaniel McLaughlin", 62.89, 37.11, null], [2020, "SEN", "Roger Marshall", "Barbara Bollier", 53.2, 41.8, null], [2022, "GOV", "Derek Schmidt", "Laura Kelly", 47.3, 49.5, "D"], [2022, "SEN", "Jerry Moran", "Mark Holland", 60.0, 37.0, "R"], [2022, "AG", "Kris Kobach", "Chris Mann", 50.8, 49.2, null], [2022, "SOS", "Scott Schwab", "Jeanna Repass", 58.6, 39.1, "R"], [2022, "TREAS", "Steven Johnson", "Lynn Rogers", 55.4, 42.8, null], [2022, "INS", "Vicki Schmidt", "Kiel Corkran", 62.0, 36.0, "R"]], "HIST_SEBELIUS": [[2002, "GOV", "Tim Shallenburger", "Kathleen Sebelius", 45.1, 52.9, null], [2006, "GOV", "Jim Barnett", "Kathleen Sebelius", 40.4, 57.9, "D"]], "LEG": {"Pat Proctor": -4.43, "Cindy Holscher": -1.86, "Ty Masterson": 0.58, "Dinah Sykes": 0.57, "Daniel Hawkins": 0.5, "Jennifer Day": -0.1, "Steven Johnson": -0.99}, "NAME_MAP": {"Dan Hawkins": "Daniel Hawkins"}, "RACES": [{"key": "SEN", "exp_R": 6245276, "exp_D": 16300681, "office": "U.S. Senate", "R": "Roger Marshall", "D": "Adam Hamilton", "inc": "R", "others": "David C. Graham (L)", "fin_R": 7055082, "fin_D": 19175045, "out_R": 24772169, "out_D": 37898050, "vis": 10000000.0, "fin_note": "FEC thru 10/14: Marshall $6.25M spent + $0.81M COH, Hamilton $16.30M + $2.87M. Outside IEs thru 10/25: pro-Marshall $24.8M, pro-Hamilton $37.9M (VoteLog). Race total $85.2M."}, {"key": "GOV", "exp_R": 1715949.37, "exp_D": 2328537.66, "office": "Governor", "R": "Ty Masterson", "D": "Cindy Holscher", "inc": null, "others": "", "fin_R": 2457613.6500000004, "fin_D": 2400746.49, "out_R": 19191850.92, "out_D": 2755000, "vis": 1000000.0, "fin_note": "KPDC 7/24-10/22: Masterson $1.72M spent + $742K COH, Holscher $2.33M + $72K. Outside: RGA Right Direction $15.17M, AFP ~$3.1M (largest legible items), Kansas Thrive $0.92M vs DGA/Kansas Values Institute $2.76M reserved (press, not a KPDC filing)."}, {"key": "AG", "exp_R": 912569.77, "exp_D": 1531668.17, "office": "Attorney General", "R": "Kris Kobach", "D": "Chris Mann", "inc": "R", "others": "", "fin_R": 914582.36, "fin_D": 1667242.2999999998, "out_R": 1789991.5, "out_D": 0, "vis": 500000.0, "fin_note": "KPDC 7/24-10/22: Kobach $913K spent + $2K COH, Mann $1.53M + $136K. Outside: Safer KS Fund $1.79M pro-Kobach/anti-Mann; no Democratic IE filed."}, {"key": "SOS", "exp_R": 157431.29, "exp_D": 761908.05, "office": "Secretary of State", "R": "Pat Proctor", "D": "Jennifer Day", "inc": null, "others": "Scott Morgan (United Kansas)", "fin_R": 253465.28000000003, "fin_D": 817080.8200000001, "out_R": 0, "out_D": 0, "vis": 500000.0, "fin_note": "KPDC 7/24-10/22: Proctor $157K spent + $96K COH, Day $762K + $55K. No outside IEs found."}, {"key": "TREAS", "exp_R": 55816.13, "exp_D": 27234.4, "office": "State Treasurer", "R": "Steven Johnson", "D": "Juan Luengo", "inc": "R", "others": "Eric Lund", "fin_R": 344158.83, "fin_D": 28853.050000000003, "out_R": 0, "out_D": 0, "vis": 500000.0, "fin_note": "KPDC 7/24-10/22: Johnson $56K spent + $288K COH, Luengo $27K + $2K. No outside IEs found."}, {"key": "INS", "exp_R": 591480.72, "exp_D": 501199.25, "office": "Insurance Commissioner", "R": "Dan Hawkins", "D": "Dinah Sykes", "inc": null, "others": "Ric Koehn (L)", "fin_R": 708780.01, "fin_D": 562753.0, "out_R": 0, "out_D": 0, "vis": 500000.0, "fin_note": "KPDC 7/24-10/22: Hawkins $591K spent + $117K COH, Sykes $501K + $62K. No outside IEs found."}], "PRATING": {"NYT/Siena": ["3.0\u2605", 3.0, null], "YouGov": ["3.0\u2605", 3.0, null], "Emerson": ["2.9\u2605", 2.9, null], "CNN/SSRS": ["2.8\u2605", 2.8, null], "GQR": ["2.0\u2605", 2.0, null], "InsiderAdvantage": ["2.0\u2605", 2.0, null], "GSG": ["1.8\u2605", 1.8, null], "PPP": ["1.4\u2605", 1.4, null], "GBAO": ["1.2\u2605", 1.2, null], "DCCC Analytics": ["1.1\u2605", 1.1, null], "co/efficient": ["1.1\u2605", 1.1, null], "Trafalgar": ["0.7\u2605", 0.7, null], "Pulse Decision Science": ["n/a", null, null], "Tavern": ["n/a", null, null], "RedBox": ["n/a", null, null], "Unknown": ["n/a", null, null], "WaPo/GMU": ["2.7\u2605", 2.7, null], "AtlasIntel": ["2.7\u2605", 2.7, null], "Survey 160": ["n/a", null, null]}, "POLLS": [["SEN", "CNN/SSRS", "CNN/SSRS", "2026-10-20", "2026-10-26", 838, 45, 49, null, false, false, "Online + phone, voter-file sample; Graham share not in published coverage", null, false], ["SEN", "InsiderAdvantage", "InsiderAdvantage", "2026-10-13", "2026-10-14", 1200, 48, 47, null, false, false, "", null, false], ["SEN", "InsiderAdvantage", "InsiderAdvantage", "2026-10-09", "2026-10-10", 1200, 47, 48, null, false, false, "", null, false], ["SEN", "GBAO (D)", "GBAO", "2026-09-30", "2026-10-04", 600, 41, 46, "D", false, false, "Full ballot with Graham 7 (head-to-head 44\u201349)", null, true], ["SEN", "Trafalgar", "Trafalgar", "2026-09-29", "2026-10-01", 1095, 43.5, 44.4, null, false, false, "", null, false], ["SEN", "YouGov", "YouGov", "2026-09-24", "2026-10-04", 2255, 45, 48, null, false, false, "", null, false], ["SEN", "NYT/Siena", "NYT/Siena", "2026-09-22", "2026-09-30", 605, 45, 45, null, false, false, "Full ballot with Graham 5 (head-to-head 47\u201346)", null, true], ["SEN", "Emerson", "Emerson", "2026-09-15", "2026-09-16", 750, 43.3, 44.8, null, false, false, "Full ballot: Graham 4", null, true], ["SEN", "GSG (D)", "GSG", "2026-09-13", "2026-09-16", 800, 43, 47, "D", false, false, "Full ballot with Graham 5 (head-to-head 47\u201349)", null, true], ["SEN", "co/efficient", "co/efficient", "2026-09-08", "2026-09-10", 915, 49, 44, null, false, false, "", null, false], ["SEN", "GSG (D)", "GSG", "2026-08-12", "2026-08-16", 800, 43, 44, "D", false, false, "", null, false], ["SEN", "PPP (D)", "PPP", "2026-08-07", "2026-08-08", 569, 46, 45, "D", false, false, "", null, false], ["SEN", "GBAO (D)", "GBAO", "2026-07-08", "2026-07-13", 600, 47, 43, "D", false, false, "", null, false], ["SEN", "GQR (D)", "GQR", "2026-04-23", "2026-04-27", 500, 49, 45, "D", false, false, "", null, false], ["SEN", "Tavern Research (D)", "Tavern", "2026-01-26", "2026-01-28", 1013, 54, 46, "D", false, false, "", null, false], ["GOV", "CNN/SSRS", "CNN/SSRS", "2026-10-20", "2026-10-26", 838, 50, 45, null, false, false, "", null, false], ["GOV", "GSG (D) for Holscher", "GSG", "2026-10-18", "2026-10-21", 600, 47, 47, "D", false, false, "Released by the Holscher campaign Oct 23", null, false], ["GOV", "YouGov", "YouGov", "2026-09-24", "2026-10-04", 2255, 47, 44, null, false, false, "n from the same survey's Senate release", null, false], ["GOV", "GSG (D) for DAGA", "GSG", "2026-09-13", "2026-09-16", 800, 46, 49, "D", false, false, "Governor question in the DAGA AG poll; same 49\u201346 the DGA posted Oct 2", null, false], ["GOV", "NYT/Siena", "NYT/Siena", "2026-09-22", "2026-09-30", 605, 49, 44, null, false, false, "", null, false], ["GOV", "Emerson", "Emerson", "2026-09-15", "2026-09-16", 750, 50.8, 43.5, null, false, false, "", null, false], ["GOV", "co/efficient", "co/efficient", "2026-09-08", "2026-09-10", 915, 51, 43, null, false, false, "", null, false], ["GOV", "GSG (D) for Holscher/DGA", "GSG", "2026-08-13", "2026-08-16", 600, 46, 47, "D", false, false, "", null, false], ["AG", "GSG (D) for DAGA", "GSG", "2026-09-13", "2026-09-16", 800, 46, 47, "D", false, false, "", null, false], ["AG", "Pulse Decision Sci. (R)", "Pulse Decision Science", "2026-01-12", "2026-01-14", 503, 47, 37, "R", false, false, "", null, false], ["KS2", "DCCC Analytics (D)", "DCCC Analytics", "2026-10-19", "2026-10-20", 639, 49, 46, "D", false, false, "Democratic House campaign committee; 6% undecided", null, false], ["SEN", "Emerson", "Emerson", "2026-10-26", "2026-10-28", 800, 47, 50, null, false, false, "Full ballot: Graham 3", null, true], ["GOV", "Emerson", "Emerson", "2026-10-26", "2026-10-28", 800, 53, 48, null, false, false, "", null, false], ["SEN", "WaPo/GMU Schar", "WaPo/GMU", "2026-10-22", "2026-10-26", 801, 43, 52, null, false, false, "Full ballot: Graham 4 (head-to-head 54\u201344)", null, true], ["GOV", "WaPo/GMU Schar", "WaPo/GMU", "2026-10-22", "2026-10-26", 801, 45, 51, null, false, false, "", null, false], ["SEN", "NYT/Siena", "NYT/Siena", "2026-10-27", "2026-11-01", 736, 44, 49, null, false, false, "", null, false], ["SEN", "YouGov", "YouGov", "2026-10-26", "2026-10-29", 2092, 49, 50, null, false, false, "", null, false], ["GOV", "NYT/Siena", "NYT/Siena", "2026-10-27", "2026-11-01", 736, 47, 48, null, false, false, "", null, false], ["GOV", "YouGov", "YouGov", "2026-10-26", "2026-10-29", 2092, 50, 49, null, false, false, "", null, false], ["SEN", "AtlasIntel", "AtlasIntel", "2026-10-28", "2026-11-01", 2038, 45, 52, null, false, false, "", null, false], ["GOV", "AtlasIntel", "AtlasIntel", "2026-10-28", "2026-11-01", 2038, 46, 50, null, false, false, "", null, false], ["SEN", "Survey 160", "Survey 160", "2026-10-27", "2026-11-01", 1267, 44, 50, null, false, false, "Likely-voter version (RV: Hamilton 50, Marshall 43)", null, false], ["GOV", "Survey 160", "Survey 160", "2026-10-27", "2026-11-01", 1267, 48, 49, null, false, false, "Likely-voter version (RV: Holscher 49, Masterson 47)", null, false]], "EXCLUDED": [["SEN", "RedBox Research (D)", "RedBox", "2026-10-20", "2026-10-23", 1301, 46, 45, "D", false, false, "For A Fight Worth Having (D-aligned); Graham 3", null, true], ["GOV", "RedBox Research (D)", "RedBox", "2026-10-20", "2026-10-23", 1301, null, null, "D", false, false, "Vote shares not published; DDHQ lists Masterson +2.4", 2.4, false]], "USPRES": {"2000": -0.51, "2004": 2.46, "2008": -7.28, "2012": -3.86, "2016": -2.09, "2020": -4.46, "2024": 1.5}, "SEN_BASE_SD": 2.0, "CAND_FIXED": {"Roger Marshall": [-3.2, "full 2020 shortfall vs Trump: Senate R+11.4 vs president R+14.6"], "Steven Johnson": [0.0, "set to 0: his 2022 shortfall reflects an appointed Democratic incumbent who campaigned"]}, "GOV_BLEND": 0.5, "USH_PRES": {"KS1": {"2020": 29.6, "2024": 31.2}, "KS2": {"2020": 16.3, "2024": 19.7}, "KS3": {"2020": -4.5, "2024": -4.1}, "KS4": {"2020": 21.7, "2024": 23.3}}, "USH_HIST": [[2022, "KS1", "Tracey Mann", "Jimmy Beard", 67.7, 32.3, "R"], [2022, "KS2", "Jake LaTurner", "Patrick Schmidt", 57.6, 42.4, "R"], [2022, "KS3", "Amanda Adkins", "Sharice Davids", 42.8, 54.9, "D"], [2022, "KS4", "Ron Estes", "Bob Hernandez", 63.3, 36.7, "R"], [2024, "KS1", "Tracey Mann", "Paul Buskirk", 69.14, 30.86, "R"], [2024, "KS2", "Derek Schmidt", "Nancy Boyda", 57.09, 38.21, null], [2024, "KS3", "Prasanth Reddy", "Sharice Davids", 42.6, 53.36, "D"], [2024, "KS4", "Ron Estes", "Esau Freeman", 65.05, 34.95, "R"]], "USH_RACES": [{"key": "KS1", "dist": "KS1", "office": "1st District", "name": "Kansas's 1st District", "R": "Tracey Mann", "D": "Lauren Reinhold", "inc": "R", "others": "Steven Jacob (L)", "exp_R": 607835, "exp_D": 43478, "out_R": 0, "out_D": 0, "vis_scale": 0.25, "fin_note": "FEC (Ballotpedia): Mann $608K spent through 9/30 (+$2.90M cash on hand); Reinhold $43K through 7/15. No outside spending reported."}, {"key": "KS2", "dist": "KS2", "office": "2nd District", "name": "Kansas's 2nd District", "R": "Derek Schmidt", "D": "Don Coover", "inc": "R", "others": "John Hauer (L)", "exp_R": 1353904, "exp_D": 1131518, "out_R": 0, "out_D": 0, "vis_scale": 0.25, "fin_note": "FEC through 10/14 (Ballotpedia): Schmidt $1.35M spent (+$458K COH), Coover $1.13M (+$232K). No outside spending reported."}, {"key": "KS3", "dist": "KS3", "office": "3rd District", "name": "Kansas's 3rd District", "R": "Eric Jenkins", "D": "Sharice Davids", "inc": "D", "others": "Steve Hohe (L)", "exp_R": 32794, "exp_D": 3199989, "out_R": 0, "out_D": 0, "vis_scale": 0.25, "fin_note": "FEC through 10/14 (Ballotpedia): Davids $3.20M spent (+$1.86M COH), Jenkins $33K (+$19K). No outside spending reported."}, {"key": "KS4", "dist": "KS4", "office": "4th District", "name": "Kansas's 4th District", "R": "Ron Estes", "D": "Katy Tyndell", "inc": "R", "others": "Drew Cranmer (L)", "exp_R": 2076693, "exp_D": 487163, "out_R": 0, "out_D": 0, "vis_scale": 0.25, "fin_note": "FEC through 10/14 (Ballotpedia): Estes $2.08M spent (+$1.33M COH), Tyndell $487K (+$146K). No outside spending reported."}], "PROFILE": {"Jerry Moran": ["H", "Three-term senator who consistently runs ahead of his party"], "Sam Brownback": ["H", "Sitting U.S. senator in 2010 and a deeply unpopular governor by 2014: the driver of both races"], "Kris Kobach": ["H", "Nationally known and polarizing; his statewide races turn on him"], "Laura Kelly": ["H", "Two-term governor who won twice in an R+15 state"], "Vicki Schmidt": ["H", "Popular moderate insurance commissioner with crossover support"], "Sharice Davids": ["H", "Four-term incumbent and the best-funded candidate in Kansas House races"], "Mark Holland": ["L", "Underfunded 2022 nominee against a popular senator"], "Patrick Wiesner": ["L", "Little-known 2016 nominee"], "A.J. Kotich": ["L", "Little-known 2014 nominee"], "Carmen Alldritt": ["L", "Little-known 2014 nominee"], "Dennis Anderson": ["L", "Little-known 2014 nominee"], "Sarah Swain": ["L", "Little-known 2018 nominee"], "Nathaniel McLaughlin": ["L", "Little-known 2018 nominee"], "Kiel Corkran": ["L", "Little-known 2022 nominee"], "Jeanna Repass": ["L", "Little-known 2022 nominee"], "Chris Mann": ["L", "First-time candidate in 2022; his near-win mostly reflects Kobach's unpopularity"], "Jimmy Beard": ["L", "Underfunded House nominee"], "Paul Buskirk": ["L", "Underfunded House nominee"], "Bob Hernandez": ["L", "Underfunded House nominee"], "Esau Freeman": ["L", "Underfunded House nominee"], "Prasanth Reddy": ["L", "Underfunded House nominee against a well-funded incumbent"]}}</script>
+<script>
+(() => {
+'use strict';
+const D = JSON.parse(document.getElementById('data').textContent);
+const P = D.params;
+const OFFICES = D.RACES.map(r => r.key);
+const TODAY = Date.UTC(2026, 10, 2);
+const TIERS = ['SAFE R', 'VERY LIKELY R', 'LIKELY R', 'LEAN R', 'TILT R', 'TOSSUP', 'TILT D', 'LEAN D', 'LIKELY D', 'VERY LIKELY D', 'SAFE D'];
+const TIER_P = [[0, .025], [.025, .10], [.10, .25], [.25, .40], [.40, .45], [.45, .55], [.55, .60], [.60, .75], [.75, .90], [.90, .975], [.975, 1]];
+
+// ---------- settings
+const pollId = p => `${p[0]}|${p[1]}|${p[3]}`;
+function defaults() {
+  const pw = {};
+  for (const k of ['SEN', 'GOV', 'AG', 'KS2']) pw[k] = P.POLL_W_OVERRIDE[k] != null ? { mode: 'manual', v: P.POLL_W_OVERRIDE[k] } : { mode: 'auto', v: 0.5 };
+  const other = {}; for (const k of OFFICES) other[k] = P.OTHER[k] || 0;
+  const incl = {}; for (const p of D.POLLS) incl[pollId(p)] = true; for (const p of D.EXCLUDED) incl[pollId(p)] = false;
+  return { gb: -P.GB_2026, elast: P.ELAST, split: P.ELAST_ST != null, elastSt: P.ELAST_ST != null ? P.ELAST_ST : 0.5,
+    avgYears: { 2002: true, 2006: true, 2010: false, 2014: true, 2018: true, 2022: true }, avgOffices: { GOV: true, AG: true, SOS: true, TREAS: true, INS: true }, govYears: { 2002: true, 2006: true, 2010: false, 2014: true, 2018: true, 2022: true }, sigGov: P.SIG_OFFICE.GOV, govBlend: D.GOV_BLEND, seb: P.USE_SEBELIUS, transfer: P.LEG_TRANSFER, incR: P.INC_R, incD: -P.INC_D,
+    useHouse: P.USE_HOUSE, shift: P.PARTISAN_SHIFT, recency: P.HALF_LIFE_TAU, fin: P.FIN_EDGE, finVis: P.FIN_VIS, outW: P.OUTSIDE_WEIGHT, pollK: P.POLL_K, k: P.K, qSpon: P.Q_SPONSOR, fixMarshall: true, fixJohnson: true, pw, other, incl,
+    fitHL: P.FIT_HALF_LIFE, profH: P.PROFILE_MULT.H, profL: P.PROFILE_MULT.L, fit2010: false, thirdW: P.THIRD_PARTY_W, qExp: P.Q_EXP, selectW: P.SELECT_W };
+}
+const DEF = defaults();
+const S = defaults();
+function diffs() {
+  const out = {};
+  for (const k of Object.keys(DEF)) {
+    if (['pw', 'other', 'incl', 'avgYears', 'avgOffices', 'govYears'].includes(k)) {
+      for (const j of Object.keys(DEF[k])) if (JSON.stringify(S[k][j]) !== JSON.stringify(DEF[k][j])) out[`${k}.${j}`] = S[k][j];
+    } else if (JSON.stringify(S[k]) !== JSON.stringify(DEF[k])) out[k] = S[k];
+  }
+  if (!S.split) delete out.elastSt;
+  return out;
+}
+
+// ---------- math helpers
+function normCdf(x) { const t = 1 / (1 + 0.3275911 * Math.abs(x) / Math.SQRT2); const erf = 1 - (((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t) * Math.exp(-x * x / 2); return x >= 0 ? 0.5 * (1 + erf) : 0.5 * (1 - erf); }
+function invert(A) {
+  const n = A.length, M = A.map((row, i) => { const r = row.slice(); for (let j = 0; j < n; j++) r.push(i === j ? 1 : 0); return r; });
+  for (let c = 0; c < n; c++) {
+    let piv = c; for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[piv][c])) piv = r;
+    [M[c], M[piv]] = [M[piv], M[c]];
+    const d = M[c][c]; for (let j = 0; j < 2 * n; j++) M[c][j] /= d;
+    for (let r = 0; r < n; r++) if (r !== c) { const f = M[r][c]; if (f) for (let j = 0; j < 2 * n; j++) M[r][j] -= f * M[c][j]; }
+  }
+  return M.map(r => r.slice(n));
+}
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+
+// ---------- model
+const isFed = off => off === 'SEN' || off === 'USH' || (D.USH_PRES && D.USH_PRES[off] != null);   // v0.17: House districts are federal races
+function eFor(off) { return (isFed(off) || !S.split) ? S.elast : S.elastSt; }
+const sig = off => off === 'GOV' ? +S.sigGov : (P.SIG_OFFICE[off] != null ? P.SIG_OFFICE[off] : P.SIG_RACE);
+const incOf = inc => inc === 'R' ? S.incR : inc === 'D' ? -S.incD : 0;   // statewide (v0.18: 1.5 / 1.5)
+const incOfH = inc => inc === 'R' ? P.USH_INC_R : inc === 'D' ? P.USH_INC_D : 0;   // U.S. House keeps the House-model bonuses
+const profOf = c => D.PROFILE[c] ? D.PROFILE[c][0] : '';
+const profMult = c => profOf(c) === 'H' ? +S.profH : profOf(c) === 'L' ? +S.profL : 1;
+const legPrior = nm => S.transfer * (D.LEG[nm] != null ? D.LEG[nm] : 0);
+const tauC = () => P.SIG_RACE / Math.sqrt(S.k);   // candidate-rating prior SD from the Kalman k
+const fixedOf = nm => (D.CAND_FIXED[nm] && (nm === 'Roger Marshall' ? S.fixMarshall : nm === 'Steven Johnson' ? S.fixJohnson : true)) ? D.CAND_FIXED[nm] : null;
+const OFF_NAME = { GOV: 'Governor', AG: 'Attorney General', SOS: 'Secretary of State', TREAS: 'Treasurer', INS: 'Insurance', SEN: 'U.S. Senate' };
+const STATE_OFFICES = ['GOV', 'AG', 'SOS', 'TREAS', 'INS'];
+function histRows() { return D.HIST.concat(S.seb ? D.HIST_SEBELIUS : []); }
+// Federal baseline: Kansas presidential margin minus the national presidential margin (same year, or the prior one in a midterm)
+function senLean(yr) { const p = yr % 4 === 0 ? yr : yr - 2; return D.PRES[p] - D.USPRES[p]; }
+// v0.17: district federal baseline, current lines: district presidential margin minus the national margin
+function ushLean(dist, yr) { const p = yr % 4 === 0 ? yr : yr - 2; return D.USH_PRES[dist][p] - D.USPRES[p]; }
+// State-office baseline: simple average of past statewide-office leans; lean = margin − elasticity × that year's generic ballot − incumbency bonus
+function stateLeans() {
+  const rows = histRows().filter(h => h[1] !== 'SEN').map(([yr, off, r, d, rs, ds, inc]) => {
+    const e = eFor(off), ib = incOf(inc), gbs = e * D.GB[yr];
+    return { yr, off, r, d, inc, margin: rs - ds, e, gbs, ib, lean: rs - ds - gbs - ib, used: S.avgYears[yr] !== false && S.avgOffices[off] !== false };
+  });
+  const u = rows.filter(x => x.used).map(x => x.lean), n = u.length;
+  const avg = n ? u.reduce((t, x) => t + x, 0) / n : 0;
+  const sd = n > 1 ? Math.sqrt(u.reduce((t, x) => t + (x - avg) ** 2, 0) / (n - 1)) : 0;
+  // v0.6: Governor gets its own baseline, the average of governor races only (same cycle ticks)
+  const g = rows.filter(x => x.off === 'GOV' && S.govYears[x.yr] !== false).map(x => x.lean), gn = g.length;
+  const gavg = gn ? g.reduce((t, x) => t + x, 0) / gn : 0;
+  const gsd = gn > 1 ? Math.sqrt(g.reduce((t, x) => t + (x - gavg) ** 2, 0) / (gn - 1)) : 0;
+  // v0.12: Governor baseline = blend of governor races and the other state offices (both relative to that year's generic ballot)
+  const o = rows.filter(x => x.off !== 'GOV' && x.used).map(x => x.lean), on = o.length;
+  const oavg = on ? o.reduce((t, x) => t + x, 0) / on : 0;
+  const osd = on > 1 ? Math.sqrt(o.reduce((t, x) => t + (x - oavg) ** 2, 0) / (on - 1)) : 0;
+  const b = +S.govBlend, gse = gn ? gsd / Math.sqrt(gn) : 0, ose = on ? osd / Math.sqrt(on) : 0;
+  const gov = { avg: b * gavg + (1 - b) * oavg, se: Math.sqrt((b * gse) ** 2 + ((1 - b) * ose) ** 2), races: gavg, racesSd: gsd, racesSe: gse, n: gn, other: oavg, otherSe: ose, otherN: on, blend: b };
+  return { rows, avg, sd, se: n ? sd / Math.sqrt(n) : 0, n, gov };
+}
+// Candidate quality: every 2010–22 statewide race's miss vs its baseline, shared by its two candidates (House Kalman logic, k = 1.5, solved jointly)
+function fit() {
+  const SL = stateLeans();
+  const rows = histRows().filter(h => S.fit2010 || !P.FIT_SKIP_YEARS.includes(h[0])).map(([yr, off, r, d, rs, ds, inc]) => {   // v0.18: 2010 out of the fit
+    const base = off === 'SEN' ? senLean(yr) : off === 'GOV' ? SL.gov.avg : SL.avg, gbs = eFor(off) * D.GB[yr], ib = incOf(inc), exp = base + gbs + ib;
+    return { yr, off, r, d, inc, margin: rs - ds, base, gbs, ib, exp, y: rs - ds - exp };
+  }).concat(D.USH_HIST.map(([yr, dist, r, d, rs, ds, inc]) => {   // v0.17: House races vs the district's federal baseline
+    const base = ushLean(dist, yr), gbs = eFor('USH') * D.GB[yr], ib = incOfH(inc), exp = base + gbs + ib;
+    return { yr, off: 'USH', dist, r, d, inc, margin: rs - ds, base, gbs, ib, exp, y: rs - ds - exp };
+  }));
+  const cands = [...new Set(rows.flatMap(x => [x.r, x.d]))].sort();
+  const idx = {}; cands.forEach((c, i) => idx[c] = i);
+  const n = cands.length, A = Array.from({ length: n }, () => new Array(n).fill(0)), b = new Array(n).fill(0);
+  for (const x of rows) x.rw = 0.5 ** ((2026 - x.yr) / S.fitHL);   // v0.18: recency weight
+  for (const x of rows) { const w = x.rw / sig(x.off) ** 2, t = [idx[x.r], idx[x.d]]; for (const i of t) { b[i] += w * x.y; for (const j of t) A[i][j] += w; } }
+  const pm = cands.map(c => fixedOf(c) ? fixedOf(c)[0] : legPrior(c));
+  const ps = cands.map(c => fixedOf(c) ? 0.25 : tauC() * profMult(c));   // fixed ratings held tight; v0.18: profile sets who a miss is credited to
+  for (let i = 0; i < n; i++) { A[i][i] += 1 / ps[i] ** 2; b[i] += pm[i] / ps[i] ** 2; }
+  const inv = invert(A), mean = inv.map(row => row.reduce((t, v, j) => t + v * b[j], 0));
+  return { SL, rows, cands, idx, inv, mean, pm };
+}
+function quad(F, ids) { let t = 0; for (const i of ids) for (const j of ids) t += F.inv[i][j]; return t; }
+
+// House-model finance (2026 HOUSE col J): edge × (wR·min(R$/vis,1) − wD·min(D$/vis,1)) + diff × sign × min(max(|ln(max(R$,vis)/max(D$,vis))| − ln 2, 0) / ln 4, 1)
+function houseFinance(race) {
+  const R = race.exp_R + S.outW * race.out_R, Dd = race.exp_D + S.outW * race.out_D, vis = +S.finVis * (race.vis_scale || 1);
+  const wR = race.inc === 'R' ? P.FIN_INC_SIDE : 1, wD = race.inc === 'D' ? P.FIN_INC_SIDE : 1;
+  const edge = S.fin * (wR * Math.min(R / vis, 1) - wD * Math.min(Dd / vis, 1));
+  const diff = P.FIN_DIFF * Math.sign(R - Dd) * Math.min(Math.max(Math.abs(Math.log(Math.max(R, vis) / Math.max(Dd, vis))) - Math.log(2), 0) / Math.log(4), 1);
+  return { R, Dd, wR, wD, edge, diff, fin: edge + diff, unc: Dd > 0 ? 1.0 : 1.5 };
+}
+function fundamentals(F, race) {
+  const k = race.key, e = eFor(k), gb24 = D.GB[2024];
+  const lean = k === 'SEN' ? senLean(2024) : race.dist ? ushLean(race.dist, 2024) : k === 'GOV' ? F.SL.gov.avg : F.SL.avg;
+  const baseSe = isFed(k) ? 0 : k === 'GOV' ? F.SL.gov.se : F.SL.se;
+  const base = lean - (1 - e) * gb24;                 // House split: baseline vs the 2024 environment ...
+  const gbs = gb24 + e * (-S.gb - gb24);              // ... + 2024 GB + elasticity × change (House col S)
+  const cand = {};
+  for (const side of ['R', 'D']) {
+    const nm = D.NAME_MAP[race[side]] || race[side];
+    if (F.idx[nm] != null) cand[side] = { v: F.mean[F.idx[nm]], src: fixedOf(nm) ? 'fixed: ' + fixedOf(nm)[1] : 'fit from past races' };
+    else cand[side] = { v: legPrior(nm), src: D.LEG[nm] != null ? `legislative ${D.LEG[nm].toFixed(2)} × ${Math.round(S.transfer * 100)}%` : 'no record' };
+  }
+  const candSum = cand.R.v + cand.D.v;
+  const inc = race.dist ? incOfH(race.inc) : incOf(race.inc);
+  const hf = houseFinance(race), fin = hf.fin;
+  const other = S.other[k] || 0;
+  const Fm = base + gbs + inc + candSum + fin;   // v0.27: manual adjustment added after the blend (run)
+  const sharedVar = P.GB_UNC ** 2 + P.KS_UNC ** 2;
+  const comps = { fin: hf.unc ** 2, cand: (P.CAND_UNC_MULT * candSum) ** 2, gb: P.GB_UNC ** 2, ks: P.KS_UNC ** 2, part: P.PART_UNC ** 2, base: baseSe ** 2 };
+  const v = comps.fin + comps.cand + comps.gb + comps.ks + comps.part + comps.base;
+  return { k, e, lean, base, baseSe, gbs, inc, cand, candSum, fin, hf, other, F: Fm, v, comps, sharedVar };
+}
+
+function pollAvg(k) {
+  const all = D.POLLS.map(p => ({ p, ex: false })).concat(D.EXCLUDED.map(p => ({ p, ex: true }))).filter(x => x.p[0] === k);
+  if (!all.length) return null;
+  const list = all.map(({ p, ex }) => {
+    const [race, label, firm, s, e, n, R, Dm, spon] = p;
+    const id = pollId(p); const [grade, trust, lean] = D.PRATING[firm] || ['n/a', null, null];
+    const sd = Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10)), ed = Date.UTC(+e.slice(0, 4), +e.slice(5, 7) - 1, +e.slice(8, 10));
+    const span = Math.round((ed - sd) / 864e5), mid = sd + Math.floor(span / 2) * 864e5;
+    const age = (TODAY - mid) / 864e5;
+    const raw = R != null ? R - Dm : p[12];
+    let adj = 0, why = '';
+    // v0.23: off by default (polls go in as reported); the toggle still removes Crosstab's measured lean
+    if (S.useHouse && lean != null && lean !== 0) { adj = -lean; why = 'house lean'; }
+    if (spon && +S.shift) { adj += spon === 'D' ? +S.shift : -S.shift; why = (why ? why + ' + ' : '') + `${spon} sponsor`; }
+    // v0.24: quality = 538 numeric grade (stars) ÷ 3
+    const qr = trust == null ? P.Q_UNGRADED : clamp(trust / P.TRUST_FULL, P.Q_FLOOR, 1);
+    const q = qr ** S.qExp * (spon ? S.qSpon : 1);   // v0.19: rating counts more
+    const tp = p[13] ? +S.thirdW : 1;   // v0.18: full-ballot Senate polls (Graham named) count a little more
+    const sel = P.SELECT_FIRMS.includes(firm) ? +S.selectW : 1;   // v0.24: select pollsters (NYT/Siena, Emerson, CNN)
+    const w = Math.sqrt(n / 600) * Math.exp(-age / S.recency) * q * tp * sel;
+    const house = P.HOUSE_BASE + P.HOUSE_SLOPE * (1 - qr) + (spon ? P.HOUSE_SPONSOR : 0);
+    const v = (100 / Math.sqrt(n)) ** 2 + house ** 2;
+    return { id, label, firm, grade, trust, lean, spon, s, e, n, R, D: Dm, raw, adj, why, val: raw + adj, age, qr, q, w, house, v,
+      tp, sel, nAssumed: p[9], dAssumed: p[10], note: p[11], excludedByDefault: ex, on: S.incl[id] !== false };
+  });
+  const used = list.filter(x => x.on);
+  const W = used.reduce((s, x) => s + x.w, 0);
+  for (const x of list) x.share = x.on && W > 0 ? x.w / W : 0;
+  if (!used.length || W <= 0) return { list, none: true };
+  const mean = used.reduce((s, x) => s + x.share * x.val, 0);
+  const vSamp = used.reduce((s, x) => s + x.share ** 2 * x.v, 0);
+  const sysRace = P.POLL_SYS_RACE[k];
+  const v = vSamp + P.POLL_SYS_SHARED ** 2 + sysRace ** 2 + P.LATE_SHARED ** 2 + P.LATE_RACE ** 2;
+  const nEff = W ** 2 / used.reduce((s, x) => s + x.w ** 2, 0);
+  return { list, mean, vSamp, v, sysRace, nEff, nUsed: used.length };
+}
+
+function rating(p) {   // House sheet thresholds (2026 HOUSE col B)
+  if (p < 0.025) return 'SAFE R';
+  for (const [c, l] of [[0.10, 'VERY LIKELY R'], [0.25, 'LIKELY R'], [0.40, 'LEAN R'], [0.45, 'TILT R'], [0.55, 'TOSSUP'], [0.60, 'TILT D'], [0.75, 'LEAN D'], [0.90, 'LIKELY D'], [0.975, 'VERY LIKELY D']]) if (p <= c) return l;
+  return 'SAFE D';
+}
+
+function run() {
+  const F = fit();
+  const mk = race => {
+    const f = fundamentals(F, race);
+    const pa = pollAvg(race.key);
+    let wCalc = 0, w = 0, m = f.F, v = f.v, manual = false, o_wVar = 0;
+    if (pa && !pa.none) {
+      wCalc = pa.nEff / (pa.nEff + +S.pollK);   // v0.14: count-based
+      o_wVar = f.v / (f.v + pa.v);
+      const o = S.pw[race.key];
+      manual = !!(o && o.mode === 'manual');
+      w = manual ? o.v : wCalc;
+      m = w * pa.mean + (1 - w) * f.F;
+      v = w ** 2 * pa.v + (1 - w) ** 2 * f.v;
+    }
+    m += f.other;   // v0.27: manual adjustment moves the final margin in full
+    const sd = Math.sqrt(v), p = 1 - normCdf(m / sd);
+    return { race, f, pa, wCalc, wVar: o_wVar, w, manual, m, sd, p, rating: rating(p) };
+  };
+  return { F, races: D.RACES.map(mk), house: D.USH_RACES.map(mk) };
+}
+const allRaces = R => R.races.concat(R.house);
+
+// ---------- formatting
+const fm = (v, dec = 1) => Math.abs(v) < 0.05 ? 'EVEN' : (v > 0 ? 'R+' : 'D+') + Math.abs(v).toFixed(dec);
+const fs = (v, dec = 1) => Math.abs(v) < 0.05 ? '0.0' : (v > 0 ? 'R+' : 'D+') + Math.abs(v).toFixed(dec);
+const pct = p => { const v = p * 100; return v < 1 ? '<1%' : v > 99 ? '>99%' : v.toFixed(0) + '%'; };
+const last = n => n.split(' ').slice(-1)[0];
+const money = x => x >= 1e6 ? '$' + (x / 1e6).toFixed(2) + 'M' : x > 0 ? '$' + Math.round(x / 1e3) + 'K' : '$0';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const CMAP_D = ['#ffffff', '#bcbdee', '#6870dc', '#0d3eca', '#031c69'], CMAP_R = ['#ffffff', '#f1b6b3', '#e7786e', '#dc4f3f', '#73241c'];
+const h2r = h => { const c = parseInt(h.slice(1), 16); return [(c >> 16) & 255, (c >> 8) & 255, c & 255]; };
+function interp(cm, t) { t = clamp(t, 0, 1); const n = cm.length - 1, x = t * n, i = Math.floor(x), f = x - i; if (i >= n) return cm[n]; const a = h2r(cm[i]), b = h2r(cm[i + 1]); return '#' + a.map((v, k) => Math.round(v + (b[k] - v) * f).toString(16).padStart(2, '0')).join(''); }
+function chipColor(p) { if (p > 0.45 && p <= 0.55) return '#ffe89a'; const t = 0.1 + 0.85 * Math.pow(Math.abs(p - 0.5) * 2, 1.5); return interp(p >= 0.5 ? CMAP_D : CMAP_R, t); }
+function inkOn(hex) { const [r, g, b] = h2r(hex); return 0.2126 * r + 0.7152 * g + 0.0722 * b < 140 ? '#ffffff' : '#0f172a'; }
+const titleCase = r => r.replace('VERY LIKELY', 'V. LIKELY');
+function chip(o) { const c = chipColor(o.p); return `<span class="chip" style="background:${c};color:${inkOn(c)}">${titleCase(o.rating)}</span>`; }
+
+// ---------- render: overview
+function rowHtml(o) {
+  const r = o.race, dw = o.p * 100;
+  const dl = dw >= 24 ? `${last(r.D)} ${pct(o.p)}` : dw >= 7 ? pct(o.p) : '';
+  const rl = 100 - dw >= 24 ? `${last(r.R)} ${pct(1 - o.p)}` : 100 - dw >= 7 ? pct(1 - o.p) : '';
+  const pwTxt = o.pa && !o.pa.none ? `Poll weight <b>${Math.round(o.w * 100)}%</b>` : 'No public polls · fundamentals only';
+  return `<div class="rrow">
+      <div><div class="off">${r.office}</div><div class="cands">${esc(r.R)}<span class="tag r">R</span>${r.inc === 'R' ? ' (inc.)' : ''}<br>${esc(r.D)}<span class="tag d">D</span>${r.inc === 'D' ? ' (inc.)' : ''}</div></div>
+      <div>
+        <div class="pbar" role="img" aria-label="${r.D} ${pct(o.p)}, ${r.R} ${pct(1 - o.p)}"><div class="d" style="width:${dw}%">${dl}</div><div class="r" style="width:${100 - dw}%">${rl}</div><span class="mid"></span></div>
+        <div class="meta"><span>Predicted <b class="num">${fm(o.m)}</b> <span class="num">±${o.sd.toFixed(1)}</span></span><span>${pwTxt}</span></div>
+      </div>
+      <div class="chips">${chip(o)}</div></div>`;
+}
+function renderOverview(R) {
+  document.getElementById('raceRows').innerHTML = R.races.map(rowHtml).join('');
+  document.getElementById('houseRows').innerHTML = R.house.map(rowHtml).join('');
+}
+
+// ---------- render: race cards
+let uid = 0, R_ = null;
+function rangeSvg(m, sd) {
+  const w = 340, id = ++uid;
+  const lo67 = m - 0.974 * sd, hi67 = m + 0.974 * sd, lo95 = m - 1.96 * sd, hi95 = m + 1.96 * sd;
+  const ext = Math.max(Math.abs(lo95), Math.abs(hi95), 16), dmin = -ext - 2, dmax = ext + 2;
+  const X = v => (v - dmin) / (dmax - dmin) * w, x0 = X(0);
+  const seg = (lo, hi, y, h, cl, cr, tag) => {
+    const a = X(lo), b = X(hi); let s = '';
+    if (a < x0) s += `<rect x="${a}" y="${y}" width="${Math.min(b, x0) - a}" height="${h}" fill="${cl}"/>`;
+    if (b > x0) s += `<rect x="${Math.max(a, x0)}" y="${y}" width="${b - Math.max(a, x0)}" height="${h}" fill="${cr}"/>`;
+    return `<clipPath id="c${id}${tag}"><rect x="${a}" y="${y}" width="${b - a}" height="${h}" rx="4"/></clipPath><g clip-path="url(#c${id}${tag})">${s}</g>`;
+  };
+  let ticks = '';
+  for (let t = -40; t <= 40; t += 10) if (t !== 0 && X(t) > 18 && X(t) < w - 18) ticks += `<text x="${X(t)}" y="63" font-size="9" font-weight="700" fill="#94a3b8" text-anchor="middle">${t < 0 ? 'D' : 'R'}+${Math.abs(t)}</text>`;
+  const xm = X(m);
+  return `<svg class="rng" viewBox="0 0 ${w} 67" role="img" aria-label="67% range ${fm(lo67)} to ${fm(hi67)}">
+    <line x1="0" y1="27" x2="${w}" y2="27" stroke="#cbd5e1" stroke-width="2"/>
+    ${seg(lo95, hi95, 20, 14, '#c9d2f4', '#fbdcd8', 'a')}${seg(lo67, hi67, 16, 22, '#3d55c4', '#f0a39b', 'b')}
+    <line x1="${x0}" y1="8" x2="${x0}" y2="46" stroke="#0f172a" stroke-width="1.4" stroke-dasharray="3,2"/>
+    <text x="${x0}" y="6" font-size="9" font-weight="800" fill="#0f172a" text-anchor="middle">EVEN</text>
+    <rect x="${xm - 2}" y="12" width="4" height="30" rx="2" fill="#0f172a"/>
+    <text x="${xm}" y="54" font-size="10" font-weight="800" fill="#0f172a" text-anchor="middle">${fm(m)}</text>${ticks}</svg>`;
+}
+function renderRaces(R) {
+  uid = 0; R_ = R;
+  const card = o => {
+    const r = o.race, k = r.key, f = o.f, pa = o.pa;
+    const cn = s => { const c = f.cand[s]; return `${last(r[s])} ${Math.abs(c.v) < 0.05 ? '0.0' : (c.v > 0 ? '+' : '−') + Math.abs(c.v).toFixed(1)}`; };
+    const baseNote = k === 'SEN' ? `KS 2024 pres. ${fm(D.PRES[2024])} vs nation ${fm(D.USPRES[2024])}` : r.dist ? `district 2024 pres. ${fm(D.USH_PRES[r.dist][2024])} vs nation ${fm(D.USPRES[2024])}` : k === 'GOV' ? `${Math.round(R_.F.SL.gov.blend * 100)}% governor races, ${Math.round((1 - R_.F.SL.gov.blend) * 100)}% other offices` : `avg of ${R_.F.SL.n} statewide-office results`;
+    let stack = `<div class="sr base"><span>Baseline partisanship<span class="n">${baseNote}</span></span><span class="num">${fm(f.base)}</span></div>
+      <div class="sr"><span>+ Generic ballot shift<span class="n">2024 ${fm(D.GB[2024])} + ${f.e.toFixed(2)} × change to D+${(+S.gb).toFixed(1)}</span></span><span class="num">${fs(f.gbs)}</span></div>
+      <div class="sr"><span>+ Incumbency effect<span class="n">${r.inc === 'R' ? 'GOP incumbent' : r.inc === 'D' ? 'Democratic incumbent' : 'open seat'}</span></span><span class="num">${fs(f.inc)}</span></div>
+      <div class="sr"><span>+ Candidate quality / perf<span class="n">${cn('R')}, ${cn('D')}</span></span><span class="num">${fs(f.candSum)}</span></div>
+      <div class="sr"><span>+ Campaign finance effect<span class="n">spent ${money(f.hf.R)} vs ${money(f.hf.Dd)}</span></span><span class="num">${fs(f.fin)}</span></div>`;
+    stack += `<div class="sr tot"><span>= Fundamentals</span><span class="num">${fm(f.F)} <span class="n">±${Math.sqrt(f.v).toFixed(1)}</span></span></div>`;
+    stack += pa && !pa.none
+      ? `<div class="sr poll"><span>Poll average · ${pa.nUsed} poll${pa.nUsed !== 1 ? 's' : ''} · weight ${Math.round(o.w * 100)}%${o.manual ? ' (set)' : ''}</span><span class="num">${fm(pa.mean)} <span class="n" style="color:var(--brand)">±${Math.sqrt(pa.v).toFixed(1)}</span></span></div>`
+      : `<div class="sr nopoll"><span>No public polls · fundamentals only</span><span>—</span></div>`;
+    if (f.other) stack += `<div class="sr modrow"><span>+ Manual adjustment<span class="n">judgment call, applied to the final margin</span></span><span class="num">${fs(f.other)}</span></div>`;
+    const c = f.comps, fv = f.v;
+    const mrow = (label, form, val) => `<tr><td>${label}<span class="f"> ${form}</span></td><td>${val}</td></tr>`;
+    let math = `<table class="mt"><tbody>
+      ${mrow('Baseline partisanship', k === 'SEN' ? `KS 2024 ${D.PRES[2024]} − US 2024 ${D.USPRES[2024]}` : r.dist ? `district 2024 ${D.USH_PRES[r.dist][2024]} − US 2024 ${D.USPRES[2024]}` : (f.e !== 1 ? `lean ${fm(f.lean)} − ${(1 - f.e).toFixed(2)} × 2024 GB; lean = ` : '') + (k === 'GOV' ? `${R_.F.SL.gov.blend} × governor races ${fm(R_.F.SL.gov.races)} + ${(1 - R_.F.SL.gov.blend).toFixed(2)} × other offices ${fm(R_.F.SL.gov.other)}` : `mean of ${R_.F.SL.n} state-office leans (History tab)`), fm(f.base, 2))}
+      ${mrow('Generic ballot shift', `2024 GB ${fs(D.GB[2024])} + ${f.e.toFixed(2)} × (${fs(-S.gb)} − ${fs(D.GB[2024])})`, fs(f.gbs, 2))}
+      ${mrow('Incumbency', r.inc === 'R' ? 'GOP incumbent bonus' : 'open seat', fs(f.inc))}
+      ${mrow(`${last(r.R)} rating`, f.cand.R.src, fs(f.cand.R.v, 2))}
+      ${mrow(`${last(r.D)} rating`, f.cand.D.src, fs(f.cand.D.v, 2))}
+      ${mrow('Finance: visibility', `${S.fin} × (${f.hf.wR} × min(${money(f.hf.R)} ÷ ${money(+S.finVis)}, 1) − ${f.hf.wD} × min(${money(f.hf.Dd)} ÷ ${money(+S.finVis)}, 1))`, fs(f.hf.edge, 2))}
+      ${mrow('Finance: spending ratio', `${P.FIN_DIFF} × sign × min(max(|ln ratio| − ln 2, 0) ÷ ln 4, 1)`, fs(f.hf.diff, 2))}
+      <tr class="sum"><td>Fundamentals</td><td>${fm(f.F, 2)}</td></tr>
+      ${mrow('Var: campaign finance', `${f.hf.unc}²`, c.fin.toFixed(1))}
+      ${mrow('Var: candidate effects', `(0.6 × |${f.candSum.toFixed(2)}|)²`, c.cand.toFixed(1))}
+      ${mrow('Var: generic ballot & elasticity', `${P.GB_UNC}²`, c.gb.toFixed(1))}
+      ${mrow('Var: KS vs national', `${P.KS_UNC}²`, c.ks.toFixed(1))}
+      ${mrow('Var: partisanship / turnout', `${P.PART_UNC}²`, c.part.toFixed(1))}
+      ${mrow('Var: baseline average', isFed(k) ? 'presidential lean is exact' : `SE ${f.baseSe.toFixed(2)}²`, c.base.toFixed(1))}
+      <tr class="sum"><td>Fundamentals SD</td><td>±${Math.sqrt(fv).toFixed(2)}</td></tr>`;
+    if (pa && !pa.none) math += `
+      ${mrow('Poll average', `${pa.nUsed} polls, see Polls tab`, fm(pa.mean, 2))}
+      ${mrow('Var: sampling + house', 'Σ share² × (100²/n + house²)', pa.vSamp.toFixed(1))}
+      ${mrow('Var: statewide miss + race miss', `${P.POLL_SYS_SHARED}² + ${pa.sysRace}²`, (P.POLL_SYS_SHARED ** 2 + pa.sysRace ** 2).toFixed(1))}
+      ${mrow('Var: late movement', `${P.LATE_SHARED}² + ${P.LATE_RACE}²`, (P.LATE_SHARED ** 2 + P.LATE_RACE ** 2).toFixed(1))}
+      <tr class="sum"><td>Poll SD</td><td>±${Math.sqrt(pa.v).toFixed(2)}</td></tr>
+      ${mrow('Computed poll weight', `effective polls ${pa.nEff.toFixed(1)} ÷ (${pa.nEff.toFixed(1)} + ${S.pollK})`, Math.round(o.wCalc * 100) + '%')}
+      ${mrow('For reference: variance-based weight', 'Vf ÷ (Vf + Vp)', Math.round(o.wVar * 100) + '%')}
+      ${mrow('Poll weight used', o.manual ? 'set by hand' : 'computed', Math.round(o.w * 100) + '%')}
+      ${mrow('Blend', 'w × polls + (1 − w) × fundamentals', fm(o.m - f.other, 2))}
+      ${mrow('Total SD', '√(w²·Vp + (1 − w)²·Vf)', '±' + o.sd.toFixed(2))}`;
+    math += `${f.other ? mrow('Manual adjustment', 'added to the final margin', fs(f.other, 2)) + mrow('Forecast margin', '', fm(o.m, 2)) : ''}${mrow('DEM win chance', 'Φ(−margin ÷ SD)', (o.p * 100).toFixed(1) + '%')}</tbody></table>`;
+    return `<article class="card"><div class="dhead"><div><h2 class="ct">${r.name || r.office}</h2>
+      <p class="cs">${esc(r.R)}<span class="tag r">R</span> vs ${esc(r.D)}<span class="tag d">D</span>${r.others ? ` · also ${esc(r.others)}` : ''}</p></div>${chip(o)}</div>
+      ${stack}
+      <div class="res"><span class="k">Predicted margin</span><span class="v num">${fm(o.m)}</span></div>
+      <div class="mm"><div><div class="l">Model SD</div><div class="x num">${o.sd.toFixed(1)} pts</div></div>
+        <div style="text-align:right"><div class="l">Win probability</div><div class="x num"><span style="color:var(--dem)">${last(r.D)} ${pct(o.p)}</span> · <span style="color:var(--rep-strong)">${last(r.R)} ${pct(1 - o.p)}</span></div></div></div>
+      <div class="rt"><span>Range of outcomes</span><span class="num">67%: ${fm(o.m - 0.974 * o.sd)} to ${fm(o.m + 0.974 * o.sd)}</span></div>
+      ${rangeSvg(o.m, o.sd)}
+      <details class="math" id="math-${k}" ${openMath.has(k) ? 'open' : ''}><summary>Show the math</summary>${math}
+        <p class="foot" style="margin:6px 0 0">Finance source: ${esc(r.fin_note)}</p></details>
+    </article>`;
+  };
+  document.getElementById('raceCards').innerHTML = R.races.map(card).join('');
+  document.getElementById('houseCards').innerHTML = R.house.map(card).join('');
+  const ush = R.F.rows.filter(x => x.off === 'USH');
+  document.getElementById('ushTable').innerHTML = `<thead><tr><th class="l">Year</th><th class="l">District</th><th class="l">Republican</th><th class="l">Democrat</th><th>Pres. lean</th><th>GB × e</th><th>Inc.</th><th>Expected</th><th>Actual</th><th>Miss</th></tr></thead><tbody>` +
+    ush.map(x => `<tr><td class="l">${x.yr}</td><td class="l">${x.dist.replace('KS', 'KS-')}</td><td class="l">${esc(x.r)}</td><td class="l">${esc(x.d)}</td><td>${fm(x.base)}</td><td>${fs(x.gbs)}</td><td>${x.ib ? fs(x.ib) : '—'}</td><td>${fm(x.exp)}</td><td>${fm(x.margin)}</td><td class="b">${fs(x.y)}</td></tr>`).join('') +
+    R.house.map(o => { const r = o.race, f = o.f; return `<tr><td class="l b">2026</td><td class="l b">${r.dist.replace('KS', 'KS-')}</td><td class="l">${esc(r.R)}</td><td class="l">${esc(r.D)}</td><td class="b">${fm(f.base)}</td><td>${fs(f.gbs)}</td><td>${f.inc ? fs(f.inc) : '—'}</td><td class="b">${fm(f.base + f.gbs + f.inc)}</td><td></td><td></td></tr>`; }).join('') + '</tbody>';
+}
+const openMath = new Set();
+
+// ---------- render: polls
+function renderPolls(R) {
+  const names = { SEN: 'U.S. Senate', GOV: 'Governor', AG: 'Attorney General', KS2: "Kansas's 2nd District" };
+  document.getElementById('pollCards').innerHTML = allRaces(R).filter(o => o.pa).map(o => {
+    const k = o.race.key, pa = o.pa, r = o.race;
+    const mx = Math.max(...pa.list.map(x => x.share), 1e-9);
+    const rows = pa.list.filter(x => x.on).sort((a, b) => (b.on - a.on) || (b.share - a.share) || (a.age - b.age)).map(x => {
+      const fd = (() => { const M = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; const m1 = +x.s.slice(5, 7), d1 = +x.s.slice(8, 10), m2 = +x.e.slice(5, 7), d2 = +x.e.slice(8, 10); return m1 === m2 ? `${M[m1]} ${d1}–${d2}` : `${M[m1]} ${d1}–${M[m2]} ${d2}`; })();
+      const adjTxt = Math.abs(x.adj) < 0.05 ? '' : `${fs(x.adj)} <span class="note" style="display:inline">${x.why}</span>`;
+      return `<tr class="${x.on ? '' : 'off'}">
+        <td class="l b">${esc(x.label)}${x.note ? `<span class="note">${esc(x.note)}</span>` : ''}${x.sel > 1 ? `<span class="note">Select pollster · weight ×${x.sel.toFixed(1)}</span>` : ''}${x.tp > 1 ? `<span class="note">Full ballot · weight ×${x.tp.toFixed(1)}</span>` : ''}</td>
+        <td>${x.grade === 'new' || x.grade === 'n/a' ? '—' : x.grade}</td>
+        <td class="${x.dAssumed ? 'flag' : ''}">${x.dAssumed ? '~' : ''}${fd}</td>
+        <td class="${x.nAssumed ? 'flag' : ''}">${x.nAssumed ? '~' : ''}${x.n.toLocaleString()}</td>
+        <td>${x.R != null ? `${x.R} – ${x.D}` : '<span class="note" style="display:inline">margin only</span>'}</td><td class="b">${fm(x.val)}</td>
+        <td>${x.age.toFixed(0)}d</td><td>${x.q.toFixed(2)}</td>
+        <td class="l"><span class="wbar" style="width:${Math.max(x.share / mx * 56, x.on ? 1.5 : 0)}px;opacity:${0.35 + 0.65 * x.share / mx}"></span>${x.on ? (x.share * 100).toFixed(0) + '%' : 'off'}</td></tr>`;
+    }).join('');
+    const sum = pa.none ? '<div class="sumline">No polls included.</div>' : `<div class="sumline"><div><span>Poll avg</span> ${fm(pa.mean)} ±${Math.sqrt(pa.v).toFixed(1)}</div><div><span>Effective polls</span> ${pa.nEff.toFixed(1)}</div><div><span>Fundamentals</span> ${fm(o.f.F)} ±${Math.sqrt(o.f.v).toFixed(1)}</div><div><span>Poll weight</span> ${Math.round(o.w * 100)}%${o.manual ? ` set (computed ${Math.round(o.wCalc * 100)}%)` : ''}</div><div><span>Blend</span> ${fm(o.m)}</div></div>`;
+    return `<div class="card"><h2 class="ct">${names[k] || r.name || r.office}: ${esc(r.R)} vs ${esc(r.D)}</h2>
+      <div class="tw"><table class="t"><thead><tr><th class="l">Pollster</th><th>538</th><th>Field</th><th>n</th><th>R – D</th><th>Margin</th><th>Age</th><th>Quality</th><th class="l">Weight</th></tr></thead><tbody>${rows}</tbody></table></div>${sum}</div>`;
+  }).join('');
+  document.getElementById('pollFoot').innerHTML = `<b>Weighting.</b> Each poll counts √(n/600) × e<sup>−age/${S.recency} days</sup> × quality. Quality = (538 numeric pollster grade ÷ 3)<sup>${S.qExp}</sup>: 538's 0.5–3 star rating, built from its predictive POLLSCORE and a transparency score. A 3.0★ pollster counts 1.0, 2.0★ 0.54, 1.1★ 0.22 (floor 0.25 before the exponent; unrated pollsters 0.35). Three select pollsters (NYT/Siena, Emerson and CNN) count ${(+S.selectW).toFixed(1)}× on top of that. Quality is halved for polls sponsored by a campaign, party or allied committee. Polls go into the average as reported, with no pollster bias adjustments; sponsored polls are only down-weighted and given a wider error. Poll variance = sampling + house-effect SD (1.5 + 6 × (1 − quality), +3 if sponsored) + a 4-pt shared statewide polling miss + a race-specific miss + late movement. Senate polls use the full-ballot question (Libertarian David Graham included) where both versions were released, and full-ballot polls count ${(+S.thirdW).toFixed(1)}× as much. ~ = not published, assumed. Poll weight = effective polls ÷ (effective polls + ${S.pollK}).`;
+}
+
+// ---------- render: history
+function renderHistory(R) {
+  const F = R.F, SL = F.SL;
+  const usedRows = SL.rows.filter(x => x.used);
+  const byKey = (key) => { const g = {}; for (const x of usedRows) (g[x[key]] = g[x[key]] || []).push(x.lean); return Object.entries(g).map(([k2, v]) => [k2, v.reduce((t, y) => t + y, 0) / v.length, v.length]); };
+  document.getElementById('leanTable').innerHTML = `<thead><tr><th class="l">Item</th><th>Value</th><th>n</th></tr></thead><tbody>
+    <tr><td class="l">Kansas 2024 presidential</td><td>${fm(D.PRES[2024])}</td><td></td></tr>
+    <tr><td class="l">National 2024 presidential</td><td>${fm(D.USPRES[2024])}</td><td></td></tr>
+    <tr><td class="l b">Senate baseline (federal lean)</td><td class="b">${fm(senLean(2024))}</td><td></td></tr>
+    <tr><td class="l">Governor races average</td><td>${fm(SL.gov.races)}</td><td>${SL.gov.n}</td></tr>
+    <tr><td class="l">Other state offices average (no governor)</td><td>${fm(SL.gov.other)}</td><td>${SL.gov.otherN}</td></tr>
+    <tr><td class="l b">Governor baseline (${Math.round(SL.gov.blend * 100)} / ${Math.round((1 - SL.gov.blend) * 100)} blend)</td><td class="b">${fm(SL.gov.avg)}</td><td></td></tr>
+    <tr><td class="l b">Other state offices baseline (average)</td><td class="b">${fm(SL.avg)}</td><td>${SL.n}</td></tr>
+    <tr><td class="l">State-office leans SD / SE</td><td>${SL.sd.toFixed(1)} / ${SL.se.toFixed(1)}</td><td></td></tr>
+    <tr><td class="l" colspan="3" style="padding-top:10px;font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.05em;text-transform:uppercase">Average by cycle</td></tr>
+    ${byKey('yr').sort((x, y) => x[0] - y[0]).map(([k2, v, n]) => `<tr><td class="l">${k2}</td><td>${fm(v)}</td><td>${n}</td></tr>`).join('')}
+    <tr><td class="l" colspan="3" style="padding-top:10px;font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.05em;text-transform:uppercase">Average by office</td></tr>
+    ${STATE_OFFICES.map(o => byKey('off').find(x => x[0] === o)).filter(Boolean).map(([k2, v, n]) => `<tr><td class="l">${OFF_NAME[k2]}</td><td>${fm(v)}</td><td>${n}</td></tr>`).join('')}
+  </tbody>`;
+  const rows = SL.rows.slice().sort((a, b) => a.yr - b.yr || STATE_OFFICES.indexOf(a.off) - STATE_OFFICES.indexOf(b.off));
+  document.getElementById('histTable').innerHTML = `<thead><tr><th class="l">Year</th><th class="l">Office</th><th class="l">Republican</th><th class="l">Democrat</th><th>Margin</th><th>GB × e</th><th>Inc.</th><th>Lean</th><th>In avg.</th></tr></thead><tbody>` +
+    rows.filter(x => x.used || (x.off === 'GOV' && S.govYears[x.yr] !== false)).map(x => `<tr><td class="l">${x.yr}</td><td class="l">${OFF_NAME[x.off]}</td><td class="l">${esc(x.r)}</td><td class="l">${esc(x.d)}</td><td>${fm(x.margin)}</td><td>${fs(x.gbs)}</td><td>${x.ib ? fs(x.ib) : '—'}</td><td class="b">${fm(x.lean)}</td><td class="keep">${[x.used ? 'state' : '', x.off === 'GOV' && S.govYears[x.yr] !== false ? 'gov' : ''].filter(Boolean).join(' + ') || 'no'}</td></tr>`).join('') +
+    `<tr><td class="l b" colspan="7">State-office average (AG, SoS, Treasurer, Insurance baseline)</td><td class="b">${fm(SL.avg)}</td><td>${SL.n}</td></tr>` +
+    `<tr><td class="l" colspan="7">Governor races only</td><td>${fm(SL.gov.races)}</td><td>${SL.gov.n}</td></tr>` +
+    `<tr><td class="l" colspan="7">Other state offices only (no governor)</td><td>${fm(SL.gov.other)}</td><td>${SL.gov.otherN}</td></tr>` +
+    `<tr><td class="l b" colspan="7">Governor baseline (${Math.round(SL.gov.blend * 100)}% governor + ${Math.round((1 - SL.gov.blend) * 100)}% other offices)</td><td class="b">${fm(SL.gov.avg)}</td><td></td></tr></tbody>`;
+  const sen = F.rows.filter(x => x.off === 'SEN');
+  document.getElementById('senTable').innerHTML = `<thead><tr><th class="l">Year</th><th class="l">Republican</th><th class="l">Democrat</th><th>Pres. lean</th><th>GB × e</th><th>Inc.</th><th>Expected</th><th>Actual</th><th>Miss</th></tr></thead><tbody>` +
+    sen.map(x => `<tr><td class="l">${x.yr}</td><td class="l">${esc(x.r)}</td><td class="l">${esc(x.d)}</td><td>${fm(x.base)}</td><td>${fs(x.gbs)}</td><td>${x.ib ? fs(x.ib) : '—'}</td><td>${fm(x.exp)}</td><td>${fm(x.margin)}</td><td class="b">${fs(x.y)}</td></tr>`).join('') +
+    `<tr><td class="l b" colspan="3">2026: Marshall vs Hamilton</td><td class="b">${fm(senLean(2024))}</td><td>${fs(eFor('SEN') * -S.gb)}</td><td>${fs(S.incR)}</td><td class="b">${fm(senLean(2024) + eFor('SEN') * -S.gb + S.incR)}</td><td></td><td></td></tr></tbody>`;
+  const sd = i => Math.sqrt(F.inv[i][i]);
+  const nominees = new Set(D.RACES.concat(D.USH_RACES).flatMap(r => [D.NAME_MAP[r.R] || r.R, D.NAME_MAP[r.D] || r.D]));
+  const cr = F.cands.map(c => ({ c, m: F.mean[F.idx[c]], s: sd(F.idx[c]), pm: F.pm[F.idx[c]] })).sort((a, b) => a.m - b.m);
+  const legOnly = Object.keys(D.LEG).filter(nm => F.idx[nm] == null).map(nm => ({ c: nm, leg: D.LEG[nm] }));
+  const inFit = new Set(F.cands);
+  const prof = Object.entries(D.PROFILE).filter(([c]) => inFit.has(c)).sort((a, b) => a[1][0].localeCompare(b[1][0]) || a[0].localeCompare(b[0]));
+  document.getElementById('profTable').innerHTML = `<thead><tr><th class="l">Candidate</th><th class="l">Profile</th><th>Rating</th><th class="l">Why</th></tr></thead><tbody>` +
+    prof.map(([c, [tier, why]]) => `<tr><td class="l b">${esc(c)}</td><td class="l">${tier === 'H' ? 'High' : 'Low'}</td><td>${fs(F.mean[F.idx[c]], 2)}</td><td class="l" style="white-space:normal;min-width:240px">${esc(why)}</td></tr>`).join('') + '</tbody>';
+  document.getElementById('candTable').innerHTML = `<thead><tr><th class="l">Candidate</th><th>Rating</th><th>SD</th><th>Prior</th><th class="l">Profile</th></tr></thead><tbody>` +
+    cr.map(x => `<tr><td class="l ${nominees.has(x.c) ? 'b' : ''}">${esc(x.c)}${nominees.has(x.c) ? ' · 2026' : ''}</td><td class="b">${fs(x.m, 2)}</td><td>±${x.s.toFixed(1)}</td><td>${x.pm ? fs(x.pm, 2) : '—'}</td><td class="l">${profOf(x.c) === 'H' ? 'High' : profOf(x.c) === 'L' ? 'Low' : fixedOf(x.c) ? 'Set' : ''}</td></tr>`).join('') +
+    `<tr><td class="l" colspan="5" style="padding-top:12px;font-weight:800;color:var(--muted);font-size:11px;letter-spacing:.05em;text-transform:uppercase">2026 nominees with legislative records only</td></tr>` +
+    legOnly.map(x => `<tr><td class="l b">${esc(x.c)}</td><td class="b">${fs(S.transfer * x.leg, 2)}</td><td>±${tauC().toFixed(1)}</td><td>${x.leg.toFixed(2)} × ${Math.round(S.transfer * 100)}%</td><td></td></tr>`).join('') + '</tbody>';
+}
+
+// ---------- render: method
+function renderMethod(R) {
+  const SL = R.F.SL, G = SL.gov, w = k => Math.round(allRaces(R).find(o => o.race.key === k).w * 100) + '%', H = k => R.house.find(o => o.race.key === k).f;
+  document.getElementById('methodCard').innerHTML = `
+  <h2 class="ct">How this forecast works</h2>
+  <p class="caveat" style="margin:8px 0 4px"><b>Personal ratings, not a back-tested model.</b> These forecasts have not been calibrated against past elections. Treat them as my own race ratings, built from fundamentals, polling averages and judgment calls (including a manual D+2 in the Attorney General race).</p>
+  <p>Each race starts from a fundamentals estimate built the same way as the district cards in the <a href="./">Kansas House forecast</a>, then blends in a weighted average of public polls where they exist. Margins are Republican minus Democrat: R+5 means the Republican wins by five points.</p>
+  <h3>1. Baseline partisanship</h3>
+  <ul>
+    <li><b>U.S. Senate:</b> Kansas's 2024 presidential margin relative to the nation (${fm(D.PRES[2024])} in Kansas vs ${fm(D.USPRES[2024])} nationally = ${fm(senLean(2024))}). Federal races in Kansas track presidential partisanship closely.</li>
+    <li><b>Attorney General, Secretary of State, Treasurer, Insurance:</b> the average lean of the ${SL.n} statewide-office races from 2014, 2018 and 2022 (${fm(SL.avg)}). Each race's lean is its margin minus that year's national generic-ballot environment × elasticity, minus any incumbency bonus, so a wave year or a strong incumbent doesn't distort the baseline.</li>
+    <li><b>U.S. House:</b> the same federal baseline, district by district: each district's 2024 presidential margin under its current (2022) lines relative to the nation (1st ${fm(H('KS1').base)}, 2nd ${fm(H('KS2').base)}, 3rd ${fm(H('KS3').base)}, 4th ${fm(H('KS4').base)}).</li>
+    <li><b>Governor:</b> half the average of the 2014, 2018 and 2022 governor races (${fm(G.races)}) and half the other state offices (${fm(G.other)}), for ${fm(G.avg)}. Kansas governor races run far closer than its other statewide contests, but three races are a small sample, so the two are blended.</li>
+  </ul>
+  <h3>2. Generic ballot shift</h3>
+  <p>The national environment, written the House model's way: the 2024 environment (${fm(D.GB[2024])}) plus elasticity × the change to the 2026 generic ballot (D+${(+S.gb).toFixed(1)}: 75% the D+9.2 national average and 25% the D+11.5 implied by the NYT/Siena Kansas congressional-ballot question (R+3 in Kansas vs its R+14.5 House-vote lean)). The Senate and House races take the full national swing (elasticity ${(+S.elast).toFixed(2)}); state offices take ${(+eFor('GOV')).toFixed(2)}.</p>
+  <h3>3. Incumbency</h3>
+  <p>Statewide incumbents get +${S.incR} for either party, less than the House model's R +2 / D +3, because incumbency matters less in well-covered statewide races. The U.S. House districts keep the House-model bonuses (R +${P.USH_INC_R}, D +${-P.USH_INC_D}). Marshall, Kobach and Johnson are incumbents; the Governor, Secretary of State and Insurance races are open. All four House members are running again: Mann, Schmidt and Estes (R) and Davids (D).</p>
+  <h3>4. Candidate quality</h3>
+  <p>Every statewide race from 2014 through 2022, plus the 2022 and 2024 U.S. House races under the current district lines, is compared with its own baseline, and each miss is shared between its two candidates: the House model's Kalman update, solved jointly so candidates who ran more than once are rated on their whole record. Older races count less (a race's weight halves every ${S.fitHL} years), and 2010 is left out because its Kansas-specific wave swing would otherwise land on individual candidates. Who a miss is credited to is a judgment call by candidate profile: well-known candidates whose races turned on them (Moran, Brownback, Kobach, Kelly, Vicki Schmidt, Davids) get ${(+S.profH).toFixed(1)}× the usual prior spread, and low-profile or underfunded challengers get ${(+S.profL).toFixed(1)}×, so a race between the two is read about 90 / 10 as the well-known candidate's result. Chris Mann's 2022 near-win, for example, is credited mostly to Kobach. The full list is on the History tab. Ratings count for more than in the House model (k = ${(+S.k).toFixed(1)} vs 1.5) because statewide candidates are far better known. Nominees without a statewide record carry ${Math.round(S.transfer * 100)}% of their over- or underperformance in legislative races. Two ratings are set directly: Roger Marshall carries his full 2020 shortfall against Trump (−3.2; Senate R+11.4 vs president R+14.6 in Kansas), and Steven Johnson's rating is 0, because his 2022 underperformance mostly reflects an appointed Democratic incumbent, Lynn Rogers, who campaigned hard for the seat. Negative ratings help Democrats.</p>
+  <h3>5. Campaign finance</h3>
+  <p>The House model's formula: ${S.fin} × (Republican visibility − Democratic visibility) + a spending-ratio term worth up to ±0.5. Visibility is general-election spending ÷ ${money(+S.finVis)} (capped at 1; the House model's $20K threshold scaled to a statewide race), with an incumbent's spending counted at 75%. The ratio term starts once one side outspends the other more than 2 to 1 and reaches full value at 8 to 1. Spending = candidate expenditures (KPDC pre-general reports, Jul 24–Oct 22; FEC through Oct 14 for the Senate) plus independent spending supporting a candidate or opposing their opponent. Each race card lists its sources. House races use FEC candidate spending (through Oct 14, via Ballotpedia) with the threshold split four ways ($625K per district); no outside spending had been reported in any district.</p>
+  <h3>6. Polling average and blend</h3>
+  <p>Polls are weighted by sample size, recency (24-day decay, so a three-week-old poll keeps about 42% of its weight) and 538's pollster rating (0.5–3 stars), with quality counting extra (rating<sup>1.5</sup>) and three select pollsters, NYT/Siena, Emerson and CNN, counting ${(+S.selectW).toFixed(1)}×. Polls go in as reported, with no pollster bias adjustments. Polls sponsored by campaigns, parties or allied committees count at half weight with a wider error. Senate polls that name Libertarian David Graham count ${(+S.thirdW).toFixed(1)}× as much, since the full ballot is the more complete picture. The poll weight grows with the effective number of polls: effective polls ÷ (effective polls + ${S.pollK}), so one poll earns about 33% and eight about 80%. Right now: Senate ${w('SEN')}, Governor ${w('GOV')}, Attorney General ${w('AG')} and the 2nd District ${w('KS2')} (one DCCC poll; district polls carry the AG race's larger race-specific error). The other statewide races and the 1st, 3rd and 4th Districts have no public polls and run on fundamentals alone.</p>
+  <h3>7. Uncertainty, win chances and ratings</h3>
+  <p>Fundamentals uncertainty uses the House stack: campaign finance 1 pt (1.5 when one side reports no spending), candidate effects 0.6 × |combined rating|, generic ballot and elasticity ${P.GB_UNC}, Kansas vs national ${P.KS_UNC}, partisanship and turnout ${P.PART_UNC}, plus the standard error of the baseline average. Poll uncertainty adds sampling and house-effect error, a ${P.POLL_SYS_SHARED}-pt shared statewide polling miss, a race-specific miss and late movement. The forecast margin is w × polls + (1 − w) × fundamentals, and the win chance is Φ(−margin ÷ SD). One judgment call sits on top: the Attorney General forecast carries a manual D+2 adjustment.</p>
+  <p>Ratings by Democratic win chance: under 2.5% Safe R · 2.5–10% Very Likely R · 10–25% Likely R · 25–40% Lean R · 40–45% Tilt R · <b>45–55% Tossup</b> · 55–60% Tilt D · 60–75% Lean D · 75–90% Likely D · 90–97.5% Very Likely D · over 97.5% Safe D.</p>
+  <h3>Sources</h3>
+  <ul>
+    <li><a href="https://en.wikipedia.org/wiki/2026_United_States_Senate_election_in_Kansas" target="_blank" rel="noopener">2026 U.S. Senate election in Kansas (poll table)</a>; <a href="https://www.poliwave.com/us/ks/sen-fed" target="_blank" rel="noopener">Poliwave</a>; <a href="https://www.realclearpolling.com/polls/senate/general/2026/kansas/marshall-vs-hamilton" target="_blank" rel="noopener">RealClearPolling Senate</a></li>
+    <li><a href="https://www.realclearpolling.com/polls/governor/general/2026/kansas/masterson-vs-holscher" target="_blank" rel="noopener">RealClearPolling governor</a>; <a href="https://en.wikipedia.org/wiki/2026_Kansas_Attorney_General_election" target="_blank" rel="noopener">2026 Kansas Attorney General election (poll table)</a></li>
+    <li><a href="https://github.com/fivethirtyeight/data/tree/master/pollster-ratings" target="_blank" rel="noopener">538 pollster ratings</a>; <a href="https://battlegrounds.coefficient.org/ks/" target="_blank" rel="noopener">co/efficient Kansas poll and sample</a>; <a href="https://emersoncollegepolling.com/kansas-2026/" target="_blank" rel="noopener">Emerson Kansas poll</a></li>
+    <li><a href="https://www.natesilver.net/p/generic-ballot-average-2026-nate-silver-bulletin-congress-polls" target="_blank" rel="noopener">Silver Bulletin generic ballot average</a></li>
+    <li>Past results: Kansas Secretary of State (<a href="https://kssos.org/elections/election-statistics-data.html" target="_blank" rel="noopener">election statistics</a>, <a href="https://kssos.org/ent/2010General/live/kssos_ent.html" target="_blank" rel="noopener">2010 general</a>); national presidential margins: FEC official results</li>
+    <li><a href="https://www.kansas.gov/ethics/CFAScanned/StWide/2026ElecCycle/SWLinks2026EC.htm" target="_blank" rel="noopener">KPDC statewide candidate reports</a>, <a href="https://www.kansas.gov/ethics/CFAScanned/Others/2026ElecCycle/IndependentExpendLink.htm" target="_blank" rel="noopener">independent expenditure reports</a> and <a href="https://www.kansas.gov/ethics/CFAScanned/PartyComm/2026ElecCycle/PartyLinks2026EC.htm" target="_blank" rel="noopener">party committee reports</a></li>
+    <li>U.S. House: FEC candidate filings and DCCC poll via <a href="https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Kansas,_2026" target="_blank" rel="noopener">Ballotpedia</a>; district presidential results under current lines from Ballotpedia's district analyses; past House results from the <a href="https://en.wikipedia.org/wiki/2024_United_States_House_of_Representatives_elections_in_Kansas" target="_blank" rel="noopener">2024</a> and <a href="https://en.wikipedia.org/wiki/2022_United_States_House_of_Representatives_elections_in_Kansas" target="_blank" rel="noopener">2022</a> certified returns</li>
+    <li><a href="https://votelog.org/investigations/kansas-senate-general-money" target="_blank" rel="noopener">VoteLog Kansas Senate money tracker</a>; <a href="https://adimpact.com/blogs/battleground-kansas-2026" target="_blank" rel="noopener">AdImpact Kansas ad spending</a>; <a href="https://sunflowerstatejournal.com/national-democrats-launch-first-ad-against-masterson-republicans-counter/" target="_blank" rel="noopener">Sunflower State Journal on DGA spending</a></li>
+  </ul>`;
+}
+
+// ---------- page wiring (read-only: no settings, nothing saved)
+const $ = id => document.getElementById(id);
+let R = null;
+function update() {
+  R = run(); window.__ksModel = R;
+  renderOverview(R); renderRaces(R); renderPolls(R); renderHistory(R); renderMethod(R);
+}
+const TABS = ['overview', 'races', 'house', 'polls', 'history', 'method'];
+function show(tab, push) {
+  if (!TABS.includes(tab)) tab = 'overview';
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', t.dataset.tab === tab));
+  document.querySelectorAll('[data-view]').forEach(v => v.hidden = v.dataset.view !== tab);
+  if (push) { try { history.replaceState(null, '', tab === 'overview' ? location.pathname : '#' + tab); } catch (e) {} window.scrollTo({ top: 0 }); }
+}
+$('raceCards').addEventListener('toggle', e => { const d = e.target; if (d.tagName === 'DETAILS') { const k = d.id.replace('math-', ''); d.open ? openMath.add(k) : openMath.delete(k); } }, true);
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => show(t.dataset.tab, true)));
+window.addEventListener('hashchange', () => show((location.hash || '').slice(1), false));
+update();
+show((location.hash || '').slice(1), false);
+})();
+</script>
+</body>
+</html>

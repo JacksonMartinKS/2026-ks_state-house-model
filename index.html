@@ -463,6 +463,12 @@
       padding: 6px 12px; border-radius: 8px;
     }
     .sim-link:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+    .nav-links { display: flex; gap: 6px; flex-shrink: 0; }
+    @media (max-width: 640px) {
+      .header-left { flex-wrap: wrap; row-gap: 6px; }
+      .nav-links { width: 100%; }
+      .nav-links .sim-link { flex: 1; text-align: center; font-size: 0.8rem; padding: 6px 8px; }
+    }
   </style>
 </head>
 <body>
@@ -481,7 +487,10 @@
         <button id="btnGeo" class="toggle-btn" onclick="switchMapMode('geo')">Map</button>
         <button id="btnHex" class="toggle-btn active" onclick="switchMapMode('hex')">Hex Grid</button>
       </div>
-      <a class="sim-link" href="./simulate.html">Simulate an election</a>
+      <div class="nav-links">
+        <a class="sim-link" href="./statewide.html">Statewide Forecasts</a>
+        <a class="sim-link" href="./simulate.html">Simulate an election</a>
+      </div>
     </div>
   </div>
 
