@@ -209,6 +209,17 @@ a.kicker { text-decoration: none; }
   .brandrow { gap: 4px 10px; }
   .tab { padding: 8px 8px 9px; font-size: 13.5px; }
 }
+.mgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 10px; }
+@media (max-width: 560px) { .mgrid { grid-template-columns: minmax(0, 1fr); } }
+.mcard { border: 1px solid var(--line); border-radius: var(--r); background: var(--card-2); padding: 12px 14px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.mhead { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.mcard .chip { min-width: 0; flex: none; }
+.ksmap { width: 100%; height: auto; display: block; margin: 2px 0; }
+.maplegend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12.5px; font-weight: 700; color: var(--muted); margin-top: 6px; }
+.maplegend span { display: inline-flex; align-items: center; gap: 5px; }
+.maplegend i { width: 12px; height: 12px; border-radius: 2px; border: 1px solid #cbd5e1; display: inline-block; }
+.maplegend i.hatch { background: repeating-linear-gradient(45deg, #f1f5f9, #f1f5f9 2px, #000 2px, #000 3.5px); }
+.flipnote { font-size: 12.5px; font-weight: 800; color: var(--ink); }
 .caveat { background: var(--warn-soft); border: 1px solid #f0d58a; color: #5c3a00; border-radius: var(--r); padding: 10px 12px; font-size: 14px; font-weight: 600; line-height: 1.45; }
 .caveat b { color: var(--warn); }
 </style>
@@ -534,22 +545,42 @@ const titleCase = r => r.replace('VERY LIKELY', 'V. LIKELY');
 function chip(o) { const c = chipColor(o.p); return `<span class="chip" style="background:${c};color:${inkOn(c)}">${titleCase(o.rating)}</span>`; }
 
 // ---------- render: overview
-function rowHtml(o) {
-  const r = o.race, dw = o.p * 100;
+const SHAPES = {"w": 400.0, "h": 206.1, "KS": "M124.0,0.1L0.0,0.0L0.5,206.1L104.2,205.5L398.4,205.7L398.9,60.7L400.0,58.5L399.0,57.7L396.4,58.0L396.2,56.8L395.4,56.1L392.8,57.1L391.3,56.9L389.6,54.5L387.9,54.5L387.0,53.9L386.9,51.1L384.2,49.2L383.0,47.1L382.8,44.6L384.3,43.3L384.1,42.0L381.0,42.0L380.7,40.7L379.4,39.8L378.9,38.5L375.9,36.9L375.0,34.3L373.5,33.3L372.0,31.4L372.4,29.1L374.3,29.2L375.2,28.5L375.1,25.5L376.5,23.1L379.5,21.6L379.5,18.8L379.9,17.9L380.7,17.6L383.3,19.1L385.3,17.9L385.4,16.4L384.9,15.8L382.8,16.7L381.4,15.8L381.8,14.7L384.1,14.3L384.6,13.0L384.2,11.7L382.4,11.5L381.2,10.3L381.0,9.6L381.8,8.4L381.4,7.5L380.3,7.0L377.1,7.1L376.5,9.0L375.8,9.5L373.6,9.7L371.3,8.9L370.5,8.4L369.9,6.7L368.2,7.1L367.0,6.7L366.9,4.3L364.5,3.7L363.5,2.3L361.8,1.3L361.4,0.2L124.0,0.1Z", "CD": {"1": "M124.0,0.1L0.0,0.0L0.5,206.1L134.6,205.7L134.4,179.6L133.8,179.6L133.5,149.1L133.0,149.1L133.0,125.2L156.5,125.2L156.5,124.7L159.1,124.2L162.4,120.9L162.4,119.3L191.8,119.3L192.2,155.5L233.3,155.3L233.1,125.3L250.8,125.3L250.8,95.4L274.5,95.4L274.6,81.6L276.6,81.6L276.6,77.6L274.7,77.6L274.7,70.1L273.6,70.7L273.4,70.3L272.7,71.1L272.8,53.6L278.8,53.7L278.8,59.2L279.8,59.2L278.7,62.7L284.5,62.7L284.9,63.2L285.6,62.5L286.5,62.5L286.5,63.7L297.5,63.7L297.5,65.7L302.6,65.7L303.4,65.7L303.5,56.9L304.4,57.5L305.1,56.8L305.1,57.9L305.8,58.2L306.7,57.7L306.9,56.0L307.8,55.2L309.8,56.4L311.7,54.2L312.9,55.0L314.5,54.5L314.9,55.8L317.8,55.9L318.6,54.9L319.2,55.6L319.9,55.4L321.3,57.6L321.1,57.9L319.7,57.6L319.5,58.2L322.1,59.1L322.3,60.0L322.4,53.9L346.3,53.9L345.9,63.7L346.4,64.7L347.0,65.0L348.8,64.0L350.4,64.1L351.5,65.0L353.5,64.0L355.5,64.1L358.5,66.3L360.0,66.7L360.0,68.7L359.5,68.9L361.0,68.8L359.5,68.9L360.0,70.2L359.5,70.2L359.5,70.7L360.1,70.7L359.9,71.7L360.5,71.6L360.0,72.6L361.1,72.7L361.9,73.5L362.2,73.1L364.1,74.5L364.8,73.6L366.6,73.7L368.5,72.7L368.5,72.1L366.6,71.2L368.0,71.1L368.2,40.0L347.4,40.0L347.4,32.7L339.4,29.9L311.5,29.9L311.5,0.2L124.0,0.1Z", "2": "M326.4,155.4L326.3,205.7L398.4,205.7L398.7,110.6L374.4,110.5L373.8,134.6L350.1,134.6L351.1,86.6L374.9,86.6L374.9,69.9L376.2,70.4L377.2,68.6L380.3,69.9L382.0,68.5L382.2,69.8L382.6,69.5L382.8,60.8L385.8,60.8L386.0,61.2L388.6,61.8L391.9,61.4L393.5,62.3L394.6,61.7L396.9,63.6L397.6,63.6L399.0,62.6L398.9,60.6L400.0,58.9L399.9,58.1L399.0,57.7L396.4,58.0L396.2,56.8L395.4,56.1L392.8,57.1L391.3,56.9L389.6,54.5L387.9,54.5L387.0,53.9L386.9,51.1L384.2,49.2L383.0,47.1L382.8,44.6L384.3,43.3L384.1,42.0L381.0,42.0L380.7,40.7L379.4,39.8L378.9,38.5L375.9,36.9L375.0,34.3L373.5,33.3L372.0,31.4L372.4,29.1L374.3,29.2L375.2,28.5L375.1,25.5L376.5,23.1L379.5,21.6L379.5,18.8L379.9,17.9L380.7,17.6L383.3,19.1L385.3,17.9L385.4,16.4L384.9,15.8L382.8,16.7L381.4,15.8L381.8,14.7L384.1,14.3L384.6,13.0L384.2,11.7L382.4,11.5L381.2,10.3L381.7,7.8L380.3,7.0L377.4,7.0L375.8,9.5L373.6,9.7L371.3,8.9L370.5,8.4L369.9,6.7L368.2,7.1L367.0,6.7L366.9,4.3L364.5,3.7L363.5,2.3L361.8,1.3L361.4,0.2L311.5,0.2L311.5,29.9L339.4,29.9L347.4,32.7L347.4,40.0L368.2,40.0L368.0,71.1L366.6,71.1L368.5,72.1L368.0,73.1L366.5,73.8L364.8,73.6L364.1,74.5L362.2,73.1L361.9,73.5L361.1,72.7L360.0,72.6L360.5,71.6L359.9,71.7L360.1,70.7L359.5,70.7L359.5,70.2L360.0,70.2L359.5,68.9L361.0,68.8L359.5,68.9L360.0,68.7L360.0,66.7L358.5,66.3L355.5,64.1L353.5,64.0L351.5,65.0L350.4,64.1L348.8,64.0L347.0,65.0L346.4,64.7L345.9,63.7L346.3,53.9L322.4,53.9L322.3,60.0L322.1,59.1L319.5,58.2L319.7,57.6L321.1,57.9L321.3,57.6L319.9,55.4L319.2,55.6L318.6,54.9L317.8,55.9L314.9,55.8L314.5,54.5L312.9,55.0L311.7,54.2L309.8,56.4L307.8,55.2L306.9,56.0L306.7,57.7L305.8,58.2L305.1,57.9L305.1,56.8L304.4,57.5L303.5,56.9L303.4,65.7L302.6,65.7L297.5,65.7L297.5,63.7L286.5,63.7L286.5,62.5L285.6,62.5L284.9,63.2L284.5,62.7L278.7,62.7L279.8,59.2L278.8,59.2L278.8,53.7L272.8,53.6L272.7,71.1L273.4,70.3L273.6,70.7L274.7,70.1L274.7,77.6L276.6,77.6L276.6,81.6L274.6,81.6L274.5,95.4L250.8,95.4L250.8,125.3L262.5,125.2L262.6,131.2L305.2,131.3L305.2,125.4L326.5,125.5L326.4,155.4Z", "3": "M350.7,94.5L350.7,119.4L350.2,119.4L350.1,134.6L373.8,134.6L374.4,110.5L398.7,110.6L399.0,62.6L398.3,63.4L397.1,63.6L394.6,61.7L393.5,62.3L391.9,61.4L388.6,61.8L386.0,61.2L385.8,60.8L382.8,60.8L382.6,69.5L382.2,69.8L382.0,68.5L380.3,69.9L377.2,68.6L376.2,70.4L374.9,69.9L374.9,86.6L351.1,86.6L350.7,94.5Z", "4": "M168.2,119.3L162.4,119.3L162.4,120.9L159.1,124.2L156.5,124.7L156.5,125.2L133.0,125.2L133.0,149.1L133.5,149.1L133.8,179.6L134.4,179.6L134.6,205.7L326.3,205.7L326.5,125.5L305.2,125.4L305.2,131.3L277.5,131.3L262.6,131.2L262.5,125.2L233.1,125.3L233.3,155.3L192.2,155.5L191.8,119.3L168.2,119.3Z"}};
+const HELD = { SEN: 'R', GOV: 'D', AG: 'R', SOS: 'R', TREAS: 'R', INS: 'R', KS1: 'R', KS2: 'R', KS3: 'D', KS4: 'R' };   // party holding the seat now
+let mapUid = 0;
+function mapSvg(o) {
+  const r = o.race, fill = chipColor(o.p), favP = o.p >= 0.5 ? 'D' : 'R', flip = favP !== HELD[r.key] && o.rating !== 'TOSSUP', id = 'hatch' + (++mapUid);
+  const defs = `<defs><pattern id="${id}" width="7" height="7" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="7" stroke="#000" stroke-width="2.6"/></pattern></defs>`;
+  const W = SHAPES.w, H = SHAPES.h, hatch = d => flip ? `<path d="${d}" fill="url(#${id})" fill-opacity="0.65"/>` : '';
+  let body;
+  if (r.dist) {
+    const n = r.dist.replace('KS', ''), d = SHAPES.CD[n];
+    body = Object.entries(SHAPES.CD).filter(([k]) => k !== n).map(([, dd]) => `<path d="${dd}" fill="#eef0f4" stroke="#cbd5e1" stroke-width="1"/>`).join('')
+      + `<path d="${d}" fill="${fill}" stroke="#0f172a" stroke-width="1.4" stroke-linejoin="round"/>` + hatch(d);
+  } else body = `<path d="${SHAPES.KS}" fill="${fill}" stroke="#0f172a" stroke-width="1.4" stroke-linejoin="round"/>` + hatch(SHAPES.KS);
+  return { flip, svg: `<svg class="ksmap" viewBox="-3 -3 ${W + 6} ${H + 6}" role="img" aria-label="${esc(r.name || r.office)}: ${titleCase(o.rating)}${flip ? ', projected flip' : ''}">${defs}${body}</svg>` };
+}
+function mapCard(o) {
+  const r = o.race, dw = o.p * 100, mp = mapSvg(o);
   const dl = dw >= 24 ? `${last(r.D)} ${pct(o.p)}` : dw >= 7 ? pct(o.p) : '';
   const rl = 100 - dw >= 24 ? `${last(r.R)} ${pct(1 - o.p)}` : 100 - dw >= 7 ? pct(1 - o.p) : '';
-  const pwTxt = o.pa && !o.pa.none ? `Poll weight <b>${Math.round(o.w * 100)}%</b>` : 'No public polls · fundamentals only';
-  return `<div class="rrow">
-      <div><div class="off">${r.office}</div><div class="cands">${esc(r.R)}<span class="tag r">R</span>${r.inc === 'R' ? ' (inc.)' : ''}<br>${esc(r.D)}<span class="tag d">D</span>${r.inc === 'D' ? ' (inc.)' : ''}</div></div>
-      <div>
-        <div class="pbar" role="img" aria-label="${r.D} ${pct(o.p)}, ${r.R} ${pct(1 - o.p)}"><div class="d" style="width:${dw}%">${dl}</div><div class="r" style="width:${100 - dw}%">${rl}</div><span class="mid"></span></div>
-        <div class="meta"><span>Predicted <b class="num">${fm(o.m)}</b> <span class="num">±${o.sd.toFixed(1)}</span></span><span>${pwTxt}</span></div>
-      </div>
-      <div class="chips">${chip(o)}</div></div>`;
+  const pwTxt = o.pa && !o.pa.none ? `Poll weight <b>${Math.round(o.w * 100)}%</b>` : 'No public polls';
+  return `<article class="mcard">
+    <div class="mhead"><div><div class="off">${r.name || r.office}</div><div class="cands">${esc(r.D)}<span class="tag d">D</span>${r.inc === 'D' ? ' (inc.)' : ''} vs ${esc(r.R)}<span class="tag r">R</span>${r.inc === 'R' ? ' (inc.)' : ''}</div></div>${chip(o)}</div>
+    ${mp.svg}
+    <div class="pbar" role="img" aria-label="${r.D} ${pct(o.p)}, ${r.R} ${pct(1 - o.p)}"><div class="d" style="width:${dw}%">${dl}</div><div class="r" style="width:${100 - dw}%">${rl}</div><span class="mid"></span></div>
+    <div class="meta"><span>Predicted <b class="num">${fm(o.m)}</b> <span class="num">±${o.sd.toFixed(1)}</span></span><span>${pwTxt}</span></div>
+    ${mp.flip ? `<div class="flipnote">Projected flip: ${HELD[r.key]} → ${o.p >= 0.5 ? 'D' : 'R'}</div>` : ''}
+  </article>`;
+}
+function legendHtml() {
+  const stops = [[0.99, 'D 95%+'], [0.8, 'D 80%'], [0.5, 'Tossup'], [0.2, 'R 80%'], [0.01, 'R 95%+']];
+  return `<div class="maplegend">${stops.map(([p, l]) => `<span><i style="background:${chipColor(p)}${p === 0.5 ? ';border-color:#000' : ''}"></i>${l}</span>`).join('')}<span><i class="hatch"></i>Projected flip</span></div>`;
 }
 function renderOverview(R) {
-  document.getElementById('raceRows').innerHTML = R.races.map(rowHtml).join('');
-  document.getElementById('houseRows').innerHTML = R.house.map(rowHtml).join('');
+  mapUid = 0;
+  document.getElementById('raceRows').innerHTML = legendHtml() + `<div class="mgrid">${R.races.map(mapCard).join('')}</div>`;
+  document.getElementById('houseRows').innerHTML = `<div class="mgrid">${R.house.map(mapCard).join('')}</div>`;
 }
 
 // ---------- render: race cards
